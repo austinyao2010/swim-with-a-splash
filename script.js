@@ -14,8 +14,15 @@ function showEvent2() {
     event2.style.flexDirection = "column";
 }
 
+function showMembers() {
+    mainPage.style.display = "none";
+    document.getElementById("members-detail").style.display = "flex";
+    document.getElementById("members-detail").style.flexDirection = "column";
+}
+
 function backToMain() {
     mainPage.style.display = "flex";
     event1.style.display = "none";
     event2.style.display = "none";
+    document.getElementById("members-detail").style.display = "none";
 }
