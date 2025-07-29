@@ -6,15 +6,24 @@
   <title>Swim With A Splash</title>
 
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 0; line-height: 1.6; background: #f8f9fa; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      line-height: 1.6; 
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
     h1{
       margin: 0px 0px 20px 0px;
       color: #0077b6;
       font-size: 2.5em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
     }
     h2{
       color: #0077b6;
       font-size: 2.2em;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
     header h1 {
       color: white;
@@ -28,13 +37,47 @@
     h5{
       margin: 0px 0px 10px 0px;
     }
-    header { background: #0077b6; color: white; padding: 0.5rem 1rem 1rem 1rem; }
-    nav a { color: white; margin: 0 1rem; text-decoration: none; }
-    nav a:hover { text-decoration: underline; }
+    header { 
+      background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%); 
+      color: white; 
+      padding: 0.5rem 1rem 1rem 1rem; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    nav a { 
+      color: white; 
+      margin: 0 1rem; 
+      text-decoration: none; 
+      font-weight: 500;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+    }
+    nav a:hover { 
+      background: rgba(255,255,255,0.2); 
+      transform: translateY(-2px);
+    }
     .container { padding: 1rem; max-width: 1200px; margin: auto; }
-    .hero { background: #48cae4; color: white; padding: 1rem; text-align: center; }
+    .hero { 
+      background: linear-gradient(135deg, #48cae4 0%, #0077b6 100%); 
+      color: white; 
+      padding: 2rem 1rem; 
+      text-align: center; 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
     .section { margin-top: 2rem; }
-    .card { background: white; padding: 1rem 1.5rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .card { 
+      background: white; 
+      padding: 1.5rem 2rem; 
+      margin-bottom: 1.5rem; 
+      border-radius: 15px; 
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+    }
     footer { background: #023e8a; color: white; text-align: center; padding: 1rem; margin-top: 2rem; }
     #mainPage{
       display: flex;
@@ -46,11 +89,11 @@
       color: black;
     }
 
-    #event1, #event2, #members-detail{
+    #event1, #event2, #event3, #members-detail{
       display: none;
     }
     
-    #event1 button, #event2 button, #members-detail button {
+    #event1 button, #event2 button, #event3 button, #members-detail button {
       margin: 20px;
       padding: 12px 24px;
       background: linear-gradient(135deg, #0077b6, #023e8a);
@@ -66,19 +109,19 @@
       letter-spacing: 0.5px;
     }
 
-    #event1 button:hover, #event2 button:hover, #members-detail button:hover {
+    #event1 button:hover, #event2 button:hover, #event3 button:hover, #members-detail button:hover {
       background: linear-gradient(135deg, #023e8a, #0077b6);
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
     }
 
-    #event1 button:active, #event2 button:active, #members-detail button:active {
+    #event1 button:active, #event2 button:active, #event3 button:active, #members-detail button:active {
       transform: translateY(0);
       box-shadow: 0 2px 10px rgba(0, 119, 182, 0.3);
     }
 
     /* Smaller styling for back buttons */
-    #event1 button, #event2 button, #members-detail button {
+    #event1 button, #event2 button, #event3 button, #members-detail button {
       padding: 8px 16px;
       font-size: 12px;
       margin: 10px auto;
@@ -89,6 +132,284 @@
     /* Darker shadow for past events' individual event boxes */
     #events .card .card {
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    /* Fun Team Grid Styling */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .team-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.4s ease;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #0077b6, #48cae4, #023e8a);
+    }
+
+    .team-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+      border-color: #0077b6;
+    }
+
+    .team-avatar {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .team-card h4 {
+      color: #0077b6;
+      font-size: 1.4em;
+      margin: 0 0 0.5rem 0;
+      font-weight: 600;
+    }
+
+    .team-location {
+      color: #666;
+      font-weight: 500;
+      margin: 0.3rem 0;
+      font-size: 0.9em;
+    }
+
+    .team-club {
+      color: #888;
+      font-size: 0.85em;
+      margin: 0.3rem 0;
+      font-style: italic;
+    }
+
+    .team-bio {
+      color: #333;
+      margin: 1rem 0 0 0;
+      line-height: 1.5;
+      font-size: 0.95em;
+    }
+
+    /* Registration Form Styling */
+    .registration-form {
+      display: grid;
+      gap: 1.5rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #0077b6;
+      font-size: 1.1em;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1em;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #0077b6;
+      box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .register-btn {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 1rem;
+    }
+
+    .register-btn:hover {
+      background: linear-gradient(135deg, #20c997, #28a745);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    }
+
+    .register-btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* Time Slot Grid Styling */
+    .timeslot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .timeslot-card {
+      background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+      border-radius: 15px;
+      padding: 1.5rem;
+      border: 2px solid #e0e0e0;
+      transition: all 0.3s ease;
+    }
+
+    .timeslot-card:hover {
+      border-color: #0077b6;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .timeslot-card h4 {
+      color: #0077b6;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.3em;
+      font-weight: 600;
+    }
+
+    .time-slots {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .slot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      transition: all 0.3s ease;
+    }
+
+    .slot:hover {
+      border-color: #0077b6;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .slot .time {
+      font-weight: 600;
+      color: #333;
+      font-size: 1.1em;
+    }
+
+    .slot .spots {
+      color: #28a745;
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+
+    .slot-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9em;
+    }
+
+    .slot-btn.available {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+    }
+
+    .slot-btn.available:hover {
+      background: linear-gradient(135deg, #20c997, #28a745);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .slot-btn.booked {
+      background: #dc3545;
+      color: white;
+      cursor: not-allowed;
+    }
+
+    .slot-btn.selected {
+      background: linear-gradient(135deg, #0077b6, #023e8a);
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .form-group textarea {
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1em;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: white;
+      resize: vertical;
+    }
+
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #0077b6;
+      box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Remove Reservation Button Styling */
+    .remove-btn {
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 10px auto;
+      width: 120px;
+      display: block;
+    }
+
+    .remove-btn:hover {
+      background: linear-gradient(135deg, #c82333, #dc3545);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+    }
+
+    .remove-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
     }
   </style>
 </head>
@@ -153,7 +474,10 @@
           
           <div class="card">
             <h3>Upcoming Events</h3>
-            <p>No upcoming events at this time. Check back soon for new swim lesson opportunities!</p>
+            <a href="#" onclick="showEvent3()"><div class="card">
+              <h3>Texas Swim Lessons – August 23–24, 2024 (Texas)</h3>
+              <p><strong>Registration Open!</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
+            </div></a>
           </div>
           
           <div class="card">
@@ -302,44 +626,254 @@
       <section class="section">
         <h2>Team</h2>
         <div class="card">
-          <h3>Meet Our Coaches</h3>
+          <h3>Meet Our Amazing Coaches! 🌊</h3>
           <p>Our team consists of competitive swimmers from top clubs in the nation, dedicated to teaching swimming skills and water safety to our community.</p>
+        </div>
+        
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♂️</div>
+            <h4>Austin Yao</h4>
+            <p class="team-location">Dallas, TX & Mason, OH</p>
+            <p class="team-club">Lakeside Aquatic Club & Mason Manta Rays</p>
+            <p class="team-bio">Founder & Lead Coach - Passionate about making swimming accessible to everyone! 🏆</p>
+          </div>
           
-          <p><strong>Dallas, Texas</strong></p>
-          <ul>
-            <p>Lakeside Aquatic Club</p>
-            <li>Austin Yao</li>
-            <li>Rebecca Yao</li>
-          </ul>
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♀️</div>
+            <h4>Rebecca Yao</h4>
+            <p class="team-location">Dallas, TX & Mason, OH</p>
+            <p class="team-club">Lakeside Aquatic Club & Mason Manta Rays</p>
+            <p class="team-bio">Dedicated coach who loves working with kids and building confidence in the water! 💪</p>
+          </div>
           
-          <p><strong>Mason, Ohio</strong></p>
-          <ul>
-            <p>Mason Manta Rays Swimmers</p>
-            <li>Austin Yao</li>
-            <li>Andrew Zhang</li>
-            <li>Bryan Zhang</li>
-            <li>Caleb Tan</li>
-            <li>Rebecca Yao</li>
-            <li>Sharon Li</li>
-            <li>Victor Cao</li>
-          </ul>
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♂️</div>
+            <h4>Andrew Zhang</h4>
+            <p class="team-location">Mason, OH</p>
+            <p class="team-club">Mason Manta Rays</p>
+            <p class="team-bio">Experienced swimmer who specializes in stroke technique and speed training! ⚡</p>
+          </div>
           
-          <p><strong>Frisco, Texas</strong></p>
-          <ul>
-            <p>Lakeside Aquatic Club Swimmers</p>
-            <li>Aiden Ji</li>
-          </ul>
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♂️</div>
+            <h4>Bryan Zhang</h4>
+            <p class="team-location">Mason, OH</p>
+            <p class="team-club">Mason Manta Rays</p>
+            <p class="team-bio">Patient coach who excels at teaching beginners and building strong foundations! 🌟</p>
+          </div>
           
-          <p><strong>Coppell, Texas</strong></p>
-          <ul>
-            <p>Lakeside Aquatic Club Swimmers</p>
-            <li>Olivia Ye</li>
-          </ul>
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♂️</div>
+            <h4>Caleb Tan</h4>
+            <p class="team-location">Mason, OH</p>
+            <p class="team-club">Mason Manta Rays</p>
+            <p class="team-bio">Energetic coach who makes every lesson fun and engaging! 🎉</p>
+          </div>
+          
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♀️</div>
+            <h4>Sharon Li</h4>
+            <p class="team-location">Mason, OH</p>
+            <p class="team-club">Mason Manta Rays</p>
+            <p class="team-bio">Compassionate coach who focuses on water safety and building trust! 🛟</p>
+          </div>
+          
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♂️</div>
+            <h4>Victor Cao</h4>
+            <p class="team-location">Mason, OH</p>
+            <p class="team-club">Mason Manta Rays</p>
+            <p class="team-bio">Technical expert who helps swimmers perfect their form and technique! 🎯</p>
+          </div>
+          
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♂️</div>
+            <h4>Aiden Ji</h4>
+            <p class="team-location">Frisco, TX</p>
+            <p class="team-club">Lakeside Aquatic Club</p>
+            <p class="team-bio">Motivational coach who inspires swimmers to reach their full potential! 🚀</p>
+          </div>
+          
+          <div class="team-card">
+            <div class="team-avatar">🏊‍♀️</div>
+            <h4>Olivia Ye</h4>
+            <p class="team-location">Coppell, TX</p>
+            <p class="team-club">Lakeside Aquatic Club</p>
+            <p class="team-bio">Creative coach who makes learning to swim an exciting adventure! 🌊</p>
+          </div>
         </div>
       </section>
     </div>
     
     <button onclick="backToMain()">Back to Team</button>
+  </div>
+  
+  <div id="event3">
+    <header>
+      <h1>Swim With a Splash</h1>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#pictures">Pictures</a>
+      </nav>
+    </header>
+    
+    <div class="container">
+      <section class="section">
+        <h2>Texas Swim Lessons – August 23–24, 2024</h2>
+        <div class="card">
+          <h3>Event Details</h3>
+          <p><strong>Date:</strong> August 23–24, 2024</p>
+          <p><strong>Location:</strong> Texas Community Pool</p>
+          <p><strong>Description:</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
+          <p><strong>Age groups:</strong> 5-12 years old</p>
+          <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Registration Open! 🎉</span></p>
+        </div>
+        
+        <div class="card">
+          <h3>Select Your Time Slot! 📅</h3>
+          <div class="timeslot-grid">
+            <div class="timeslot-card">
+              <h4>Friday, August 23rd</h4>
+              <div class="time-slots">
+                <div class="slot">
+                  <span class="time">9:00 AM - 10:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" data-slot-id="fri-9am" onclick="selectSlot('fri-9am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">10:00 AM - 11:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-10am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">11:00 AM - 12:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-11am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">1:00 PM - 2:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-1pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">2:00 PM - 3:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-2pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:00 PM - 4:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-3pm')">Sign Up</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="timeslot-card">
+              <h4>Saturday, August 24th</h4>
+              <div class="time-slots">
+                <div class="slot">
+                  <span class="time">9:00 AM - 10:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-9am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">10:00 AM - 11:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-10am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">11:00 AM - 12:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-11am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">1:00 PM - 2:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-1pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">2:00 PM - 3:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-2pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:00 PM - 4:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-3pm')">Sign Up</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" id="registration-form" style="display: none;">
+          <h3>Complete Your Registration! 📝</h3>
+          <form class="registration-form" onsubmit="handleRegistration(event)">
+            <div class="form-group">
+              <label for="selected-slot">Selected Time Slot:</label>
+              <input type="text" id="selected-slot" name="selected-slot" readonly>
+            </div>
+            
+            <div class="form-group">
+              <label for="child-name">What is your child's name? *</label>
+              <input type="text" id="child-name" name="child-name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="child-age">Age *</label>
+              <input type="number" id="child-age" name="child-age" min="5" max="12" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="swimming-level">Your Child's swimming level *</label>
+              <select id="swimming-level" name="swimming-level" required>
+                <option value="">Select level...</option>
+                <option value="beginner">Beginner (Learning to float/kick)</option>
+                <option value="intermediate">Intermediate (Can swim but needs improvement)</option>
+                <option value="advanced">Advanced (Stroke refinement)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="goals">Put any goals you want to achieve here *</label>
+              <textarea id="goals" name="goals" rows="3" placeholder="e.g., Learn to float, Improve freestyle, Build confidence..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone">What is your phone number? *</label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="location">Optional: What area are you located in?</label>
+              <input type="text" id="location" name="location" placeholder="e.g., Mason, West Chester, etc.">
+            </div>
+            
+            <div class="form-group">
+              <label for="additional-info">If there is anything else you want us to know, tell us here!</label>
+              <textarea id="additional-info" name="additional-info" rows="3" placeholder="Any special needs, preferences, or additional information..."></textarea>
+            </div>
+            
+            <button type="submit" class="register-btn">Complete Registration! 🏊‍♂️</button>
+          </form>
+        </div>
+        
+        <div class="card">
+          <h3>What to Expect</h3>
+          <ul>
+            <li>✅ Free private swim lessons</li>
+            <li>✅ Experienced coaches from Mason Manta Rays</li>
+            <li>✅ Personalized instruction based on skill level</li>
+            <li>✅ Water safety education</li>
+            <li>✅ Fun and engaging learning environment</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    
+    <button onclick="backToMain()">Back to Events</button>
+    <button onclick="removeReservation()" class="remove-btn">Remove Reservation</button>
   </div>
 
   <script src="script.js"></script>
