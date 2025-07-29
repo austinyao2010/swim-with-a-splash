@@ -25,6 +25,11 @@
       font-size: 2.2em;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
     }
+    h3{
+      color: #023e8a;
+      font-size: 1.4em;
+      margin-bottom: 0.8rem;
+    }
     header h1 {
       color: white;
       font-size: 2.2em;
@@ -36,6 +41,148 @@
     }
     h5{
       margin: 0px 0px 10px 0px;
+      color: #023e8a;
+    }
+    p {
+      color: #333;
+      line-height: 1.7;
+      font-size: 1.05em;
+      margin-bottom: 1rem;
+    }
+    .card p {
+      color: #444;
+      line-height: 1.6;
+      font-size: 1em;
+    }
+    .hero p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.2em;
+      line-height: 1.5;
+    }
+    ul {
+      color: #444;
+      line-height: 1.6;
+      font-size: 1em;
+      margin-bottom: 1rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+    strong {
+      color: #023e8a;
+    }
+    .card strong {
+      color: #0077b6;
+    }
+
+    /* Feedback Form Styling */
+    .feedback-form {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .feedback-form .form-group {
+      grid-column: 1;
+    }
+
+    .feedback-form .form-group:nth-child(4),
+    .feedback-form .form-group:nth-child(5),
+    .feedback-form .form-group:nth-child(6),
+    .feedback-form .form-group:nth-child(7) {
+      grid-column: 2;
+    }
+
+    .feedback-form .form-group:nth-child(8) {
+      grid-column: 1 / -1;
+      text-align: center;
+    }
+
+    .submit-feedback-btn {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 1rem;
+    }
+
+    .submit-feedback-btn:hover {
+      background: linear-gradient(135deg, #20c997, #28a745);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    }
+
+    .submit-feedback-btn:active {
+      transform: translateY(-1px);
+    }
+
+    /* Quote Styling */
+    .quote {
+      position: relative;
+      padding: 2rem 1rem 1rem 3rem;
+      margin: 2rem 0;
+      background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+      border-radius: 15px;
+      border-left: 4px solid #0077b6;
+    }
+
+    .quote-mark {
+      position: absolute;
+      top: -10px;
+      left: 20px;
+      font-size: 4rem;
+      color: #0077b6;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .quote p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      color: #333;
+      margin: 0;
+      font-style: italic;
+    }
+
+    /* Back Button Styling */
+    #feedback-page button {
+      padding: 8px 16px;
+      font-size: 12px;
+      margin: 10px auto;
+      width: 120px;
+      display: block;
+      background: linear-gradient(135deg, #0077b6, #023e8a);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    #feedback-page button:hover {
+      background: linear-gradient(135deg, #023e8a, #0077b6);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
+    }
+
+    #feedback-page button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 10px rgba(0, 119, 182, 0.3);
     }
     header { 
       background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%); 
@@ -89,7 +236,7 @@
       color: black;
     }
 
-    #event1, #event2, #event3, #members-detail{
+    #event1, #event2, #event3, #members-detail, #feedback-page{
       display: none;
     }
     
@@ -411,6 +558,35 @@
       transform: translateY(0);
       box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
     }
+
+    /* Learn More Button Styling */
+    .learn-more-btn {
+      background: linear-gradient(135deg, #0077b6, #023e8a);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 15px;
+      display: inline-block;
+    }
+
+    .learn-more-btn:hover {
+      background: linear-gradient(135deg, #023e8a, #0077b6);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
+    }
+
+    .learn-more-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 10px rgba(0, 119, 182, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -419,7 +595,6 @@
       <h1>Swim With a Splash</h1>
       <nav>
         <a href="#about">About</a>
-        <a href="#programs">Programs</a>
         <a href="#events">Events</a>
         <a href="#members">Team</a>
         <a href="#get-involved">Get Involved</a>
@@ -441,6 +616,9 @@
           <h3>Who We Are</h3>
           <p>We are a group of competitive swimmers from the top clubs in the nation. We are dedicated to providing valuable swim lessons and water safety education in our local communities.
             Swim With a Splash has been an ongoing event since 2023, and we are passionate to help others learn and grow.</p>
+          <h3>What We Offer</h3>
+          <p><strong>Learn‑to‑Swim:</strong> This is geared towards children who want to learn how to swim or are in the elementary steps.</p>
+          <p><strong>Stroke Clinic:</strong> If your child is proficient in their strokes, we will help polish your child's skills to bring them to competitive standards.</p>
         </div>
       </section>
 
@@ -456,17 +634,7 @@
         </div>
       </section>
 
-      <section id="programs" class="section">
-        <h2>Programs</h2>
-        <div class="card">
-          <h3>Learn‑to‑Swim </h3>
-          <p>This is geared towards children who want to learn how to swim or are in the elementary steps.</p>
-        </div>
-        <div class="card">
-          <h3>Stroke Clinic</h3>
-          <p>If your child is proficient in their strokes, we will help polish your child's skills to bring them to competitive standards.</p>
-        </div>
-      </section>
+
 
               <!--Add links to each one using display none-->
         <section id="events" class="section">
@@ -474,43 +642,61 @@
           
           <div class="card">
             <h3>Upcoming Events</h3>
-            <a href="#" onclick="showEvent3()"><div class="card">
-              <h3>Texas Swim Lessons – August 23–24, 2024 (Texas)</h3>
+            <div class="card">
+              <h3>Texas Swim Lessons – August 23–24, 2025 (Texas)</h3>
               <p><strong>Registration Open!</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
-            </div></a>
+              <button class="learn-more-btn" onclick="showEvent3()">Learn More & Register</button>
+            </div>
           </div>
           
           <div class="card">
             <h3>Past Events</h3>
-            <a href="#" onclick="showEvent1()"><div class="card">
+            <div class="card">
               <h3>Chestnut Hill Swim Lessons – August 14–16, 2023 (Mason, Ohio)</h3>
-            </div></a>
-            <a href="#" onclick="showEvent2()"><div class="card">
+              <button class="learn-more-btn" onclick="showEvent1()">Learn More</button>
+            </div>
+            <div class="card">
               <h3>Chestnut Hill Swim Lessons – May 18–19, 2024 (Mason, Ohio)</h3>
-            </div></a>
+              <button class="learn-more-btn" onclick="showEvent2()">Learn More</button>
+            </div>
           </div>
         </section>
 
       <section id="members" class="section">
         <h2>Team</h2>
-        <a href="#" onclick="showMembers()"><div class="card">
+        <div class="card">
           <h3>Meet Our Coaches</h3>
           <p>Our team consists of competitive swimmers from top clubs in the nation, dedicated to teaching swimming skills and water safety to our community.</p>
-          <p><strong>Click here to meet our team</strong></p>
-        </div></a>
+          <button class="learn-more-btn" onclick="showMembers()">Meet Our Team</button>
+        </div>
       </section>
+
+
 
       <section id="parent-feedback" class="section">
         <h2>Parent Feedback</h2>
         <div class="card">
-          <p><strong>"It is very grateful to have those lovely young people to volunteering teach swimming lessons. It is very
+          <div class="quote">
+            <div class="quote-mark">"</div>
+            <p>It is very grateful to have those lovely young people to volunteering teach swimming lessons. It is very
             meaningful and valuable way to give back to the community. Thanks for their enthusiasm, dedication
-          and patience, my son got impressive advice from them which made a  highly positive impact on my son's
-          swimming confidences and his swimming skills. The most hard work is to teaching my 4 years old son,
-          which I believe is kind of mission impossible. Thanks for all their hard working. The whole family do
-          appreciate."</strong> - DanXi Zhao</p>
-          <p><strong>"Rayaan loved the swim class with Austin! He said he learned lots of good techniques! He wished he could
-          take classes from him regularly this summer at the neighborhood pool."</strong> - Sameena Akbar</p>
+            and patience, my son got impressive advice from them which made a highly positive impact on my son's
+            swimming confidences and his swimming skills. The most hard work is to teaching my 4 years old son,
+            which I believe is kind of mission impossible. Thanks for all their hard working. The whole family do
+            appreciate.</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <div class="quote">
+            <div class="quote-mark">"</div>
+            <p>Rayaan loved the swim class with Austin! He said he learned lots of good techniques! He wished he could
+            take classes from him regularly this summer at the neighborhood pool.</p>
+          </div>
+        </div>
+        
+        <div class="card">
+          <button class="learn-more-btn" onclick="showFeedback()">Share Your Experience</button>
         </div>
       </section>
   <!--
@@ -560,6 +746,11 @@
         <div class="card">
           <h3>Coach Team</h3>
           <img src="year1groupphoto.jpg" alt="August 2023 Swim Lessons" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px;">
+          <p style="text-align: center; margin-top: 10px; font-style: italic; color: #666;">
+            <strong>From left to right:</strong><br>
+            Front row: Victor Cao, Rebecca Yao, and George Cao<br>
+            Second row: Sharon Li, Bryan Zhang, Austin Yao
+          </p>
         </div>
         
         <div class="card">
@@ -598,6 +789,11 @@
         <div class="card">
           <h3>Coach Team</h3>
           <img src="year2groupphoto.jpg" alt="May 2024 Swim Lessons" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px;">
+          <p style="text-align: center; margin-top: 10px; font-style: italic; color: #666;">
+            <strong>From left to right:</strong><br>
+            Front row: Rebecca Yao, George Cao, Andrew Zhang<br>
+            Second row: Sharon Li, Victor Cao, Caleb Tan, Austin Yao
+          </p>
         </div>
         
         <div class="card">
@@ -720,10 +916,10 @@
     
     <div class="container">
       <section class="section">
-        <h2>Texas Swim Lessons – August 23–24, 2024</h2>
+        <h2>Texas Swim Lessons – August 23–24, 2025</h2>
         <div class="card">
           <h3>Event Details</h3>
-          <p><strong>Date:</strong> August 23–24, 2024</p>
+          <p><strong>Date:</strong> August 23–24, 2025</p>
           <p><strong>Location:</strong> Texas Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
           <p><strong>Age groups:</strong> 5-12 years old</p>
@@ -875,10 +1071,86 @@
     <button onclick="backToMain()">Back to Events</button>
     <button onclick="removeReservation()" class="remove-btn">Remove Reservation</button>
   </div>
+  
+  <div id="feedback-page">
+    <header>
+      <h1>Swim With a Splash</h1>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#feedback">Feedback</a>
+      </nav>
+    </header>
+    
+    <div class="container">
+      <section class="section">
+        <h2>Share Your Experience</h2>
+        <div class="card">
+          <h3>We'd Love to Hear From You! 🌊</h3>
+          <p>Your feedback helps us improve and inspires other families to join our swimming community. Share your experience and help us make a difference!</p>
+        </div>
+        
+        <div class="card">
+          <h3>Feedback Form</h3>
+          <form class="registration-form" onsubmit="submitFeedback(event)">
+            <div class="form-group">
+              <label for="parent-name">Your Name (Optional)</label>
+              <input type="text" id="parent-name" name="parent-name">
+            </div>
+            
+            <div class="form-group">
+              <label for="child-name">Child's Name (Optional)</label>
+              <input type="text" id="child-name" name="child-name">
+            </div>
+            
+            <div class="form-group">
+              <label for="event-attended">Which event did you attend? *</label>
+              <select id="event-attended" name="event-attended" required>
+                <option value="">Select an event...</option>
+                <option value="August 2023 - Mason, OH">August 2023 - Mason, Ohio</option>
+                <option value="May 2024 - Mason, OH">May 2024 - Mason, Ohio</option>
+                <option value="August 2025 - Texas">August 2025 - Texas</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="feedback-message">Your Experience & Feedback *</label>
+              <textarea id="feedback-message" name="feedback-message" rows="5" placeholder="Tell us about your experience! What did your child learn? How did the coaches help? Any memorable moments?" required></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="rating">How would you rate your experience? *</label>
+              <select id="rating" name="rating" required>
+                <option value="">Select rating...</option>
+                <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                <option value="4">⭐⭐⭐⭐ Very Good</option>
+                <option value="3">⭐⭐⭐ Good</option>
+                <option value="2">⭐⭐ Fair</option>
+                <option value="1">⭐ Poor</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="permission">Can we share your feedback on our website? *</label>
+              <select id="permission" name="permission" required>
+                <option value="">Select...</option>
+                <option value="yes">Yes, you can share my feedback</option>
+                <option value="no">No, keep it private</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="register-btn">Share My Experience 🌊</button>
+          </form>
+        </div>
+      </section>
+    </div>
+    
+    <button onclick="backToMain()">Back to Parent Feedback</button>
+  </div>
 
   <script src="script.js"></script>
   <footer>
-    <p>&copy; 2025 Community Swim Lessons. All rights reserved.</p>
+    <p style="color: white;">&copy; 2025 Swim With a Splash. All rights reserved.</p>
   </footer>
 </body>
 </html>

@@ -20,6 +20,12 @@ function showMembers() {
     document.getElementById("members-detail").style.flexDirection = "column";
 }
 
+function showFeedback() {
+    mainPage.style.display = "none";
+    document.getElementById("feedback-page").style.display = "flex";
+    document.getElementById("feedback-page").style.flexDirection = "column";
+}
+
 
 
 // Slot management system
@@ -205,18 +211,18 @@ function selectSlot(slotId) {
     
     // Update the selected slot display
     const slotDisplay = {
-        'fri-9am': 'Friday, August 23rd - 9:00 AM - 10:00 AM (Texas)',
-        'fri-10am': 'Friday, August 23rd - 10:00 AM - 11:00 AM (Texas)',
-        'fri-11am': 'Friday, August 23rd - 11:00 AM - 12:00 PM (Texas)',
-        'fri-1pm': 'Friday, August 23rd - 1:00 PM - 2:00 PM (Texas)',
-        'fri-2pm': 'Friday, August 23rd - 2:00 PM - 3:00 PM (Texas)',
-        'fri-3pm': 'Friday, August 23rd - 3:00 PM - 4:00 PM (Texas)',
-        'sat-9am': 'Saturday, August 24th - 9:00 AM - 10:00 AM (Texas)',
-        'sat-10am': 'Saturday, August 24th - 10:00 AM - 11:00 AM (Texas)',
-        'sat-11am': 'Saturday, August 24th - 11:00 AM - 12:00 PM (Texas)',
-        'sat-1pm': 'Saturday, August 24th - 1:00 PM - 2:00 PM (Texas)',
-        'sat-2pm': 'Saturday, August 24th - 2:00 PM - 3:00 PM (Texas)',
-        'sat-3pm': 'Saturday, August 24th - 3:00 PM - 4:00 PM (Texas)'
+        'fri-9am': 'Friday, August 23rd, 2025 - 9:00 AM - 10:00 AM (Texas)',
+        'fri-10am': 'Friday, August 23rd, 2025 - 10:00 AM - 11:00 AM (Texas)',
+        'fri-11am': 'Friday, August 23rd, 2025 - 11:00 AM - 12:00 PM (Texas)',
+        'fri-1pm': 'Friday, August 23rd, 2025 - 1:00 PM - 2:00 PM (Texas)',
+        'fri-2pm': 'Friday, August 23rd, 2025 - 2:00 PM - 3:00 PM (Texas)',
+        'fri-3pm': 'Friday, August 23rd, 2025 - 3:00 PM - 4:00 PM (Texas)',
+        'sat-9am': 'Saturday, August 24th, 2025 - 9:00 AM - 10:00 AM (Texas)',
+        'sat-10am': 'Saturday, August 24th, 2025 - 10:00 AM - 11:00 AM (Texas)',
+        'sat-11am': 'Saturday, August 24th, 2025 - 11:00 AM - 12:00 PM (Texas)',
+        'sat-1pm': 'Saturday, August 24th, 2025 - 1:00 PM - 2:00 PM (Texas)',
+        'sat-2pm': 'Saturday, August 24th, 2025 - 2:00 PM - 3:00 PM (Texas)',
+        'sat-3pm': 'Saturday, August 24th, 2025 - 3:00 PM - 4:00 PM (Texas)'
     };
     
     document.getElementById('selected-slot').value = slotDisplay[slotId];
@@ -339,18 +345,18 @@ function submitToGoogleSheets(reservation) {
 // Helper function to get slot ID from display text
 function getSlotIdFromDisplay(displayText) {
     const slotMap = {
-        'Friday, August 23rd - 9:00 AM - 10:00 AM (Texas)': 'fri-9am',
-        'Friday, August 23rd - 10:00 AM - 11:00 AM (Texas)': 'fri-10am',
-        'Friday, August 23rd - 11:00 AM - 12:00 PM (Texas)': 'fri-11am',
-        'Friday, August 23rd - 1:00 PM - 2:00 PM (Texas)': 'fri-1pm',
-        'Friday, August 23rd - 2:00 PM - 3:00 PM (Texas)': 'fri-2pm',
-        'Friday, August 23rd - 3:00 PM - 4:00 PM (Texas)': 'fri-3pm',
-        'Saturday, August 24th - 9:00 AM - 10:00 AM (Texas)': 'sat-9am',
-        'Saturday, August 24th - 10:00 AM - 11:00 AM (Texas)': 'sat-10am',
-        'Saturday, August 24th - 11:00 AM - 12:00 PM (Texas)': 'sat-11am',
-        'Saturday, August 24th - 1:00 PM - 2:00 PM (Texas)': 'sat-1pm',
-        'Saturday, August 24th - 2:00 PM - 3:00 PM (Texas)': 'sat-2pm',
-        'Saturday, August 24th - 3:00 PM - 4:00 PM (Texas)': 'sat-3pm'
+        'Friday, August 23rd, 2025 - 9:00 AM - 10:00 AM (Texas)': 'fri-9am',
+        'Friday, August 23rd, 2025 - 10:00 AM - 11:00 AM (Texas)': 'fri-10am',
+        'Friday, August 23rd, 2025 - 11:00 AM - 12:00 PM (Texas)': 'fri-11am',
+        'Friday, August 23rd, 2025 - 1:00 PM - 2:00 PM (Texas)': 'fri-1pm',
+        'Friday, August 23rd, 2025 - 2:00 PM - 3:00 PM (Texas)': 'fri-2pm',
+        'Friday, August 23rd, 2025 - 3:00 PM - 4:00 PM (Texas)': 'fri-3pm',
+        'Saturday, August 24th, 2025 - 9:00 AM - 10:00 AM (Texas)': 'sat-9am',
+        'Saturday, August 24th, 2025 - 10:00 AM - 11:00 AM (Texas)': 'sat-10am',
+        'Saturday, August 24th, 2025 - 11:00 AM - 12:00 PM (Texas)': 'sat-11am',
+        'Saturday, August 24th, 2025 - 1:00 PM - 2:00 PM (Texas)': 'sat-1pm',
+        'Saturday, August 24th, 2025 - 2:00 PM - 3:00 PM (Texas)': 'sat-2pm',
+        'Saturday, August 24th, 2025 - 3:00 PM - 4:00 PM (Texas)': 'sat-3pm'
     };
     return slotMap[displayText];
 }
@@ -361,6 +367,7 @@ function backToMain() {
     event2.style.display = "none";
     event3.style.display = "none";
     document.getElementById("members-detail").style.display = "none";
+    document.getElementById("feedback-page").style.display = "none";
 }
 
 // Load reservations when event3 is shown
@@ -389,3 +396,27 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Event3 element not found');
     }
 });
+
+// Handle feedback form submission
+function submitFeedback(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const feedback = {
+        parentName: formData.get('parent-name') || 'Anonymous',
+        childName: formData.get('child-name') || 'Not provided',
+        eventAttended: formData.get('event-attended'),
+        feedbackMessage: formData.get('feedback-message'),
+        rating: formData.get('rating'),
+        permission: formData.get('permission'),
+        timestamp: new Date().toISOString()
+    };
+    
+    // For now, just show a success message
+    // In the future, this could be connected to a backend or email service
+    const nameDisplay = feedback.parentName === 'Anonymous' ? 'Anonymous' : feedback.parentName;
+    alert(`Thank you for sharing your experience${nameDisplay !== 'Anonymous' ? ', ' + nameDisplay : ''}! Your feedback helps us improve and inspire other families. We appreciate you being part of our swimming community! 🌊`);
+    
+    // Reset the form
+    event.target.reset();
+}
