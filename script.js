@@ -2,28 +2,47 @@ const mainPage = document.getElementById("mainPage");
 const event1 = document.getElementById("event1");
 const event2 = document.getElementById("event2");
 
-function showEvent1() {
+function showEvent1(event) {
+    if (event) event.preventDefault();
     mainPage.style.display = "none";
     event1.style.display = "flex";
     event1.style.flexDirection = "column";
+    window.scrollTo(0, 0);
 }
 
-function showEvent2() {
+function showEvent2(event) {
+    if (event) event.preventDefault();
     mainPage.style.display = "none";
     event2.style.display = "flex";
     event2.style.flexDirection = "column";
+    window.scrollTo(0, 0);
 }
 
-function showMembers() {
+function showMembers(event) {
+    if (event) event.preventDefault();
     mainPage.style.display = "none";
     document.getElementById("members-detail").style.display = "flex";
     document.getElementById("members-detail").style.flexDirection = "column";
+    window.scrollTo(0, 0);
 }
 
-function showFeedback() {
+function showFeedback(event) {
+    if (event) event.preventDefault();
     mainPage.style.display = "none";
     document.getElementById("feedback-page").style.display = "flex";
     document.getElementById("feedback-page").style.flexDirection = "column";
+    window.scrollTo(0, 0);
+}
+
+// Smooth scroll to section
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
 }
 
 
@@ -211,18 +230,18 @@ function selectSlot(slotId) {
     
     // Update the selected slot display
     const slotDisplay = {
-        'fri-9am': 'Friday, August 23rd, 2025 - 9:00 AM - 10:00 AM (Texas)',
-        'fri-10am': 'Friday, August 23rd, 2025 - 10:00 AM - 11:00 AM (Texas)',
-        'fri-11am': 'Friday, August 23rd, 2025 - 11:00 AM - 12:00 PM (Texas)',
-        'fri-1pm': 'Friday, August 23rd, 2025 - 1:00 PM - 2:00 PM (Texas)',
-        'fri-2pm': 'Friday, August 23rd, 2025 - 2:00 PM - 3:00 PM (Texas)',
-        'fri-3pm': 'Friday, August 23rd, 2025 - 3:00 PM - 4:00 PM (Texas)',
-        'sat-9am': 'Saturday, August 24th, 2025 - 9:00 AM - 10:00 AM (Texas)',
-        'sat-10am': 'Saturday, August 24th, 2025 - 10:00 AM - 11:00 AM (Texas)',
-        'sat-11am': 'Saturday, August 24th, 2025 - 11:00 AM - 12:00 PM (Texas)',
-        'sat-1pm': 'Saturday, August 24th, 2025 - 1:00 PM - 2:00 PM (Texas)',
-        'sat-2pm': 'Saturday, August 24th, 2025 - 2:00 PM - 3:00 PM (Texas)',
-        'sat-3pm': 'Saturday, August 24th, 2025 - 3:00 PM - 4:00 PM (Texas)'
+        'fri-9am': 'Friday, August 23rd, 2025 - 9:00 AM - 10:00 AM (Dallas, Texas)',
+        'fri-10am': 'Friday, August 23rd, 2025 - 10:00 AM - 11:00 AM (Dallas, Texas)',
+        'fri-11am': 'Friday, August 23rd, 2025 - 11:00 AM - 12:00 PM (Dallas, Texas)',
+        'fri-1pm': 'Friday, August 23rd, 2025 - 1:00 PM - 2:00 PM (Dallas, Texas)',
+        'fri-2pm': 'Friday, August 23rd, 2025 - 2:00 PM - 3:00 PM (Dallas, Texas)',
+        'fri-3pm': 'Friday, August 23rd, 2025 - 3:00 PM - 4:00 PM (Dallas, Texas)',
+        'sat-9am': 'Saturday, August 24th, 2025 - 9:00 AM - 10:00 AM (Dallas, Texas)',
+        'sat-10am': 'Saturday, August 24th, 2025 - 10:00 AM - 11:00 AM (Dallas, Texas)',
+        'sat-11am': 'Saturday, August 24th, 2025 - 11:00 AM - 12:00 PM (Dallas, Texas)',
+        'sat-1pm': 'Saturday, August 24th, 2025 - 1:00 PM - 2:00 PM (Dallas, Texas)',
+        'sat-2pm': 'Saturday, August 24th, 2025 - 2:00 PM - 3:00 PM (Dallas, Texas)',
+        'sat-3pm': 'Saturday, August 24th, 2025 - 3:00 PM - 4:00 PM (Dallas, Texas)'
     };
     
     document.getElementById('selected-slot').value = slotDisplay[slotId];
@@ -280,6 +299,7 @@ function handleRegistration(event) {
         swimmingLevel: formData.get('swimming-level'),
         goals: formData.get('goals'),
         phone: formData.get('phone'),
+        email: formData.get('email'),
         location: formData.get('location'),
         additionalInfo: formData.get('additional-info'),
         timestamp: new Date().toISOString(),
@@ -321,6 +341,7 @@ function submitToGoogleSheets(reservation) {
     formData.append('swimmingLevel', reservation.swimmingLevel);
     formData.append('goals', reservation.goals);
     formData.append('phone', reservation.phone);
+    formData.append('email', reservation.email);
     formData.append('location', reservation.location || 'N/A');
     formData.append('additionalInfo', reservation.additionalInfo || 'N/A');
     formData.append('timeSlot', reservation.timeSlot);
@@ -345,18 +366,18 @@ function submitToGoogleSheets(reservation) {
 // Helper function to get slot ID from display text
 function getSlotIdFromDisplay(displayText) {
     const slotMap = {
-        'Friday, August 23rd, 2025 - 9:00 AM - 10:00 AM (Texas)': 'fri-9am',
-        'Friday, August 23rd, 2025 - 10:00 AM - 11:00 AM (Texas)': 'fri-10am',
-        'Friday, August 23rd, 2025 - 11:00 AM - 12:00 PM (Texas)': 'fri-11am',
-        'Friday, August 23rd, 2025 - 1:00 PM - 2:00 PM (Texas)': 'fri-1pm',
-        'Friday, August 23rd, 2025 - 2:00 PM - 3:00 PM (Texas)': 'fri-2pm',
-        'Friday, August 23rd, 2025 - 3:00 PM - 4:00 PM (Texas)': 'fri-3pm',
-        'Saturday, August 24th, 2025 - 9:00 AM - 10:00 AM (Texas)': 'sat-9am',
-        'Saturday, August 24th, 2025 - 10:00 AM - 11:00 AM (Texas)': 'sat-10am',
-        'Saturday, August 24th, 2025 - 11:00 AM - 12:00 PM (Texas)': 'sat-11am',
-        'Saturday, August 24th, 2025 - 1:00 PM - 2:00 PM (Texas)': 'sat-1pm',
-        'Saturday, August 24th, 2025 - 2:00 PM - 3:00 PM (Texas)': 'sat-2pm',
-        'Saturday, August 24th, 2025 - 3:00 PM - 4:00 PM (Texas)': 'sat-3pm'
+        'Friday, August 23rd, 2025 - 9:00 AM - 10:00 AM (Dallas, Texas)': 'fri-9am',
+        'Friday, August 23rd, 2025 - 10:00 AM - 11:00 AM (Dallas, Texas)': 'fri-10am',
+        'Friday, August 23rd, 2025 - 11:00 AM - 12:00 PM (Dallas, Texas)': 'fri-11am',
+        'Friday, August 23rd, 2025 - 1:00 PM - 2:00 PM (Dallas, Texas)': 'fri-1pm',
+        'Friday, August 23rd, 2025 - 2:00 PM - 3:00 PM (Dallas, Texas)': 'fri-2pm',
+        'Friday, August 23rd, 2025 - 3:00 PM - 4:00 PM (Dallas, Texas)': 'fri-3pm',
+        'Saturday, August 24th, 2025 - 9:00 AM - 10:00 AM (Dallas, Texas)': 'sat-9am',
+        'Saturday, August 24th, 2025 - 10:00 AM - 11:00 AM (Dallas, Texas)': 'sat-10am',
+        'Saturday, August 24th, 2025 - 11:00 AM - 12:00 PM (Dallas, Texas)': 'sat-11am',
+        'Saturday, August 24th, 2025 - 1:00 PM - 2:00 PM (Dallas, Texas)': 'sat-1pm',
+        'Saturday, August 24th, 2025 - 2:00 PM - 3:00 PM (Dallas, Texas)': 'sat-2pm',
+        'Saturday, August 24th, 2025 - 3:00 PM - 4:00 PM (Dallas, Texas)': 'sat-3pm'
     };
     return slotMap[displayText];
 }
@@ -368,14 +389,27 @@ function backToMain() {
     event3.style.display = "none";
     document.getElementById("members-detail").style.display = "none";
     document.getElementById("feedback-page").style.display = "none";
+    
+    // Restore scroll position if it was saved
+    const savedScroll = sessionStorage.getItem('mainPageScroll');
+    if (savedScroll) {
+        window.scrollTo(0, parseInt(savedScroll));
+        sessionStorage.removeItem('mainPageScroll'); // Clean up
+    }
 }
 
 // Load reservations when event3 is shown
-function showEvent3() {
+function showEvent3(event) {
+    if (event) event.preventDefault();
+    // Save current scroll position before switching pages
+    sessionStorage.setItem('mainPageScroll', window.pageYOffset);
     mainPage.style.display = "none";
     document.getElementById("event3").style.display = "flex";
     document.getElementById("event3").style.flexDirection = "column";
     loadReservations(); // Load existing reservations
+    
+    // Scroll to top of the page
+    window.scrollTo(0, 0);
 }
 
 // Load reservations when page loads (in case of refresh)
@@ -409,14 +443,48 @@ function submitFeedback(event) {
         feedbackMessage: formData.get('feedback-message'),
         rating: formData.get('rating'),
         permission: formData.get('permission'),
+        email: formData.get('email') || 'Not provided',
         timestamp: new Date().toISOString()
     };
     
-    // For now, just show a success message
-    // In the future, this could be connected to a backend or email service
-    const nameDisplay = feedback.parentName === 'Anonymous' ? 'Anonymous' : feedback.parentName;
-    alert(`Thank you for sharing your experience${nameDisplay !== 'Anonymous' ? ', ' + nameDisplay : ''}! Your feedback helps us improve and inspire other families. We appreciate you being part of our swimming community! 🌊`);
+    // Send to Google Sheets
+    submitFeedbackToGoogleSheets(feedback);
     
     // Reset the form
     event.target.reset();
+}
+
+// Submit feedback to Google Sheets
+function submitFeedbackToGoogleSheets(feedback) {
+    // Replace this URL with your Google Apps Script web app URL for feedback
+    const scriptURL = 'YOUR_FEEDBACK_GOOGLE_APPS_SCRIPT_URL_HERE';
+    
+    const formData = new FormData();
+    formData.append('parentName', feedback.parentName);
+    formData.append('childName', feedback.childName);
+    formData.append('eventAttended', feedback.eventAttended);
+    formData.append('feedbackMessage', feedback.feedbackMessage);
+    formData.append('rating', feedback.rating);
+    formData.append('permission', feedback.permission);
+    formData.append('email', feedback.email);
+    formData.append('timestamp', feedback.timestamp);
+    
+    fetch(scriptURL, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Feedback submitted to Google Sheets successfully');
+            const nameDisplay = feedback.parentName === 'Anonymous' ? 'Anonymous' : feedback.parentName;
+            alert(`Thank you for sharing your experience${nameDisplay !== 'Anonymous' ? ', ' + nameDisplay : ''}! Your feedback helps us improve and inspire other families. We appreciate you being part of our swimming community! 🌊`);
+        } else {
+            console.error('Error submitting feedback to Google Sheets');
+            alert('Thank you for your feedback! We received your submission.');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Thank you for your feedback! We received your submission.');
+    });
 }

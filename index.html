@@ -187,7 +187,7 @@
     header { 
       background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%); 
       color: white; 
-      padding: 0.5rem 1rem 1rem 1rem; 
+      padding: 1.5rem 1rem 1rem 1rem; 
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     nav a { 
@@ -594,11 +594,11 @@
     <header>
       <h1>Swim With a Splash</h1>
       <nav>
-        <a href="#about">About</a>
-        <a href="#events">Events</a>
-        <a href="#members">Team</a>
-        <a href="#get-involved">Get Involved</a>
-        <a href="#contact">Contact</a>
+        <a href="#about" onclick="scrollToSection('about'); return false;">About</a>
+        <a href="#events" onclick="scrollToSection('events'); return false;">Events</a>
+        <a href="#members" onclick="scrollToSection('members'); return false;">Team</a>
+        <a href="#get-involved" onclick="scrollToSection('get-involved'); return false;">Get Involved</a>
+        <a href="#contact" onclick="scrollToSection('contact'); return false;">Contact</a>
       </nav>
     </header>
 
@@ -636,6 +636,15 @@
 
 
 
+      <section id="members" class="section">
+        <h2>Team</h2>
+        <div class="card">
+          <h3>Meet Our Coaches</h3>
+          <p>Our team consists of competitive swimmers from top clubs in the nation, dedicated to teaching swimming skills and water safety to our community.</p>
+          <button class="learn-more-btn" onclick="showMembers(event); return false;">Meet Our Team</button>
+        </div>
+      </section>
+
               <!--Add links to each one using display none-->
         <section id="events" class="section">
           <h2>Events</h2>
@@ -643,9 +652,9 @@
           <div class="card">
             <h3>Upcoming Events</h3>
             <div class="card">
-              <h3>Texas Swim Lessons – August 23–24, 2025 (Texas)</h3>
+              <h3>Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)</h3>
               <p><strong>Registration Open!</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
-              <button class="learn-more-btn" onclick="showEvent3()">Learn More & Register</button>
+              <button class="register-btn" onclick="showEvent3(event); return false;">Register</button>
             </div>
           </div>
           
@@ -653,23 +662,14 @@
             <h3>Past Events</h3>
             <div class="card">
               <h3>Chestnut Hill Swim Lessons – August 14–16, 2023 (Mason, Ohio)</h3>
-              <button class="learn-more-btn" onclick="showEvent1()">Learn More</button>
+              <button class="learn-more-btn" onclick="showEvent1(event); return false;">Learn More</button>
             </div>
             <div class="card">
               <h3>Chestnut Hill Swim Lessons – May 18–19, 2024 (Mason, Ohio)</h3>
-              <button class="learn-more-btn" onclick="showEvent2()">Learn More</button>
+              <button class="learn-more-btn" onclick="showEvent2(event); return false;">Learn More</button>
             </div>
           </div>
         </section>
-
-      <section id="members" class="section">
-        <h2>Team</h2>
-        <div class="card">
-          <h3>Meet Our Coaches</h3>
-          <p>Our team consists of competitive swimmers from top clubs in the nation, dedicated to teaching swimming skills and water safety to our community.</p>
-          <button class="learn-more-btn" onclick="showMembers()">Meet Our Team</button>
-        </div>
-      </section>
 
 
 
@@ -696,7 +696,7 @@
         </div>
         
         <div class="card">
-          <button class="learn-more-btn" onclick="showFeedback()">Share Your Experience</button>
+          <button class="learn-more-btn" onclick="showFeedback(event); return false;">Share Your Experience</button>
         </div>
       </section>
   <!--
@@ -726,10 +726,6 @@
   <div id="event1">
     <header>
       <h1>Swim With a Splash</h1>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#pictures">Pictures</a>
-      </nav>
     </header>
     
     <div class="container">
@@ -769,10 +765,6 @@
   <div id="event2">
     <header>
       <h1>Swim With a Splash</h1>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#pictures">Pictures</a>
-      </nav>
     </header>
     
     <div class="container">
@@ -812,10 +804,6 @@
   <div id="members-detail">
     <header>
       <h1>Swim With a Splash</h1>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#pictures">Pictures</a>
-      </nav>
     </header>
     
     <div class="container">
@@ -908,19 +896,26 @@
   <div id="event3">
     <header>
       <h1>Swim With a Splash</h1>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#pictures">Pictures</a>
-      </nav>
     </header>
     
     <div class="container">
       <section class="section">
-        <h2>Texas Swim Lessons – August 23–24, 2025</h2>
+        <h2>Dallas Swim Lessons – August 23–24, 2025</h2>
+        <div class="card">
+          <h3>What to Expect</h3>
+          <ul>
+            <li>✅ Free private swim lessons</li>
+            <li>✅ Experienced coaches from Lakeside Aquatic Club</li>
+            <li>✅ Personalized instruction based on skill level</li>
+            <li>✅ Water safety education</li>
+            <li>✅ Fun and engaging learning environment</li>
+          </ul>
+        </div>
+        
         <div class="card">
           <h3>Event Details</h3>
           <p><strong>Date:</strong> August 23–24, 2025</p>
-          <p><strong>Location:</strong> Texas Community Pool</p>
+          <p><strong>Location:</strong> Dallas Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
           <p><strong>Age groups:</strong> 5-12 years old</p>
           <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Registration Open! 🎉</span></p>
@@ -1042,6 +1037,11 @@
             </div>
             
             <div class="form-group">
+              <label for="email">What is your email address? *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
               <label for="location">Optional: What area are you located in?</label>
               <input type="text" id="location" name="location" placeholder="e.g., Mason, West Chester, etc.">
             </div>
@@ -1055,16 +1055,6 @@
           </form>
         </div>
         
-        <div class="card">
-          <h3>What to Expect</h3>
-          <ul>
-            <li>✅ Free private swim lessons</li>
-            <li>✅ Experienced coaches from Mason Manta Rays</li>
-            <li>✅ Personalized instruction based on skill level</li>
-            <li>✅ Water safety education</li>
-            <li>✅ Fun and engaging learning environment</li>
-          </ul>
-        </div>
       </section>
     </div>
     
@@ -1075,10 +1065,6 @@
   <div id="feedback-page">
     <header>
       <h1>Swim With a Splash</h1>
-      <nav>
-        <a href="#about">About</a>
-        <a href="#feedback">Feedback</a>
-      </nav>
     </header>
     
     <div class="container">
@@ -1108,7 +1094,7 @@
                 <option value="">Select an event...</option>
                 <option value="August 2023 - Mason, OH">August 2023 - Mason, Ohio</option>
                 <option value="May 2024 - Mason, OH">May 2024 - Mason, Ohio</option>
-                <option value="August 2025 - Texas">August 2025 - Texas</option>
+                <option value="August 2025 - Dallas, Texas">August 2025 - Dallas, Texas</option>
                 <option value="Other">Other</option>
               </select>
             </div>
