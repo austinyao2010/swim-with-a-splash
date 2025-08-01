@@ -248,7 +248,7 @@
       color: black;
     }
 
-    #event1, #event2, #event3, #members-detail, #feedback-page{
+    #event1, #event2, #event3, #event4, #members-detail, #feedback-page{
       display: none;
     }
     
@@ -437,57 +437,238 @@
 
     .timeslot-card {
       background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
-      border-radius: 15px;
-      padding: 1.5rem;
-      border: 2px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 2rem;
+      border: 2px solid #e8ecf0;
       transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
     }
 
     .timeslot-card:hover {
       border-color: #0077b6;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 12px 35px rgba(0,119,182,0.15);
+      transform: translateY(-3px);
     }
 
     .timeslot-card h4 {
       color: #0077b6;
       text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 1.3em;
-      font-weight: 600;
+      margin-bottom: 2rem;
+      font-size: 1.4em;
+      font-weight: 700;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid rgba(0, 119, 182, 0.1);
     }
 
     .time-slots {
       display: flex;
       flex-direction: column;
-      gap: 0.8rem;
+      gap: 0.3rem;
     }
 
     .slot {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem;
-      background: white;
-      border-radius: 10px;
-      border: 1px solid #e0e0e0;
+      padding: 1.5rem 1.25rem;
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+      border-radius: 15px;
+      border: 2px solid #e8ecf0;
       transition: all 0.3s ease;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
 
     .slot:hover {
       border-color: #0077b6;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 20px rgba(0,119,182,0.15);
+      transform: translateY(-2px);
     }
 
     .slot .time {
       font-weight: 600;
-      color: #333;
+      color: #0077b6;
       font-size: 1.1em;
+      flex: 1;
     }
 
     .slot .spots {
       color: #28a745;
-      font-size: 0.9em;
-      font-weight: 500;
+      font-size: 0.85em;
+      font-weight: 600;
+      background: rgba(40, 167, 69, 0.1);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      margin: 0 1rem;
+      text-align: center;
+      min-width: 120px;
+    }
+
+    .slot .spots.warning {
+      color: #f57c00;
+      background: rgba(245, 124, 0, 0.1);
+    }
+
+    .slot .spots.full {
+      color: #dc3545;
+      background: rgba(220, 53, 69, 0.1);
+    }
+
+    /* Dallas event button styling - COMPLETE REGISTRATION BUTTON */
+    #event3 .register-btn,
+    #event3 button[type="submit"].register-btn,
+    #event3 form .register-btn,
+    #event3 .registration-form .register-btn {
+      background: linear-gradient(135deg, #0077b6, #023e8a) !important;
+      color: white !important;
+      border: none !important;
+      padding: 15px 30px !important;
+      border-radius: 25px !important;
+      font-size: 1.1em !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3) !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.5px !important;
+      margin-top: 1rem !important;
+      margin: 1rem auto 0 auto !important;
+      width: auto !important;
+      display: inline-block !important;
+    }
+
+    #event3 .register-btn:hover,
+    #event3 button[type="submit"].register-btn:hover,
+    #event3 form .register-btn:hover,
+    #event3 .registration-form .register-btn:hover {
+      background: linear-gradient(135deg, #023e8a, #0077b6) !important;
+      transform: translateY(-3px) !important;
+      box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4) !important;
+    }
+
+    #event3 .register-btn:active,
+    #event3 button[type="submit"].register-btn:active,
+    #event3 form .register-btn:active,
+    #event3 .registration-form .register-btn:active {
+      transform: translateY(-1px) !important;
+    }
+
+    /* California event button styling */
+    #event4 .slot-btn.available {
+      background: linear-gradient(135deg, #0077b6, #023e8a);
+      color: white;
+    }
+
+    #event4 .slot-btn.available:hover {
+      background: linear-gradient(135deg, #023e8a, #0077b6);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+    }
+
+    #event4 .register-btn {
+      background: linear-gradient(135deg, #0077b6, #023e8a);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 1rem;
+    }
+
+    #event4 .register-btn:hover {
+      background: linear-gradient(135deg, #023e8a, #0077b6);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
+    }
+
+    #event4 button:not(.slot-btn):not(.register-btn):not(.remove-btn) {
+      background: linear-gradient(135deg, #0077b6, #023e8a);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 8px 16px;
+      font-size: 12px;
+      margin: 10px auto;
+      width: 120px;
+      display: block;
+    }
+
+    #event4 button:not(.slot-btn):not(.register-btn):not(.remove-btn):hover {
+      background: linear-gradient(135deg, #023e8a, #0077b6);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
+    }
+
+    /* Dallas event remove reservation button styling */
+    #event3 .remove-btn {
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 10px auto;
+      width: 120px;
+      display: block;
+    }
+
+    #event3 .remove-btn:hover {
+      background: linear-gradient(135deg, #c82333, #dc3545);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+    }
+
+    #event3 .remove-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+    }
+
+    /* California event remove reservation button styling */
+    #event4 .remove-btn {
+      background: linear-gradient(135deg, #dc3545, #c82333) !important;
+      color: white !important;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3) !important;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 10px auto;
+      width: 120px;
+      display: block;
+    }
+
+    #event4 .remove-btn:hover {
+      background: linear-gradient(135deg, #c82333, #dc3545) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4) !important;
+    }
+
+    #event4 .remove-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3) !important;
     }
 
     .slot-btn {
@@ -644,6 +825,10 @@
             <li>We provide feedback to parents after every class</li>
           </ul>
         </div>
+        
+        <div class="card" style="max-width: 550px; margin: 0 auto; padding: 1rem;">
+          <img src="IMG_20250729_181745.jpg" alt="Swim With a Splash Team" style="width: 100%; max-width: 500px; height: auto; border-radius: 20px; display: block; margin: 0 auto; box-shadow: 0 10px 30px rgba(0, 119, 182, 0.3); transition: all 0.3s ease; transform: rotate(-1deg); cursor: pointer;" onmouseover="this.style.transform='rotate(0deg) scale(1.05)'; this.style.boxShadow='0 15px 40px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-1deg) scale(1)'; this.style.boxShadow='0 10px 30px rgba(0, 119, 182, 0.3)'">
+        </div>
       </section>
 
 
@@ -663,6 +848,11 @@
           
           <div class="card">
             <h3>Upcoming Events</h3>
+            <div class="card">
+              <h3>California Swim Lessons – August 2–3, 2025 (California)</h3>
+              <p><strong>Registration Open!</strong> Free private swim lessons offered by California Swimming Club swimmers.</p>
+              <button class="register-btn" onclick="showEvent4(event); return false;">Register</button>
+            </div>
             <div class="card">
               <h3>Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)</h3>
               <p><strong>Registration Open!</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
@@ -748,7 +938,7 @@
           <p><strong>Date:</strong> August 14–16, 2023</p>
           <p><strong>Location:</strong> Chestnut Hill Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by Mason Manta Rays swimmers.</p>
-          <p><strong>Age groups:</strong> 5-12 years old</p>
+          <p><strong>Age groups:</strong> All ages welcome</p>
         </div>
         
         <div class="card">
@@ -787,7 +977,7 @@
           <p><strong>Date:</strong> May 18–19, 2024</p>
           <p><strong>Location:</strong> Chestnut Hill Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by Mason Manta Rays swimmers.</p>
-          <p><strong>Age groups:</strong> 5-12 years old</p>
+          <p><strong>Age groups:</strong> All ages welcome</p>
         </div>
         
         <div class="card">
@@ -827,19 +1017,6 @@
         </div>
         
         <div class="card">
-          <h3>🌴 California Team</h3>
-          <div class="team-grid">
-            <div class="team-card">
-              <div class="team-avatar">🏊‍♂️</div>
-              <h4>Yimo</h4>
-              <p class="team-location">California</p>
-              <p class="team-club">California Swimming Club</p>
-              <p class="team-bio">Skilled coach bringing West Coast swimming expertise to our team! 🌊</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card">
           <h3>🤠 Texas Team</h3>
           <div class="team-grid">
             <div class="team-card">
@@ -847,7 +1024,7 @@
               <h4>Austin Yao</h4>
               <p class="team-location">Dallas, TX</p>
               <p class="team-club">Lakeside Aquatic Club</p>
-              <p class="team-bio">Founder & Lead Coach - Passionate about making swimming accessible to everyone! 🏆</p>
+              <p class="team-bio">Founder - Passionate about making swimming accessible to everyone! 🏆</p>
             </div>
             
             <div class="team-card">
@@ -873,6 +1050,14 @@
               <p class="team-club">Lakeside Aquatic Club</p>
               <p class="team-bio">Creative coach who makes learning to swim an exciting adventure! 🌊</p>
             </div>
+            
+            <div class="team-card">
+              <div class="team-avatar">🏊‍♂️</div>
+              <h4>Lucas Sun</h4>
+              <p class="team-location">Southlake, TX</p>
+              <p class="team-club">Lakeside Aquatic Club</p>
+              <p class="team-bio">Dynamic coach who brings enthusiasm and technical expertise to every lesson! 🔥</p>
+            </div>
           </div>
         </div>
         
@@ -880,19 +1065,11 @@
           <h3>🌽 Ohio Team</h3>
           <div class="team-grid">
             <div class="team-card">
-              <div class="team-avatar">🏊‍♂️</div>
-              <h4>Andrew Zhang</h4>
+              <div class="team-avatar">🏊‍♀️</div>
+              <h4>Sharon Li</h4>
               <p class="team-location">Mason, OH</p>
               <p class="team-club">Mason Manta Rays</p>
-              <p class="team-bio">Experienced swimmer who specializes in stroke technique and speed training! ⚡</p>
-            </div>
-            
-            <div class="team-card">
-              <div class="team-avatar">🏊‍♂️</div>
-              <h4>Bryan Zhang</h4>
-              <p class="team-location">Mason, OH</p>
-              <p class="team-club">Mason Manta Rays</p>
-              <p class="team-bio">Patient coach who excels at teaching beginners and building strong foundations! 🌟</p>
+              <p class="team-bio">Compassionate coach who focuses on water safety and building trust! 🛟</p>
             </div>
             
             <div class="team-card">
@@ -904,11 +1081,11 @@
             </div>
             
             <div class="team-card">
-              <div class="team-avatar">🏊‍♀️</div>
-              <h4>Sharon Li</h4>
+              <div class="team-avatar">🏊‍♂️</div>
+              <h4>Andrew Zhang</h4>
               <p class="team-location">Mason, OH</p>
               <p class="team-club">Mason Manta Rays</p>
-              <p class="team-bio">Compassionate coach who focuses on water safety and building trust! 🛟</p>
+              <p class="team-bio">Experienced swimmer who specializes in stroke technique and speed training! ⚡</p>
             </div>
             
             <div class="team-card">
@@ -916,7 +1093,27 @@
               <h4>Victor Cao</h4>
               <p class="team-location">Mason, OH</p>
               <p class="team-club">Mason Manta Rays</p>
-              <p class="team-bio">Technical expert who helps swimmers perfect their form and technique! 🎯</p>
+              <p class="team-bio">Hi, I'm Victor Cao, and I'm 12 years old. I swim with the Mason Manta Rays, and I've been in the pool since I was little. I love racing the 50 freestyle—I already reached a AA cut in short course, and I'm trying to hit 29.39 in long course for the AAA time this season. Swimming's awesome because it's just me and the water, pushing to go faster. When I'm not swimming, I like playing video games or Rubik's cubing. I'm excited to keep training and maybe make it to Zones one day. Thanks for reading!</p>
+            </div>
+            
+            <div class="team-card">
+              <div class="team-avatar bryan-avatar">
+                <img src="bryanProfilePicture.jpg" alt="Bryan Zhang" style="
+                  width: 140px; 
+                  height: 140px; 
+                  object-fit: cover; 
+                  border-radius: 50% 20% 50% 20%;
+                  border: 4px solid #0077b6;
+                  box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                  transform: rotate(-5deg);
+                  transition: all 0.3s ease;
+                  filter: brightness(1.1) contrast(1.1);
+                " onmouseover="this.style.transform='rotate(0deg) scale(1.1)'; this.style.borderRadius='20% 50% 20% 50%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-5deg) scale(1)'; this.style.borderRadius='50% 20% 50% 20%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+              </div>
+              <h4>Bryan Zhang</h4>
+              <p class="team-location">Mason, OH</p>
+              <p class="team-club">Mason Manta Rays</p>
+              <p class="team-bio">Patient coach who excels at teaching beginners and building strong foundations! 🌟</p>
             </div>
             
             <div class="team-card">
@@ -933,6 +1130,19 @@
               <p class="team-location">Mason, OH</p>
               <p class="team-club">Mason Manta Rays</p>
               <p class="team-bio">Dedicated coach who excels at helping swimmers build confidence and technique! 🌟</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3>🌴 California Team</h3>
+          <div class="team-grid">
+            <div class="team-card">
+              <div class="team-avatar">🏊‍♂️</div>
+              <h4>Yimo</h4>
+              <p class="team-location">California</p>
+              <p class="team-club">California Swimming Club</p>
+              <p class="team-bio">Skilled coach bringing West Coast swimming expertise to our team! 🌊</p>
             </div>
           </div>
         </div>
@@ -956,7 +1166,7 @@
           <p><strong>Date:</strong> August 23–24, 2025</p>
           <p><strong>Location:</strong> Dallas Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
-          <p><strong>Age groups:</strong> 5-12 years old</p>
+          <p><strong>Age groups:</strong> All ages welcome</p>
           <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Registration Open! 🎉</span></p>
         </div>
 
@@ -978,34 +1188,64 @@
               <h4>Friday, August 23rd</h4>
               <div class="time-slots">
                 <div class="slot">
-                  <span class="time">9:00 AM - 10:00 AM</span>
+                  <span class="time">9:00 AM - 9:30 AM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" data-slot-id="fri-9am" onclick="selectSlot('fri-9am')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">10:00 AM - 11:00 AM</span>
+                  <span class="time">9:30 AM - 10:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-930am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">10:00 AM - 10:30 AM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('fri-10am')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">11:00 AM - 12:00 PM</span>
+                  <span class="time">10:30 AM - 11:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-1030am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">11:00 AM - 11:30 AM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('fri-11am')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">1:00 PM - 2:00 PM</span>
+                  <span class="time">11:30 AM - 12:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-1130am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">1:00 PM - 1:30 PM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('fri-1pm')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">2:00 PM - 3:00 PM</span>
+                  <span class="time">1:30 PM - 2:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-130pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">2:00 PM - 2:30 PM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('fri-2pm')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">3:00 PM - 4:00 PM</span>
+                  <span class="time">2:30 PM - 3:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-230pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:00 PM - 3:30 PM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('fri-3pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:30 PM - 4:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('fri-330pm')">Sign Up</button>
                 </div>
               </div>
             </div>
@@ -1014,34 +1254,64 @@
               <h4>Saturday, August 24th</h4>
               <div class="time-slots">
                 <div class="slot">
-                  <span class="time">9:00 AM - 10:00 AM</span>
+                  <span class="time">9:00 AM - 9:30 AM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('sat-9am')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">10:00 AM - 11:00 AM</span>
+                  <span class="time">9:30 AM - 10:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-930am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">10:00 AM - 10:30 AM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('sat-10am')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">11:00 AM - 12:00 PM</span>
+                  <span class="time">10:30 AM - 11:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-1030am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">11:00 AM - 11:30 AM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('sat-11am')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">1:00 PM - 2:00 PM</span>
+                  <span class="time">11:30 AM - 12:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-1130am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">1:00 PM - 1:30 PM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('sat-1pm')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">2:00 PM - 3:00 PM</span>
+                  <span class="time">1:30 PM - 2:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-130pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">2:00 PM - 2:30 PM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('sat-2pm')">Sign Up</button>
                 </div>
                 <div class="slot">
-                  <span class="time">3:00 PM - 4:00 PM</span>
+                  <span class="time">2:30 PM - 3:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-230pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:00 PM - 3:30 PM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('sat-3pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:30 PM - 4:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlot('sat-330pm')">Sign Up</button>
                 </div>
               </div>
             </div>
@@ -1051,6 +1321,8 @@
         <div class="card" id="registration-form" style="display: none;">
           <h3>Complete Your Registration! 📝</h3>
           <form class="registration-form" onsubmit="handleRegistration(event)">
+            <input type="hidden" id="event-name" name="event" value="Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)">
+            
             <div class="form-group">
               <label for="selected-slot">Selected Time Slot:</label>
               <input type="text" id="selected-slot" name="selected-slot" readonly>
@@ -1063,7 +1335,7 @@
             
             <div class="form-group">
               <label for="child-age">Age *</label>
-              <input type="number" id="child-age" name="child-age" min="5" max="12" required>
+              <input type="number" id="child-age" name="child-age" min="1" max="99" required>
             </div>
             
             <div class="form-group">
@@ -1112,6 +1384,238 @@
     <button onclick="removeReservation()" class="remove-btn">Remove Reservation</button>
   </div>
   
+  <div id="event4">
+    <header>
+      <h1>Swim With a Splash</h1>
+    </header>
+    
+    <div class="container">
+      <section class="section">
+        <h2>California Swim Lessons – August 2–3, 2025</h2>
+        
+        <div class="card">
+          <h3>Event Details</h3>
+          <p><strong>Date:</strong> August 2–3, 2025</p>
+          <p><strong>Location:</strong> California Community Pool</p>
+          <p><strong>Description:</strong> Free private swim lessons offered by California Swimming Club swimmers.</p>
+          <p><strong>Age groups:</strong> All ages welcome</p>
+          <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Registration Open! 🎉</span></p>
+        </div>
+
+        <div class="card">
+          <h3>What to Expect</h3>
+          <ul>
+            <li>✅ Free private swim lessons</li>
+            <li>✅ Experienced swimmers from California Swimming Club</li>
+            <li>✅ Personalized instruction based on skill level</li>
+            <li>✅ Water safety education</li>
+            <li>✅ Fun and engaging learning environment</li>
+          </ul>
+        </div>
+        
+        <div class="card">
+          <h3>Select Your Time Slot! 📅</h3>
+          <div class="timeslot-grid">
+            <div class="timeslot-card">
+              <h4>Friday, August 2nd</h4>
+              <div class="time-slots">
+                <div class="slot">
+                  <span class="time">9:00 AM - 9:30 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-9am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">9:30 AM - 10:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-930am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">10:00 AM - 10:30 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-10am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">10:30 AM - 11:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-1030am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">11:00 AM - 11:30 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-11am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">11:30 AM - 12:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-1130am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">1:00 PM - 1:30 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-1pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">1:30 PM - 2:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-130pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">2:00 PM - 2:30 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-2pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">2:30 PM - 3:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-230pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:00 PM - 3:30 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-3pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:30 PM - 4:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('fri-330pm')">Sign Up</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="timeslot-card">
+              <h4>Saturday, August 3rd</h4>
+              <div class="time-slots">
+                <div class="slot">
+                  <span class="time">9:00 AM - 9:30 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-9am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">9:30 AM - 10:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-930am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">10:00 AM - 10:30 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-10am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">10:30 AM - 11:00 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-1030am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">11:00 AM - 11:30 AM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-11am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">11:30 AM - 12:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-1130am')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">1:00 PM - 1:30 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-1pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">1:30 PM - 2:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-130pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">2:00 PM - 2:30 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-2pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">2:30 PM - 3:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-230pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:00 PM - 3:30 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-3pm')">Sign Up</button>
+                </div>
+                <div class="slot">
+                  <span class="time">3:30 PM - 4:00 PM</span>
+                  <span class="spots">2 spots available</span>
+                  <button class="slot-btn available" onclick="selectSlotCA('sat-330pm')">Sign Up</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" id="registration-form-ca" style="display: none;">
+          <h3>Complete Your Registration! 📝</h3>
+          <form class="registration-form" onsubmit="handleRegistrationCA(event)">
+            <input type="hidden" id="event-name-ca" name="event" value="California Swim Lessons – August 2–3, 2025 (California)">
+            
+            <div class="form-group">
+              <label for="selected-slot-ca">Selected Time Slot:</label>
+              <input type="text" id="selected-slot-ca" name="selected-slot" readonly>
+            </div>
+            
+            <div class="form-group">
+              <label for="child-name-ca">What is your child's name? *</label>
+              <input type="text" id="child-name-ca" name="child-name" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="child-age-ca">Age *</label>
+              <input type="number" id="child-age-ca" name="child-age" min="1" max="99" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="swimming-level-ca">Your Child's swimming level *</label>
+              <select id="swimming-level-ca" name="swimming-level" required>
+                <option value="">Select level...</option>
+                <option value="beginner">Beginner (Learning to float/kick)</option>
+                <option value="intermediate">Intermediate (Can swim but needs improvement)</option>
+                <option value="advanced">Advanced (Stroke refinement)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="goals-ca">Put any goals you want to achieve here *</label>
+              <textarea id="goals-ca" name="goals" rows="3" placeholder="e.g., Learn to float, Improve freestyle, Build confidence..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label for="phone-ca">What is your phone number? *</label>
+              <input type="tel" id="phone-ca" name="phone" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="email-ca">What is your email address? *</label>
+              <input type="email" id="email-ca" name="email" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="location-ca">Optional: What area are you located in?</label>
+              <input type="text" id="location-ca" name="location" placeholder="e.g., Los Angeles, San Francisco, etc.">
+            </div>
+            
+            <div class="form-group">
+              <label for="additional-info-ca">If there is anything else you want us to know, tell us here!</label>
+              <textarea id="additional-info-ca" name="additional-info" rows="3" placeholder="Any special needs, preferences, or additional information..."></textarea>
+            </div>
+            
+            <button type="submit" class="register-btn">Complete Registration! 🏊‍♂️</button>
+          </form>
+        </div>
+        
+      </section>
+    </div>
+    
+    <button onclick="backToMain()">Back to Events</button>
+    <button onclick="removeReservationCA()" class="remove-btn">Remove Reservation</button>
+  </div>
+  
   <div id="feedback-page">
     <header>
       <h1>Swim With a Splash</h1>
@@ -1139,13 +1643,15 @@
             </div>
             
             <div class="form-group">
+              <label for="parent-email">Your Email (Optional - for thank you message)</label>
+              <input type="email" id="parent-email" name="parent-email" placeholder="your.email@example.com">
+            </div>
+            
+            <div class="form-group">
               <label for="event-attended">Which event did you attend? *</label>
               <select id="event-attended" name="event-attended" required>
                 <option value="">Select an event...</option>
-                <option value="August 2023 - Mason, OH">August 2023 - Mason, Ohio</option>
-                <option value="May 2024 - Mason, OH">May 2024 - Mason, Ohio</option>
-                <option value="August 2025 - Dallas, Texas">August 2025 - Dallas, Texas</option>
-                <option value="Other">Other</option>
+                <!-- Options will be populated dynamically by JavaScript -->
               </select>
             </div>
             
