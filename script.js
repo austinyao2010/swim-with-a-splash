@@ -1,6 +1,7 @@
 const mainPage = document.getElementById("mainPage");
 const event1 = document.getElementById("event1");
 const event2 = document.getElementById("event2");
+const event5 = document.getElementById("event5");
 
 function showEvent1(event) {
     if (event) event.preventDefault();
@@ -15,6 +16,14 @@ function showEvent2(event) {
     mainPage.style.display = "none";
     event2.style.display = "flex";
     event2.style.flexDirection = "column";
+    window.scrollTo(0, 0);
+}
+
+function showEvent5(event) {
+    if (event) event.preventDefault();
+    mainPage.style.display = "none";
+    event5.style.display = "flex";
+    event5.style.flexDirection = "column";
     window.scrollTo(0, 0);
 }
 
@@ -63,7 +72,7 @@ function loadReservations() {
         console.log('No saved reservations in localStorage');
     }
     
-    // Then sync with spreadsheet (this will override with actual data)
+    // Re-enabling sync since Google Apps Script is working
     loadFromSpreadsheet();
     
     // Set up periodic syncing every 30 seconds
@@ -76,20 +85,11 @@ async function loadFromSpreadsheet() {
     
     try {
         // Use the same Google Apps Script URL but with a GET request to fetch data
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwg-kNUr-sKIVsrV6c3bAhsZlrOxpQX-TmKD0Far2rNQB_Uxje1aDp7YXhU0dI5KEncKg/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
         
         console.log('Fetching Dallas data from:', `${scriptURL}?action=getReservations`);
         
-        const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            }
-        });
+        const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`);
         
                 if (response.ok) {
             const data = await response.json();
@@ -98,8 +98,22 @@ async function loadFromSpreadsheet() {
             if (data.success && data.reservations) {
                 console.log('Before sync - Dallas slots:', Object.keys(slotReservations).length);
                 
-                // Merge Google Sheets data with localStorage
-                slotReservations = data.reservations;
+                // Merge Google Sheets data with localStorage (don't overwrite local data)
+                Object.keys(data.reservations).forEach(slotId => {
+                    if (!slotReservations[slotId]) {
+                        slotReservations[slotId] = [];
+                    }
+                    // Add any reservations from Google Sheets that aren't already local
+                    data.reservations[slotId].forEach(reservation => {
+                        const exists = slotReservations[slotId].some(local => 
+                            local.childName === reservation.childName && 
+                            local.timeSlot === reservation.timeSlot
+                        );
+                        if (!exists) {
+                            slotReservations[slotId].push(reservation);
+                        }
+                    });
+                });
                 
                 console.log('After sync - Dallas slots:', Object.keys(slotReservations).length);
                 console.log('Detailed reservations:', slotReservations);
@@ -237,12 +251,12 @@ function updateSlotDisplay() {
         spotsElement.className = 'spots';
     });
     
+
+    
     // Check all slots for time-based availability and reservations
     const allSlotIds = [
-        'fri-9am', 'fri-930am', 'fri-10am', 'fri-1030am', 'fri-11am', 'fri-1130am',
-        'fri-1pm', 'fri-130pm', 'fri-2pm', 'fri-230pm', 'fri-3pm', 'fri-330pm',
-        'sat-9am', 'sat-930am', 'sat-10am', 'sat-1030am', 'sat-11am', 'sat-1130am',
-        'sat-1pm', 'sat-130pm', 'sat-2pm', 'sat-230pm', 'sat-3pm', 'sat-330pm'
+        'fri-9am', 'fri-930am', 'fri-10am', 'fri-1030am', 'fri-11am',
+        'sat-9am', 'sat-930am', 'sat-10am', 'sat-1030am', 'sat-11am'
     ];
     
     allSlotIds.forEach(slotId => {
@@ -268,6 +282,8 @@ function updateSlotDisplay() {
             const remainingSlots = 2 - reservations.length;
             
             console.log(`Slot ${slotId}: ${reservations.length} reservations, ${remainingSlots} remaining`);
+            
+
             
             if (remainingSlots === 0) {
                 // Slot is full
@@ -326,30 +342,16 @@ function selectSlot(slotId) {
     
     // Update the selected slot display
     const slotDisplay = {
-        'fri-9am': 'Friday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)',
-        'fri-930am': 'Friday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)',
-        'fri-10am': 'Friday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)',
-        'fri-1030am': 'Friday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)',
-        'fri-11am': 'Friday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)',
-        'fri-1130am': 'Friday, August 23rd, 2025 - 11:30 AM - 12:00 PM (Southlake, Texas)',
-        'fri-1pm': 'Friday, August 23rd, 2025 - 1:00 PM - 1:30 PM (Southlake, Texas)',
-        'fri-130pm': 'Friday, August 23rd, 2025 - 1:30 PM - 2:00 PM (Southlake, Texas)',
-        'fri-2pm': 'Friday, August 23rd, 2025 - 2:00 PM - 2:30 PM (Southlake, Texas)',
-        'fri-230pm': 'Friday, August 23rd, 2025 - 2:30 PM - 3:00 PM (Southlake, Texas)',
-        'fri-3pm': 'Friday, August 23rd, 2025 - 3:00 PM - 3:30 PM (Southlake, Texas)',
-        'fri-330pm': 'Friday, August 23rd, 2025 - 3:30 PM - 4:00 PM (Southlake, Texas)',
-        'sat-9am': 'Saturday, August 24th, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)',
-        'sat-930am': 'Saturday, August 24th, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)',
-        'sat-10am': 'Saturday, August 24th, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)',
-        'sat-1030am': 'Saturday, August 24th, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)',
-        'sat-11am': 'Saturday, August 24th, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)',
-        'sat-1130am': 'Saturday, August 24th, 2025 - 11:30 AM - 12:00 PM (Southlake, Texas)',
-        'sat-1pm': 'Saturday, August 24th, 2025 - 1:00 PM - 1:30 PM (Southlake, Texas)',
-        'sat-130pm': 'Saturday, August 24th, 2025 - 1:30 PM - 2:00 PM (Southlake, Texas)',
-        'sat-2pm': 'Saturday, August 24th, 2025 - 2:00 PM - 2:30 PM (Southlake, Texas)',
-        'sat-230pm': 'Saturday, August 24th, 2025 - 2:30 PM - 3:00 PM (Southlake, Texas)',
-        'sat-3pm': 'Saturday, August 24th, 2025 - 3:00 PM - 3:30 PM (Southlake, Texas)',
-        'sat-330pm': 'Saturday, August 24th, 2025 - 3:30 PM - 4:00 PM (Southlake, Texas)'
+        'fri-9am': 'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)',
+        'fri-930am': 'Saturday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)',
+        'fri-10am': 'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)',
+        'fri-1030am': 'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)',
+        'fri-11am': 'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)',
+        'sat-9am': 'Sunday, August 24th, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)',
+        'sat-930am': 'Sunday, August 24th, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)',
+        'sat-10am': 'Sunday, August 24th, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)',
+        'sat-1030am': 'Sunday, August 24th, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)',
+        'sat-11am': 'Sunday, August 24th, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)'
     };
     
     document.getElementById('selected-slot').value = slotDisplay[slotId];
@@ -462,7 +464,7 @@ function handleRegistration(event) {
     
     // Create reservation data
     const reservation = {
-        event: formData.get('event') || 'Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)',
+        event: formData.get('event') || 'Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)',
         childName: formData.get('child-name'),
         age: formData.get('child-age'),
         swimmingLevel: formData.get('swimming-level'),
@@ -502,10 +504,10 @@ function handleRegistration(event) {
 // Submit reservation to Google Sheets
 function submitToGoogleSheets(reservation) {
     // Replace this URL with your Google Apps Script web app URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwg-kNUr-sKIVsrV6c3bAhsZlrOxpQX-TmKD0Far2rNQB_Uxje1aDp7YXhU0dI5KEncKg/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
     
     const formData = new FormData();
-    formData.append('event', reservation.event || 'Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)');
+    formData.append('event', reservation.event || 'Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)');
     formData.append('childName', reservation.childName);
     formData.append('age', reservation.age);
     formData.append('swimmingLevel', reservation.swimmingLevel);
@@ -536,30 +538,16 @@ function submitToGoogleSheets(reservation) {
 // Helper function to get slot ID from display text
 function getSlotIdFromDisplay(displayText) {
     const slotMap = {
-        'Friday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Dallas, Texas)': 'fri-9am',
-        'Friday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Dallas, Texas)': 'fri-930am',
-        'Friday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Dallas, Texas)': 'fri-10am',
-        'Friday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Dallas, Texas)': 'fri-1030am',
-        'Friday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Dallas, Texas)': 'fri-11am',
-        'Friday, August 23rd, 2025 - 11:30 AM - 12:00 PM (Dallas, Texas)': 'fri-1130am',
-        'Friday, August 23rd, 2025 - 1:00 PM - 1:30 PM (Dallas, Texas)': 'fri-1pm',
-        'Friday, August 23rd, 2025 - 1:30 PM - 2:00 PM (Dallas, Texas)': 'fri-130pm',
-        'Friday, August 23rd, 2025 - 2:00 PM - 2:30 PM (Dallas, Texas)': 'fri-2pm',
-        'Friday, August 23rd, 2025 - 2:30 PM - 3:00 PM (Dallas, Texas)': 'fri-230pm',
-        'Friday, August 23rd, 2025 - 3:00 PM - 3:30 PM (Dallas, Texas)': 'fri-3pm',
-        'Friday, August 23rd, 2025 - 3:30 PM - 4:00 PM (Dallas, Texas)': 'fri-330pm',
-        'Saturday, August 24th, 2025 - 9:00 AM - 9:30 AM (Dallas, Texas)': 'sat-9am',
-        'Saturday, August 24th, 2025 - 9:30 AM - 10:00 AM (Dallas, Texas)': 'sat-930am',
-        'Saturday, August 24th, 2025 - 10:00 AM - 10:30 AM (Dallas, Texas)': 'sat-10am',
-        'Saturday, August 24th, 2025 - 10:30 AM - 11:00 AM (Dallas, Texas)': 'sat-1030am',
-        'Saturday, August 24th, 2025 - 11:00 AM - 11:30 AM (Dallas, Texas)': 'sat-11am',
-        'Saturday, August 24th, 2025 - 11:30 AM - 12:00 PM (Dallas, Texas)': 'sat-1130am',
-        'Saturday, August 24th, 2025 - 1:00 PM - 1:30 PM (Dallas, Texas)': 'sat-1pm',
-        'Saturday, August 24th, 2025 - 1:30 PM - 2:00 PM (Dallas, Texas)': 'sat-130pm',
-        'Saturday, August 24th, 2025 - 2:00 PM - 2:30 PM (Dallas, Texas)': 'sat-2pm',
-        'Saturday, August 24th, 2025 - 2:30 PM - 3:00 PM (Dallas, Texas)': 'sat-230pm',
-        'Saturday, August 24th, 2025 - 3:00 PM - 3:30 PM (Dallas, Texas)': 'sat-3pm',
-        'Saturday, August 24th, 2025 - 3:30 PM - 4:00 PM (Dallas, Texas)': 'sat-330pm'
+        'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)': 'fri-9am',
+        'Saturday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)': 'fri-930am',
+        'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'fri-10am',
+        'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'fri-1030am',
+        'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'fri-11am',
+        'Sunday, August 24th, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)': 'sat-9am',
+        'Sunday, August 24th, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)': 'sat-930am',
+        'Sunday, August 24th, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'sat-10am',
+        'Sunday, August 24th, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'sat-1030am',
+        'Sunday, August 24th, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'sat-11am'
     };
     return slotMap[displayText];
 }
@@ -570,6 +558,7 @@ function backToMain() {
     event2.style.display = "none";
     event3.style.display = "none";
     document.getElementById("event4").style.display = "none";
+    event5.style.display = "none";
     document.getElementById("members-detail").style.display = "none";
     document.getElementById("feedback-page").style.display = "none";
     
@@ -904,28 +893,33 @@ async function loadFromSpreadsheetCA() {
     
     try {
         // Use the same Google Apps Script URL but with a GET request to fetch CA data
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwg-kNUr-sKIVsrV6c3bAhsZlrOxpQX-TmKD0Far2rNQB_Uxje1aDp7YXhU0dI5KEncKg/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
         
         console.log('Fetching CA data from:', `${scriptURL}?action=getReservationsCA`);
         
-        const response = await fetch(`${scriptURL}?action=getReservationsCA&t=${Date.now()}`, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-                'Cache-Control': 'no-cache, no-store, must-revalidate',
-                'Pragma': 'no-cache',
-                'Expires': '0'
-            }
-        });
+        const response = await fetch(`${scriptURL}?action=getReservationsCA&t=${Date.now()}`);
         
         if (response.ok) {
             const data = await response.json();
             console.log('Received CA data from Google Sheets:', data);
             
             if (data.success && data.reservations) {
-                // Merge Google Sheets data with localStorage
-                slotReservationsCA = data.reservations;
+                // Merge Google Sheets data with localStorage (don't overwrite local data)
+                Object.keys(data.reservations).forEach(slotId => {
+                    if (!slotReservationsCA[slotId]) {
+                        slotReservationsCA[slotId] = [];
+                    }
+                    // Add any reservations from Google Sheets that aren't already local
+                    data.reservations[slotId].forEach(reservation => {
+                        const exists = slotReservationsCA[slotId].some(local => 
+                            local.childName === reservation.childName && 
+                            local.timeSlot === reservation.timeSlot
+                        );
+                        if (!exists) {
+                            slotReservationsCA[slotId].push(reservation);
+                        }
+                    });
+                });
                 
                 // Update localStorage with fresh data
                 saveReservationsCA();
@@ -1064,30 +1058,30 @@ function selectSlotCA(slotId) {
     
     // Update the selected slot display
     const slotDisplay = {
-        'fri-9am': 'Friday, August 2nd, 2025 - 9:00 AM - 9:30 AM (California)',
-        'fri-930am': 'Friday, August 2nd, 2025 - 9:30 AM - 10:00 AM (California)',
-        'fri-10am': 'Friday, August 2nd, 2025 - 10:00 AM - 10:30 AM (California)',
-        'fri-1030am': 'Friday, August 2nd, 2025 - 10:30 AM - 11:00 AM (California)',
-        'fri-11am': 'Friday, August 2nd, 2025 - 11:00 AM - 11:30 AM (California)',
-        'fri-1130am': 'Friday, August 2nd, 2025 - 11:30 AM - 12:00 PM (California)',
-        'fri-1pm': 'Friday, August 2nd, 2025 - 1:00 PM - 1:30 PM (California)',
-        'fri-130pm': 'Friday, August 2nd, 2025 - 1:30 PM - 2:00 PM (California)',
-        'fri-2pm': 'Friday, August 2nd, 2025 - 2:00 PM - 2:30 PM (California)',
-        'fri-230pm': 'Friday, August 2nd, 2025 - 2:30 PM - 3:00 PM (California)',
-        'fri-3pm': 'Friday, August 2nd, 2025 - 3:00 PM - 3:30 PM (California)',
-        'fri-330pm': 'Friday, August 2nd, 2025 - 3:30 PM - 4:00 PM (California)',
-        'sat-9am': 'Saturday, August 3rd, 2025 - 9:00 AM - 9:30 AM (California)',
-        'sat-930am': 'Saturday, August 3rd, 2025 - 9:30 AM - 10:00 AM (California)',
-        'sat-10am': 'Saturday, August 3rd, 2025 - 10:00 AM - 10:30 AM (California)',
-        'sat-1030am': 'Saturday, August 3rd, 2025 - 10:30 AM - 11:00 AM (California)',
-        'sat-11am': 'Saturday, August 3rd, 2025 - 11:00 AM - 11:30 AM (California)',
-        'sat-1130am': 'Saturday, August 3rd, 2025 - 11:30 AM - 12:00 PM (California)',
-        'sat-1pm': 'Saturday, August 3rd, 2025 - 1:00 PM - 1:30 PM (California)',
-        'sat-130pm': 'Saturday, August 3rd, 2025 - 1:30 PM - 2:00 PM (California)',
-        'sat-2pm': 'Saturday, August 3rd, 2025 - 2:00 PM - 2:30 PM (California)',
-        'sat-230pm': 'Saturday, August 3rd, 2025 - 2:30 PM - 3:00 PM (California)',
-        'sat-3pm': 'Saturday, August 3rd, 2025 - 3:00 PM - 3:30 PM (California)',
-        'sat-330pm': 'Saturday, August 3rd, 2025 - 3:30 PM - 4:00 PM (California)'
+        'fri-9am': 'Friday, August 9th, 2025 - 9:00 AM - 9:30 AM (California)',
+        'fri-930am': 'Friday, August 9th, 2025 - 9:30 AM - 10:00 AM (California)',
+        'fri-10am': 'Friday, August 9th, 2025 - 10:00 AM - 10:30 AM (California)',
+        'fri-1030am': 'Friday, August 9th, 2025 - 10:30 AM - 11:00 AM (California)',
+        'fri-11am': 'Friday, August 9th, 2025 - 11:00 AM - 11:30 AM (California)',
+        'fri-1130am': 'Friday, August 9th, 2025 - 11:30 AM - 12:00 PM (California)',
+        'fri-1pm': 'Friday, August 9th, 2025 - 1:00 PM - 1:30 PM (California)',
+        'fri-130pm': 'Friday, August 9th, 2025 - 1:30 PM - 2:00 PM (California)',
+        'fri-2pm': 'Friday, August 9th, 2025 - 2:00 PM - 2:30 PM (California)',
+        'fri-230pm': 'Friday, August 9th, 2025 - 2:30 PM - 3:00 PM (California)',
+        'fri-3pm': 'Friday, August 9th, 2025 - 3:00 PM - 3:30 PM (California)',
+        'fri-330pm': 'Friday, August 9th, 2025 - 3:30 PM - 4:00 PM (California)',
+        'sat-9am': 'Saturday, August 10th, 2025 - 9:00 AM - 9:30 AM (California)',
+        'sat-930am': 'Saturday, August 10th, 2025 - 9:30 AM - 10:00 AM (California)',
+        'sat-10am': 'Saturday, August 10th, 2025 - 10:00 AM - 10:30 AM (California)',
+        'sat-1030am': 'Saturday, August 10th, 2025 - 10:30 AM - 11:00 AM (California)',
+        'sat-11am': 'Saturday, August 10th, 2025 - 11:00 AM - 11:30 AM (California)',
+        'sat-1130am': 'Saturday, August 10th, 2025 - 11:30 AM - 12:00 PM (California)',
+        'sat-1pm': 'Saturday, August 10th, 2025 - 1:00 PM - 1:30 PM (California)',
+        'sat-130pm': 'Saturday, August 10th, 2025 - 1:30 PM - 2:00 PM (California)',
+        'sat-2pm': 'Saturday, August 10th, 2025 - 2:00 PM - 2:30 PM (California)',
+        'sat-230pm': 'Saturday, August 10th, 2025 - 2:30 PM - 3:00 PM (California)',
+        'sat-3pm': 'Saturday, August 10th, 2025 - 3:00 PM - 3:30 PM (California)',
+        'sat-330pm': 'Saturday, August 10th, 2025 - 3:30 PM - 4:00 PM (California)'
     };
     
     document.getElementById('selected-slot-ca').value = slotDisplay[slotId];
@@ -1126,7 +1120,7 @@ function handleRegistrationCA(event) {
     
     // Create reservation data
     const reservation = {
-        event: formData.get('event') || 'California Swim Lessons – August 2–3, 2025 (California)',
+        event: formData.get('event') || 'California Swim Lessons – August 9–10, 2025 (California)',
         childName: formData.get('child-name'),
         age: formData.get('child-age'),
         swimmingLevel: formData.get('swimming-level'),
@@ -1166,30 +1160,30 @@ function handleRegistrationCA(event) {
 // Helper function to get slot ID from display text for California
 function getSlotIdFromDisplayCA(displayText) {
     const slotMap = {
-        'Friday, August 2nd, 2025 - 9:00 AM - 9:30 AM (California)': 'fri-9am',
-        'Friday, August 2nd, 2025 - 9:30 AM - 10:00 AM (California)': 'fri-930am',
-        'Friday, August 2nd, 2025 - 10:00 AM - 10:30 AM (California)': 'fri-10am',
-        'Friday, August 2nd, 2025 - 10:30 AM - 11:00 AM (California)': 'fri-1030am',
-        'Friday, August 2nd, 2025 - 11:00 AM - 11:30 AM (California)': 'fri-11am',
-        'Friday, August 2nd, 2025 - 11:30 AM - 12:00 PM (California)': 'fri-1130am',
-        'Friday, August 2nd, 2025 - 1:00 PM - 1:30 PM (California)': 'fri-1pm',
-        'Friday, August 2nd, 2025 - 1:30 PM - 2:00 PM (California)': 'fri-130pm',
-        'Friday, August 2nd, 2025 - 2:00 PM - 2:30 PM (California)': 'fri-2pm',
-        'Friday, August 2nd, 2025 - 2:30 PM - 3:00 PM (California)': 'fri-230pm',
-        'Friday, August 2nd, 2025 - 3:00 PM - 3:30 PM (California)': 'fri-3pm',
-        'Friday, August 2nd, 2025 - 3:30 PM - 4:00 PM (California)': 'fri-330pm',
-        'Saturday, August 3rd, 2025 - 9:00 AM - 9:30 AM (California)': 'sat-9am',
-        'Saturday, August 3rd, 2025 - 9:30 AM - 10:00 AM (California)': 'sat-930am',
-        'Saturday, August 3rd, 2025 - 10:00 AM - 10:30 AM (California)': 'sat-10am',
-        'Saturday, August 3rd, 2025 - 10:30 AM - 11:00 AM (California)': 'sat-1030am',
-        'Saturday, August 3rd, 2025 - 11:00 AM - 11:30 AM (California)': 'sat-11am',
-        'Saturday, August 3rd, 2025 - 11:30 AM - 12:00 PM (California)': 'sat-1130am',
-        'Saturday, August 3rd, 2025 - 1:00 PM - 1:30 PM (California)': 'sat-1pm',
-        'Saturday, August 3rd, 2025 - 1:30 PM - 2:00 PM (California)': 'sat-130pm',
-        'Saturday, August 3rd, 2025 - 2:00 PM - 2:30 PM (California)': 'sat-2pm',
-        'Saturday, August 3rd, 2025 - 2:30 PM - 3:00 PM (California)': 'sat-230pm',
-        'Saturday, August 3rd, 2025 - 3:00 PM - 3:30 PM (California)': 'sat-3pm',
-        'Saturday, August 3rd, 2025 - 3:30 PM - 4:00 PM (California)': 'sat-330pm'
+        'Friday, August 9th, 2025 - 9:00 AM - 9:30 AM (California)': 'fri-9am',
+        'Friday, August 9th, 2025 - 9:30 AM - 10:00 AM (California)': 'fri-930am',
+        'Friday, August 9th, 2025 - 10:00 AM - 10:30 AM (California)': 'fri-10am',
+        'Friday, August 9th, 2025 - 10:30 AM - 11:00 AM (California)': 'fri-1030am',
+        'Friday, August 9th, 2025 - 11:00 AM - 11:30 AM (California)': 'fri-11am',
+        'Friday, August 9th, 2025 - 11:30 AM - 12:00 PM (California)': 'fri-1130am',
+        'Friday, August 9th, 2025 - 1:00 PM - 1:30 PM (California)': 'fri-1pm',
+        'Friday, August 9th, 2025 - 1:30 PM - 2:00 PM (California)': 'fri-130pm',
+        'Friday, August 9th, 2025 - 2:00 PM - 2:30 PM (California)': 'fri-2pm',
+        'Friday, August 9th, 2025 - 2:30 PM - 3:00 PM (California)': 'fri-230pm',
+        'Friday, August 9th, 2025 - 3:00 PM - 3:30 PM (California)': 'fri-3pm',
+        'Friday, August 9th, 2025 - 3:30 PM - 4:00 PM (California)': 'fri-330pm',
+        'Saturday, August 10th, 2025 - 9:00 AM - 9:30 AM (California)': 'sat-9am',
+        'Saturday, August 10th, 2025 - 9:30 AM - 10:00 AM (California)': 'sat-930am',
+        'Saturday, August 10th, 2025 - 10:00 AM - 10:30 AM (California)': 'sat-10am',
+        'Saturday, August 10th, 2025 - 10:30 AM - 11:00 AM (California)': 'sat-1030am',
+        'Saturday, August 10th, 2025 - 11:00 AM - 11:30 AM (California)': 'sat-11am',
+        'Saturday, August 10th, 2025 - 11:30 AM - 12:00 PM (California)': 'sat-1130am',
+        'Saturday, August 10th, 2025 - 1:00 PM - 1:30 PM (California)': 'sat-1pm',
+        'Saturday, August 10th, 2025 - 1:30 PM - 2:00 PM (California)': 'sat-130pm',
+        'Saturday, August 10th, 2025 - 2:00 PM - 2:30 PM (California)': 'sat-2pm',
+        'Saturday, August 10th, 2025 - 2:30 PM - 3:00 PM (California)': 'sat-230pm',
+        'Saturday, August 10th, 2025 - 3:00 PM - 3:30 PM (California)': 'sat-3pm',
+        'Saturday, August 10th, 2025 - 3:30 PM - 4:00 PM (California)': 'sat-330pm'
     };
     return slotMap[displayText];
 }
@@ -1271,12 +1265,12 @@ function removeReservationCA() {
 // Send cancellation to Google Sheets for Dallas events
 function sendCancellationToGoogleSheets(reservation) {
     // Replace this URL with your Google Apps Script web app URL (same as registration)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwg-kNUr-sKIVsrV6c3bAhsZlrOxpQX-TmKD0Far2rNQB_Uxje1aDp7YXhU0dI5KEncKg/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
     
     
     const formData = new FormData();
     formData.append('action', 'cancel');
-    formData.append('event', reservation.event || 'Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)');
+    formData.append('event', reservation.event || 'Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)');
     formData.append('childName', reservation.childName);
     formData.append('email', reservation.email);
     formData.append('timeSlot', reservation.timeSlot);
@@ -1301,11 +1295,11 @@ function sendCancellationToGoogleSheets(reservation) {
 // Send cancellation to Google Sheets for California events
 function sendCancellationToGoogleSheetsCA(reservation) {
     // Replace this URL with your Google Apps Script web app URL (same as registration)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwg-kNUr-sKIVsrV6c3bAhsZlrOxpQX-TmKD0Far2rNQB_Uxje1aDp7YXhU0dI5KEncKg/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
     
     const formData = new FormData();
     formData.append('action', 'cancel');
-    formData.append('event', reservation.event || 'California Swim Lessons – August 2–3, 2025 (California)');
+    formData.append('event', reservation.event || 'California Swim Lessons – August 9–10, 2025 (California)');
     formData.append('childName', reservation.childName);
     formData.append('email', reservation.email);
     formData.append('timeSlot', reservation.timeSlot);
@@ -1336,16 +1330,16 @@ function startPeriodicSync() {
         clearInterval(syncInterval);
     }
     
-    // Sync every 15 seconds for better mobile responsiveness
+    // Re-enabling periodic sync since Google Apps Script is working
     syncInterval = setInterval(() => {
         console.log('Performing periodic sync...');
         
         // Always sync both events to ensure mobile gets updates
         loadFromSpreadsheet();
         loadFromSpreadsheetCA();
-    }, 15000); // 15 seconds (faster for mobile)
+    }, 30000); // 30 seconds
     
-    console.log('Periodic sync started (every 15 seconds)');
+    console.log('Periodic sync re-enabled (every 30 seconds)');
 }
 
 function stopPeriodicSync() {
@@ -1393,11 +1387,20 @@ function debugReservationState() {
 window.debugReservationState = debugReservationState;
 
 // Manual test function for Google Sheets connectivity
+// Debug function to check current reservation state
+function debugCurrentState() {
+    console.log('=== CURRENT RESERVATION STATE ===');
+    console.log('Dallas reservations:', slotReservations);
+    console.log('California reservations:', slotReservationsCA);
+    console.log('LocalStorage Dallas:', localStorage.getItem('slotReservations'));
+    console.log('LocalStorage California:', localStorage.getItem('slotReservationsCA'));
+}
+
 async function testGoogleSheetsConnection() {
     console.log('=== TESTING GOOGLE SHEETS CONNECTION ===');
     
     try {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwg-kNUr-sKIVsrV6c3bAhsZlrOxpQX-TmKD0Far2rNQB_Uxje1aDp7YXhU0dI5KEncKg/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
         
         console.log('Testing Dallas endpoint...');
         const dallasResponse = await fetch(`${scriptURL}?action=getReservations`);
@@ -1445,7 +1448,7 @@ document.addEventListener('DOMContentLoaded', function() {
         debugReservationState();
     }, 2000);
     
-    // Mobile-specific: Force sync when page becomes visible
+    // Re-enabling mobile sync triggers since Google Apps Script is working
     document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
             console.log('Page became visible - forcing sync for mobile');
@@ -1454,14 +1457,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Mobile-specific: Force sync when window gains focus
     window.addEventListener('focus', function() {
         console.log('Window gained focus - forcing sync for mobile');
         loadFromSpreadsheet();
         loadFromSpreadsheetCA();
     });
     
-    // Force sync when user interacts with page (mobile tap/scroll)
     let lastSyncTime = 0;
     const forceSyncOnInteraction = function() {
         const now = Date.now();

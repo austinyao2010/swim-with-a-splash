@@ -252,7 +252,7 @@
       display: none;
     }
     
-    #event1 button, #event2 button, #event3 button, #members-detail button {
+    #event1 button, #event2 button, #event3 button, #event5 button, #members-detail button {
       margin: 20px;
       padding: 12px 24px;
       background: linear-gradient(135deg, #0077b6, #023e8a);
@@ -268,19 +268,19 @@
       letter-spacing: 0.5px;
     }
 
-    #event1 button:hover, #event2 button:hover, #event3 button:hover, #members-detail button:hover {
+    #event1 button:hover, #event2 button:hover, #event3 button:hover, #event5 button:hover, #members-detail button:hover {
       background: linear-gradient(135deg, #023e8a, #0077b6);
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
     }
 
-    #event1 button:active, #event2 button:active, #event3 button:active, #members-detail button:active {
+    #event1 button:active, #event2 button:active, #event3 button:active, #event5 button:active, #members-detail button:active {
       transform: translateY(0);
       box-shadow: 0 2px 10px rgba(0, 119, 182, 0.3);
     }
 
     /* Smaller styling for back buttons */
-    #event1 button, #event2 button, #event3 button, #members-detail button {
+    #event1 button, #event2 button, #event3 button, #event5 button, #members-detail button {
       padding: 8px 16px;
       font-size: 12px;
       margin: 10px auto;
@@ -719,6 +719,8 @@
       transform: scale(1.05);
     }
 
+
+
     .form-group textarea {
       padding: 12px 16px;
       border: 2px solid #e0e0e0;
@@ -878,14 +880,14 @@
           <div class="card">
             <h3>Upcoming Events</h3>
             <div class="card">
-              <h3>California Swim Lessons – August 2–3, 2025 (California)</h3>
-              <p><strong>Registration Open!</strong> Free private swim lessons offered by California Swimming Club swimmers.</p>
-              <button class="register-btn" onclick="showEvent4(event); return false;">Register</button>
+              <h3>Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)</h3>
+              <p><strong>Registration Open!</strong> Free private swim lessons offered by Lakeside Aquatic Club and North Texas Natadores swimmers.</p>
+              <button class="register-btn" onclick="showEvent3(event); return false;">Register</button>
             </div>
             <div class="card">
-              <h3>Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)</h3>
-              <p><strong>Registration Open!</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
-              <button class="register-btn" onclick="showEvent3(event); return false;">Register</button>
+              <h3>California Swim Lessons – August 9–10, 2025 (California)</h3>
+              <p><strong>Registration Open!</strong> Free private swim lessons offered by California Swimming Club swimmers.</p>
+              <button class="register-btn" onclick="showEvent4(event); return false;">Register</button>
             </div>
           </div>
           
@@ -898,6 +900,10 @@
             <div class="card">
               <h3>Chestnut Hill Swim Lessons – May 18–19, 2024 (Mason, Ohio)</h3>
               <button class="learn-more-btn" onclick="showEvent2(event); return false;">Learn More</button>
+            </div>
+            <div class="card">
+              <h3>Mason Swim Lessons – May 24–25, 2025 (Mason, Ohio)</h3>
+              <button class="learn-more-btn" onclick="showEvent5(event); return false;">Learn More</button>
             </div>
           </div>
         </section>
@@ -1051,6 +1057,49 @@
             <source src="year2.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
+        </div>
+      </section>
+    </div>
+    
+    <button onclick="backToMain()">Back to Events</button>
+  </div>
+  
+  <div id="event5" style="display: none;">
+    <header>
+      <div style="display: flex; justify-content: center; gap: 15px;">
+        <img src="Logo C.png" alt="Swim With a Splash Logo" style="
+          width: 70px; 
+          height: 70px; 
+          border-radius: 50%; 
+          object-fit: cover; 
+          object-position: center;
+          border: 2px solid rgba(255, 255, 255, 0.8); 
+          box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+          filter: brightness(1.1) contrast(1.05);
+          padding: 2px;
+        ">
+        <h1 style="text-align: center;">Swim With a Splash</h1>
+      </div>
+    </header>
+    
+    <div class="container">
+      <section class="section">
+        <h2>Mason Swim Lessons – May 24–25, 2025</h2>
+        <div class="card">
+          <h3>Event Details</h3>
+          <p><strong>Date:</strong> May 24–25, 2025</p>
+          <p><strong>Location:</strong> Mason Community Center</p>
+          <p><strong>Description:</strong> Free private swim lessons offered by Mason Manta Rays swimmers.</p>
+          <p><strong>Age groups:</strong> 5-12 is preferred, but all ages are welcome</p>
+        </div>
+        
+        <div class="card">
+          <h3>Coach Team</h3>
+          <img src="year3mason.jpeg" alt="May 2025 Mason Swim Lessons" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px;">
+          <p style="text-align: center; margin-top: 10px; font-style: italic; color: #666;">
+            <strong>From left to right:</strong><br>
+            Sharon Li, Anna Yu, Claire Liu, Caleb Tan, Victor Cao, Andrew Zhang
+          </p>
         </div>
       </section>
     </div>
@@ -1275,9 +1324,9 @@
           <div class="team-grid">
             <div class="team-card">
               <div class="team-avatar">🏊‍♂️</div>
-              <h4>Yimo</h4>
+              <h4>Yimo Liu</h4>
               <p class="team-location">California</p>
-              <p class="team-club">California Swimming Club</p>
+              <p class="team-club">Pacific Swim</p>
               <p class="team-bio">Skilled coach bringing West Coast swimming expertise to our team! 🌊</p>
             </div>
           </div>
@@ -1314,7 +1363,7 @@
           <h3>Event Details</h3>
           <p><strong>Date:</strong> August 23–24, 2025</p>
           <p><strong>Location:</strong> Southridge Lakes Community Pool</p>
-          <p><strong>Description:</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
+          <p><strong>Description:</strong> Free private swim lessons offered by Lakeside Aquatic Club and North Texas Natadores swimmers.</p>
           <p><strong>Age groups:</strong> 5-12 is preferred, but all ages are welcome</p>
           <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Registration Open! 🎉</span></p>
         </div>
@@ -1334,7 +1383,7 @@
           <h3>Select Your Time Slot! 📅</h3>
           <div class="timeslot-single-column">
             <div class="timeslot-card">
-              <h4>Friday, August 23rd</h4>
+              <h4>Saturday, August 23rd</h4>
               <div class="time-slots">
                 <div class="slot">
                   <span class="time">9:00 AM - 9:30 AM</span>
@@ -1361,46 +1410,11 @@
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('fri-11am')">Sign Up</button>
                 </div>
-                <div class="slot">
-                  <span class="time">11:30 AM - 12:00 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('fri-1130am')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">1:00 PM - 1:30 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('fri-1pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">1:30 PM - 2:00 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('fri-130pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">2:00 PM - 2:30 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('fri-2pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">2:30 PM - 3:00 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('fri-230pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">3:00 PM - 3:30 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('fri-3pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">3:30 PM - 4:00 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('fri-330pm')">Sign Up</button>
-                </div>
               </div>
             </div>
             
             <div class="timeslot-card">
-              <h4>Saturday, August 24th</h4>
+              <h4>Sunday, August 24th</h4>
               <div class="time-slots">
                 <div class="slot">
                   <span class="time">9:00 AM - 9:30 AM</span>
@@ -1426,41 +1440,6 @@
                   <span class="time">11:00 AM - 11:30 AM</span>
                   <span class="spots">2 spots available</span>
                   <button class="slot-btn available" onclick="selectSlot('sat-11am')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">11:30 AM - 12:00 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('sat-1130am')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">1:00 PM - 1:30 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('sat-1pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">1:30 PM - 2:00 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('sat-130pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">2:00 PM - 2:30 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('sat-2pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">2:30 PM - 3:00 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('sat-230pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">3:00 PM - 3:30 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('sat-3pm')">Sign Up</button>
-                </div>
-                <div class="slot">
-                  <span class="time">3:30 PM - 4:00 PM</span>
-                  <span class="spots">2 spots available</span>
-                  <button class="slot-btn available" onclick="selectSlot('sat-330pm')">Sign Up</button>
                 </div>
               </div>
             </div>
@@ -1553,7 +1532,7 @@
     
     <div class="container">
       <section class="section">
-        <h2>California Swim Lessons – August 2–3, 2025</h2>
+        <h2>California Swim Lessons – August 9–10, 2025</h2>
         
         <div class="card">
           <h3>Event Details</h3>
@@ -1579,7 +1558,7 @@
           <h3>Select Your Time Slot! 📅</h3>
           <div class="timeslot-grid">
             <div class="timeslot-card">
-              <h4>Friday, August 2nd</h4>
+              <h4>Friday, August 9th</h4>
               <div class="time-slots">
                 <div class="slot">
                   <span class="time">9:00 AM - 9:30 AM</span>
@@ -1645,7 +1624,7 @@
             </div>
             
             <div class="timeslot-card">
-              <h4>Saturday, August 3rd</h4>
+              <h4>Saturday, August 10th</h4>
               <div class="time-slots">
                 <div class="slot">
                   <span class="time">9:00 AM - 9:30 AM</span>
@@ -1715,7 +1694,7 @@
         <div class="card" id="registration-form-ca" style="display: none;">
           <h3>Complete Your Registration! 📝</h3>
           <form class="registration-form" onsubmit="handleRegistrationCA(event)">
-            <input type="hidden" id="event-name-ca" name="event" value="California Swim Lessons – August 2–3, 2025 (California)">
+            <input type="hidden" id="event-name-ca" name="event" value="California Swim Lessons – August 9–10, 2025 (California)">
             
             <div class="form-group">
               <label for="selected-slot-ca">Selected Time Slot:</label>

@@ -37,11 +37,18 @@ function doGet(e) {
     
     return ContentService.createTextOutput(JSON.stringify({error: 'Invalid action'}))
       .setMimeType(ContentService.MimeType.JSON);
+      
   } catch (error) {
     console.error('Error in doGet:', error);
     return ContentService.createTextOutput(JSON.stringify({error: error.toString()}))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+function doOptions(e) {
+  // Handle preflight CORS requests
+  return ContentService.createTextOutput('')
+    .setMimeType(ContentService.MimeType.TEXT);
 }
 
 function doPost(e) {
@@ -177,7 +184,7 @@ function getReservations(eventType) {
       const timeSlot = row[timeSlotCol] || '';
       
       // Filter by event type
-      const isTargetEvent = (eventType === 'Dallas' && event.includes('Dallas')) ||
+      const isTargetEvent = (eventType === 'Dallas' && (event.includes('Dallas') || event.includes('Southridge Lakes') || event.includes('Southlake'))) ||
                            (eventType === 'California' && event.includes('California'));
       
       if (!isTargetEvent) continue;
@@ -824,14 +831,40 @@ function checkPendingEmails() {
    - Select time of day: `8am to 9am` (or your preferred time)
 4. Click "Save"
 
-## Step 4: Deploy the Script
+## Step 4: Deploy the Script (CRITICAL for CORS)
 1. Click the "Deploy" button in the Apps Script editor
 2. Choose "New deployment"
 3. Set type to "Web app"
-4. Set "Execute as" to "Me"
-5. Set "Who has access" to "Anyone"
+4. **Set "Execute as" to "Me"** (IMPORTANT)
+5. **Set "Who has access" to "Anyone"** (CRITICAL for CORS to work)
 6. Click "Deploy"
-7. Copy the web app URL and update it in your `script.js` file
+7. **IMPORTANT**: If you see any authorization prompts, click "Authorize" and grant all permissions
+8. Copy the web app URL and update it in your `script.js` file
+
+### 🚨 CORS Fix Instructions:
+If you're getting CORS errors like "No 'Access-Control-Allow-Origin' header" or "invalid header":
+
+**Step 1: Create Fresh Deployment**
+1. **Go to "Deploy" > "Manage deployments"**
+2. **Click the pencil/edit icon** next to your current deployment
+3. **Change version to "New version"**
+4. **CRITICAL**: Ensure "Who has access" = **"Anyone"**
+5. **Click "Deploy"**
+6. **Copy the NEW URL** (it will be different)
+
+**Step 2: Update Your Code**
+1. **Replace ALL scriptURL variables** in script.js with the new URL
+2. **Save the file**
+
+**Step 3: Test Fresh**
+1. **Clear browser cache completely** (Ctrl+Shift+Delete)
+2. **Test in incognito/private window**
+3. **Wait 2-3 minutes** after deployment before testing
+
+**Step 4: Verify Deployment**
+- Visit your Google Apps Script URL directly in browser
+- You should see: `{"error":"Invalid action"}` (this means it's working)
+- If you see HTML or authorization pages, redeploy with "Anyone" access
 
 ## Step 5: Configure Email Settings
 1. The script will use your Google account to send emails
@@ -860,8 +893,21 @@ function checkPendingEmails() {
 - **1 Day After Event**: Parent gets thank you email with follow-up suggestions
 
 ## Troubleshooting:
+
+### CORS/Connection Issues:
+- **CORS Error**: Re-deploy the Apps Script with "Anyone" access and use the new URL
+- **Failed to fetch**: Check that the Google Apps Script URL is correct and accessible
+- **Cross-origin blocked**: Ensure deployment permissions are set to "Anyone"
+- **Still not working**: Try testing the Google Apps Script URL directly in a browser
+
+### Email Issues:
 - If emails aren't sending, check the Apps Script execution log
 - Make sure you've approved email and trigger permissions
 - Verify the admin email address is correct
+
+### Registration Sync Issues:
+- Names not showing under time slots: Check browser console for fetch errors
+- Data not updating across devices: Verify CORS is fixed and sync is working
+- Reservations not persisting: Check both localStorage and Google Sheets data
 - Check that the daily trigger is set up correctly
 - Test with events that have different dates to verify date parsing 

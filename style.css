@@ -1,17 +1,17 @@
 /* Additional styles for event pages */
-#event1, #event2 {
+#event1, #event2, #event5 {
   display: none;
   min-height: 100vh;
   background: #f8f9fa;
 }
 
-#event1 .container, #event2 .container {
+#event1 .container, #event2 .container, #event5 .container {
   padding: 2rem;
   max-width: 1200px;
   margin: auto;
 }
 
-#event1 button, #event2 button {
+#event1 button, #event2 button, #event5 button {
   margin: 20px;
   padding: 12px 24px;
   background: linear-gradient(135deg, #0077b6, #023e8a);
@@ -27,13 +27,13 @@
   letter-spacing: 0.5px;
 }
 
-#event1 button:hover, #event2 button:hover {
+#event1 button:hover, #event2 button:hover, #event5 button:hover {
   background: linear-gradient(135deg, #023e8a, #0077b6);
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
 }
 
-#event1 button:active, #event2 button:active {
+#event1 button:active, #event2 button:active, #event5 button:active {
   transform: translateY(0);
   box-shadow: 0 2px 10px rgba(0, 119, 182, 0.3);
 }
