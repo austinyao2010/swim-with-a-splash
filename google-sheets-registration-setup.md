@@ -25,6 +25,25 @@
 2. Replace the default code with this enhanced version:
 
 ```javascript
+function doGet(e) {
+  try {
+    const action = e.parameter.action;
+    
+    if (action === 'getReservations') {
+      return getReservations('Dallas');
+    } else if (action === 'getReservationsCA') {
+      return getReservations('California');
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({error: 'Invalid action'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (error) {
+    console.error('Error in doGet:', error);
+    return ContentService.createTextOutput(JSON.stringify({error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
 function doPost(e) {
   try {
     const data = e.parameter;
@@ -130,6 +149,137 @@ function extractEventDate(eventName, timeSlot) {
   }
   
   return eventDate;
+}
+
+// Get current reservations for cross-device sync
+function getReservations(eventType) {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0];
+    
+    // Find column indices
+    const eventCol = headers.indexOf('Event');
+    const childNameCol = headers.indexOf('Child Name');
+    const timeSlotCol = headers.indexOf('Time Slot');
+    
+    // Object to store slot reservations in the same format as JavaScript
+    const slotReservations = {};
+    
+    // Process each row (skip header)
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      
+      // Skip empty rows
+      if (!row[childNameCol] || row[childNameCol] === '') continue;
+      
+      const event = row[eventCol] || '';
+      const timeSlot = row[timeSlotCol] || '';
+      
+      // Filter by event type
+      const isTargetEvent = (eventType === 'Dallas' && event.includes('Dallas')) ||
+                           (eventType === 'California' && event.includes('California'));
+      
+      if (!isTargetEvent) continue;
+      
+      // Convert time slot to slot ID format
+      const slotId = convertTimeSlotToSlotId(timeSlot, eventType);
+      
+      if (slotId) {
+        // Initialize slot array if doesn't exist
+        if (!slotReservations[slotId]) {
+          slotReservations[slotId] = [];
+        }
+        
+        // Add reservation to slot
+        slotReservations[slotId].push({
+          childName: row[childNameCol],
+          email: row[headers.indexOf('Email')],
+          timeSlot: timeSlot,
+          timestamp: row[headers.indexOf('Timestamp')]
+        });
+      }
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      reservations: slotReservations,
+      success: true
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    console.error('Error getting reservations:', error);
+    return ContentService.createTextOutput(JSON.stringify({
+      error: error.toString(),
+      reservations: {}
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// Convert time slot display text to slot ID
+function convertTimeSlotToSlotId(timeSlot, eventType) {
+  // Dallas event slot mapping
+  const dallasSlots = {
+    'Friday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Dallas, Texas)': 'fri-9am',
+    'Friday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Dallas, Texas)': 'fri-930am',
+    'Friday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Dallas, Texas)': 'fri-10am',
+    'Friday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Dallas, Texas)': 'fri-1030am',
+    'Friday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Dallas, Texas)': 'fri-11am',
+    'Friday, August 23rd, 2025 - 11:30 AM - 12:00 PM (Dallas, Texas)': 'fri-1130am',
+    'Friday, August 23rd, 2025 - 1:00 PM - 1:30 PM (Dallas, Texas)': 'fri-1pm',
+    'Friday, August 23rd, 2025 - 1:30 PM - 2:00 PM (Dallas, Texas)': 'fri-130pm',
+    'Friday, August 23rd, 2025 - 2:00 PM - 2:30 PM (Dallas, Texas)': 'fri-2pm',
+    'Friday, August 23rd, 2025 - 2:30 PM - 3:00 PM (Dallas, Texas)': 'fri-230pm',
+    'Friday, August 23rd, 2025 - 3:00 PM - 3:30 PM (Dallas, Texas)': 'fri-3pm',
+    'Friday, August 23rd, 2025 - 3:30 PM - 4:00 PM (Dallas, Texas)': 'fri-330pm',
+    'Saturday, August 24th, 2025 - 9:00 AM - 9:30 AM (Dallas, Texas)': 'sat-9am',
+    'Saturday, August 24th, 2025 - 9:30 AM - 10:00 AM (Dallas, Texas)': 'sat-930am',
+    'Saturday, August 24th, 2025 - 10:00 AM - 10:30 AM (Dallas, Texas)': 'sat-10am',
+    'Saturday, August 24th, 2025 - 10:30 AM - 11:00 AM (Dallas, Texas)': 'sat-1030am',
+    'Saturday, August 24th, 2025 - 11:00 AM - 11:30 AM (Dallas, Texas)': 'sat-11am',
+    'Saturday, August 24th, 2025 - 11:30 AM - 12:00 PM (Dallas, Texas)': 'sat-1130am',
+    'Saturday, August 24th, 2025 - 1:00 PM - 1:30 PM (Dallas, Texas)': 'sat-1pm',
+    'Saturday, August 24th, 2025 - 1:30 PM - 2:00 PM (Dallas, Texas)': 'sat-130pm',
+    'Saturday, August 24th, 2025 - 2:00 PM - 2:30 PM (Dallas, Texas)': 'sat-2pm',
+    'Saturday, August 24th, 2025 - 2:30 PM - 3:00 PM (Dallas, Texas)': 'sat-230pm',
+    'Saturday, August 24th, 2025 - 3:00 PM - 3:30 PM (Dallas, Texas)': 'sat-3pm',
+    'Saturday, August 24th, 2025 - 3:30 PM - 4:00 PM (Dallas, Texas)': 'sat-330pm'
+  };
+  
+  // California event slot mapping
+  const californiaSlots = {
+    'Friday, August 2nd, 2025 - 9:00 AM - 9:30 AM (California)': 'fri-9am',
+    'Friday, August 2nd, 2025 - 9:30 AM - 10:00 AM (California)': 'fri-930am',
+    'Friday, August 2nd, 2025 - 10:00 AM - 10:30 AM (California)': 'fri-10am',
+    'Friday, August 2nd, 2025 - 10:30 AM - 11:00 AM (California)': 'fri-1030am',
+    'Friday, August 2nd, 2025 - 11:00 AM - 11:30 AM (California)': 'fri-11am',
+    'Friday, August 2nd, 2025 - 11:30 AM - 12:00 PM (California)': 'fri-1130am',
+    'Friday, August 2nd, 2025 - 1:00 PM - 1:30 PM (California)': 'fri-1pm',
+    'Friday, August 2nd, 2025 - 1:30 PM - 2:00 PM (California)': 'fri-130pm',
+    'Friday, August 2nd, 2025 - 2:00 PM - 2:30 PM (California)': 'fri-2pm',
+    'Friday, August 2nd, 2025 - 2:30 PM - 3:00 PM (California)': 'fri-230pm',
+    'Friday, August 2nd, 2025 - 3:00 PM - 3:30 PM (California)': 'fri-3pm',
+    'Friday, August 2nd, 2025 - 3:30 PM - 4:00 PM (California)': 'fri-330pm',
+    'Saturday, August 3rd, 2025 - 9:00 AM - 9:30 AM (California)': 'sat-9am',
+    'Saturday, August 3rd, 2025 - 9:30 AM - 10:00 AM (California)': 'sat-930am',
+    'Saturday, August 3rd, 2025 - 10:00 AM - 10:30 AM (California)': 'sat-10am',
+    'Saturday, August 3rd, 2025 - 10:30 AM - 11:00 AM (California)': 'sat-1030am',
+    'Saturday, August 3rd, 2025 - 11:00 AM - 11:30 AM (California)': 'sat-11am',
+    'Saturday, August 3rd, 2025 - 11:30 AM - 12:00 PM (California)': 'sat-1130am',
+    'Saturday, August 3rd, 2025 - 1:00 PM - 1:30 PM (California)': 'sat-1pm',
+    'Saturday, August 3rd, 2025 - 1:30 PM - 2:00 PM (California)': 'sat-130pm',
+    'Saturday, August 3rd, 2025 - 2:00 PM - 2:30 PM (California)': 'sat-2pm',
+    'Saturday, August 3rd, 2025 - 2:30 PM - 3:00 PM (California)': 'sat-230pm',
+    'Saturday, August 3rd, 2025 - 3:00 PM - 3:30 PM (California)': 'sat-3pm',
+    'Saturday, August 3rd, 2025 - 3:30 PM - 4:00 PM (California)': 'sat-330pm'
+  };
+  
+  if (eventType === 'Dallas') {
+    return dallasSlots[timeSlot] || null;
+  } else if (eventType === 'California') {
+    return californiaSlots[timeSlot] || null;
+  }
+  
+  return null;
 }
 
 // Schedule confirmation email for 2 days before event

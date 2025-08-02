@@ -65,21 +65,47 @@ function loadReservations() {
     
     // Then sync with spreadsheet (this will override with actual data)
     loadFromSpreadsheet();
+    
+    // Set up periodic syncing every 30 seconds
+    startPeriodicSync();
 }
 
-// Load reservations from Google Sheets (optional - falls back to localStorage)
-function loadFromSpreadsheet() {
-    // For now, we'll rely on localStorage for persistence
-    // This function can be enhanced later to sync with Google Sheets API
-    console.log('Spreadsheet sync not implemented yet - using localStorage only');
+// Load reservations from Google Sheets and sync with localStorage
+async function loadFromSpreadsheet() {
+    console.log('Loading reservations from Google Sheets...');
     
-    // If you want to implement Google Sheets sync later, you would:
-    // 1. Create a proper Google Apps Script API endpoint that returns reservation data
-    // 2. Parse the returned data and merge with localStorage
-    // 3. Update the display
-    
-    // For now, just ensure display is updated with current localStorage data
+    try {
+        // Use the same Google Apps Script URL but with a GET request to fetch data
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwzYnmgxDDk9DxhFTPxTApa8oBDOiivd0WI52flZWyGTpPVWbFvgM16nhioqEdXB_MU3Q/exec';
+        
+        const response = await fetch(`${scriptURL}?action=getReservations`, {
+            method: 'GET'
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Received data from Google Sheets:', data);
+            
+            if (data.reservations) {
+                // Merge Google Sheets data with localStorage
+                slotReservations = data.reservations;
+                
+                // Update localStorage with fresh data
+                saveReservations();
+                
+                // Update the display
+                updateSlotDisplay();
+                
+                console.log('Successfully synced with Google Sheets');
+            }
+        } else {
+            console.warn('Could not fetch from Google Sheets, using localStorage data');
+            updateSlotDisplay();
+        }
+    } catch (error) {
+        console.warn('Error fetching from Google Sheets, falling back to localStorage:', error);
         updateSlotDisplay();
+    }
 }
 
 // Save reservations to localStorage
@@ -744,10 +770,11 @@ function showFeedback(event) {
 // California Event Functions
 let slotReservationsCA = {};
 
-// Load existing reservations for California
+// Load existing reservations for California from localStorage and Google Sheets
 function loadReservationsCA() {
-    console.log('Loading California reservations from localStorage...');
+    console.log('Loading California reservations from localStorage and Google Sheets...');
     
+    // First load from localStorage (for immediate display)
     const savedReservations = localStorage.getItem('swimReservationsCA');
     if (savedReservations) {
         try {
@@ -762,7 +789,46 @@ function loadReservationsCA() {
         console.log('No saved CA reservations in localStorage');
     }
     
-    updateSlotDisplayCA();
+    // Then sync with Google Sheets
+    loadFromSpreadsheetCA();
+}
+
+// Load California reservations from Google Sheets and sync with localStorage
+async function loadFromSpreadsheetCA() {
+    console.log('Loading CA reservations from Google Sheets...');
+    
+    try {
+        // Use the same Google Apps Script URL but with a GET request to fetch CA data
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwzYnmgxDDk9DxhFTPxTApa8oBDOiivd0WI52flZWyGTpPVWbFvgM16nhioqEdXB_MU3Q/exec';
+        
+        const response = await fetch(`${scriptURL}?action=getReservationsCA`, {
+            method: 'GET'
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Received CA data from Google Sheets:', data);
+            
+            if (data.reservations) {
+                // Merge Google Sheets data with localStorage
+                slotReservationsCA = data.reservations;
+                
+                // Update localStorage with fresh data
+                saveReservationsCA();
+                
+                // Update the display
+                updateSlotDisplayCA();
+                
+                console.log('Successfully synced CA data with Google Sheets');
+            }
+        } else {
+            console.warn('Could not fetch CA data from Google Sheets, using localStorage data');
+            updateSlotDisplayCA();
+        }
+    } catch (error) {
+        console.warn('Error fetching CA data from Google Sheets, falling back to localStorage:', error);
+        updateSlotDisplayCA();
+    }
 }
 
 // Save California reservations to localStorage
@@ -1114,3 +1180,57 @@ function sendCancellationToGoogleSheetsCA(reservation) {
         console.error('Error sending California cancellation to Google Sheets:', error);
     });
 }
+
+// Periodic sync functionality
+let syncInterval = null;
+
+function startPeriodicSync() {
+    // Clear any existing interval
+    if (syncInterval) {
+        clearInterval(syncInterval);
+    }
+    
+    // Sync every 30 seconds
+    syncInterval = setInterval(() => {
+        console.log('Performing periodic sync...');
+        
+        // Only sync if we're on a page that shows time slots
+        const currentPage = getCurrentPage();
+        if (currentPage === 'event3') {
+            loadFromSpreadsheet();
+        } else if (currentPage === 'event4') {
+            loadFromSpreadsheetCA();
+        } else if (currentPage === 'main') {
+            // Sync both when on main page
+            loadFromSpreadsheet();
+            loadFromSpreadsheetCA();
+        }
+    }, 30000); // 30 seconds
+    
+    console.log('Periodic sync started (every 30 seconds)');
+}
+
+function stopPeriodicSync() {
+    if (syncInterval) {
+        clearInterval(syncInterval);
+        syncInterval = null;
+        console.log('Periodic sync stopped');
+    }
+}
+
+function getCurrentPage() {
+    if (document.getElementById('event3').style.display !== 'none') {
+        return 'event3';
+    } else if (document.getElementById('event4').style.display !== 'none') {
+        return 'event4';
+    } else {
+        return 'main';
+    }
+}
+
+// Start syncing when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, starting reservation sync...');
+    loadReservations();
+    loadReservationsCA();
+});
