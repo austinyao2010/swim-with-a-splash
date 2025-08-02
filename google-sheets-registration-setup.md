@@ -717,7 +717,7 @@ function handleCancellation(data) {
   return ContentService
       .createTextOutput(JSON.stringify({ 'result': 'error', 'error': error.toString() }))
     .setMimeType(ContentService.MimeType.JSON);
-  }
+}
 }
 
 // Cancel scheduled email triggers for a specific registration

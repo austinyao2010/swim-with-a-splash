@@ -158,6 +158,65 @@ function getCookie(name) {
     return null;
 }
 
+// Function to check if a time slot has already passed
+function isSlotPassed(slotId, eventType = 'southlake') {
+    const now = new Date();
+    
+    // Define the event dates and time mappings
+    const eventDates = {
+        southlake: {
+            'fri': new Date('2025-08-23'), // August 23, 2025
+            'sat': new Date('2025-08-24')  // August 24, 2025
+        },
+        california: {
+            'fri': new Date('2025-08-02'), // August 2, 2025
+            'sat': new Date('2025-08-03')  // August 3, 2025
+        }
+    };
+    
+    // Extract day and time from slotId
+    const [day, timeStr] = slotId.split('-');
+    const eventDate = eventDates[eventType][day];
+    
+    if (!eventDate) {
+        return false; // If we can't determine the date, allow the slot
+    }
+    
+    // Parse the time string to get hours and minutes
+    let hours, minutes;
+    
+    if (timeStr.includes('am')) {
+        const timeNum = timeStr.replace('am', '');
+        if (timeNum.includes('30')) {
+            hours = parseInt(timeNum.replace('30', ''));
+            minutes = 30;
+        } else {
+            hours = parseInt(timeNum);
+            minutes = 0;
+        }
+        // Handle 12 AM edge case
+        if (hours === 12) hours = 0;
+    } else if (timeStr.includes('pm')) {
+        const timeNum = timeStr.replace('pm', '');
+        if (timeNum.includes('30')) {
+            hours = parseInt(timeNum.replace('30', ''));
+            minutes = 30;
+        } else {
+            hours = parseInt(timeNum);
+            minutes = 0;
+        }
+        // Convert PM to 24-hour format (except 12 PM)
+        if (hours !== 12) hours += 12;
+    }
+    
+    // Create the full datetime for this slot
+    const slotDateTime = new Date(eventDate);
+    slotDateTime.setHours(hours, minutes, 0, 0);
+    
+    // Check if the slot time has passed
+    return now > slotDateTime;
+}
+
 // Update the visual display of all slots
 function updateSlotDisplay() {
     console.log('Updating slot display with reservations:', slotReservations);
@@ -178,19 +237,37 @@ function updateSlotDisplay() {
         spotsElement.className = 'spots';
     });
     
-    // Then update based on actual reservations
-    Object.keys(slotReservations).forEach(slotId => {
-        const reservations = slotReservations[slotId];
-        const remainingSlots = 2 - reservations.length;
-        
-        console.log(`Slot ${slotId}: ${reservations.length} reservations, ${remainingSlots} remaining`);
-        
-        // Find the button by its onclick attribute
+    // Check all slots for time-based availability and reservations
+    const allSlotIds = [
+        'fri-9am', 'fri-930am', 'fri-10am', 'fri-1030am', 'fri-11am', 'fri-1130am',
+        'fri-1pm', 'fri-130pm', 'fri-2pm', 'fri-230pm', 'fri-3pm', 'fri-330pm',
+        'sat-9am', 'sat-930am', 'sat-10am', 'sat-1030am', 'sat-11am', 'sat-1130am',
+        'sat-1pm', 'sat-130pm', 'sat-2pm', 'sat-230pm', 'sat-3pm', 'sat-330pm'
+    ];
+    
+    allSlotIds.forEach(slotId => {
         const slotElement = document.querySelector(`button[onclick*="selectSlot('${slotId}')"]`);
         
         if (slotElement) {
             const slotContainer = slotElement.closest('.slot');
             const spotsElement = slotContainer.querySelector('.spots');
+            
+                         // Check if this slot has already passed
+             if (isSlotPassed(slotId, 'southlake')) {
+                 slotElement.className = 'slot-btn passed';
+                 slotElement.textContent = 'Passed';
+                 slotElement.onclick = null;
+                 spotsElement.textContent = 'Time has passed';
+                 spotsElement.className = 'spots full';
+                 console.log(`Slot ${slotId} marked as PASSED`);
+                 return; // Skip reservation checking for passed slots
+             }
+            
+            // Check reservations for available slots
+            const reservations = slotReservations[slotId] || [];
+            const remainingSlots = 2 - reservations.length;
+            
+            console.log(`Slot ${slotId}: ${reservations.length} reservations, ${remainingSlots} remaining`);
             
             if (remainingSlots === 0) {
                 // Slot is full
@@ -224,6 +301,12 @@ function updateSlotDisplay() {
 }
 
 function selectSlot(slotId) {
+    // Check if time slot has already passed
+    if (isSlotPassed(slotId, 'southlake')) {
+        alert('This time slot has already passed. Please select a future time slot.');
+        return;
+    }
+    
     // Check if slot is available
     const reservations = slotReservations[slotId] || [];
     if (reservations.length >= 2) {
@@ -243,30 +326,30 @@ function selectSlot(slotId) {
     
     // Update the selected slot display
     const slotDisplay = {
-        'fri-9am': 'Friday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Dallas, Texas)',
-        'fri-930am': 'Friday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Dallas, Texas)',
-        'fri-10am': 'Friday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Dallas, Texas)',
-        'fri-1030am': 'Friday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Dallas, Texas)',
-        'fri-11am': 'Friday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Dallas, Texas)',
-        'fri-1130am': 'Friday, August 23rd, 2025 - 11:30 AM - 12:00 PM (Dallas, Texas)',
-        'fri-1pm': 'Friday, August 23rd, 2025 - 1:00 PM - 1:30 PM (Dallas, Texas)',
-        'fri-130pm': 'Friday, August 23rd, 2025 - 1:30 PM - 2:00 PM (Dallas, Texas)',
-        'fri-2pm': 'Friday, August 23rd, 2025 - 2:00 PM - 2:30 PM (Dallas, Texas)',
-        'fri-230pm': 'Friday, August 23rd, 2025 - 2:30 PM - 3:00 PM (Dallas, Texas)',
-        'fri-3pm': 'Friday, August 23rd, 2025 - 3:00 PM - 3:30 PM (Dallas, Texas)',
-        'fri-330pm': 'Friday, August 23rd, 2025 - 3:30 PM - 4:00 PM (Dallas, Texas)',
-        'sat-9am': 'Saturday, August 24th, 2025 - 9:00 AM - 9:30 AM (Dallas, Texas)',
-        'sat-930am': 'Saturday, August 24th, 2025 - 9:30 AM - 10:00 AM (Dallas, Texas)',
-        'sat-10am': 'Saturday, August 24th, 2025 - 10:00 AM - 10:30 AM (Dallas, Texas)',
-        'sat-1030am': 'Saturday, August 24th, 2025 - 10:30 AM - 11:00 AM (Dallas, Texas)',
-        'sat-11am': 'Saturday, August 24th, 2025 - 11:00 AM - 11:30 AM (Dallas, Texas)',
-        'sat-1130am': 'Saturday, August 24th, 2025 - 11:30 AM - 12:00 PM (Dallas, Texas)',
-        'sat-1pm': 'Saturday, August 24th, 2025 - 1:00 PM - 1:30 PM (Dallas, Texas)',
-        'sat-130pm': 'Saturday, August 24th, 2025 - 1:30 PM - 2:00 PM (Dallas, Texas)',
-        'sat-2pm': 'Saturday, August 24th, 2025 - 2:00 PM - 2:30 PM (Dallas, Texas)',
-        'sat-230pm': 'Saturday, August 24th, 2025 - 2:30 PM - 3:00 PM (Dallas, Texas)',
-        'sat-3pm': 'Saturday, August 24th, 2025 - 3:00 PM - 3:30 PM (Dallas, Texas)',
-        'sat-330pm': 'Saturday, August 24th, 2025 - 3:30 PM - 4:00 PM (Dallas, Texas)'
+        'fri-9am': 'Friday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)',
+        'fri-930am': 'Friday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)',
+        'fri-10am': 'Friday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)',
+        'fri-1030am': 'Friday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)',
+        'fri-11am': 'Friday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)',
+        'fri-1130am': 'Friday, August 23rd, 2025 - 11:30 AM - 12:00 PM (Southlake, Texas)',
+        'fri-1pm': 'Friday, August 23rd, 2025 - 1:00 PM - 1:30 PM (Southlake, Texas)',
+        'fri-130pm': 'Friday, August 23rd, 2025 - 1:30 PM - 2:00 PM (Southlake, Texas)',
+        'fri-2pm': 'Friday, August 23rd, 2025 - 2:00 PM - 2:30 PM (Southlake, Texas)',
+        'fri-230pm': 'Friday, August 23rd, 2025 - 2:30 PM - 3:00 PM (Southlake, Texas)',
+        'fri-3pm': 'Friday, August 23rd, 2025 - 3:00 PM - 3:30 PM (Southlake, Texas)',
+        'fri-330pm': 'Friday, August 23rd, 2025 - 3:30 PM - 4:00 PM (Southlake, Texas)',
+        'sat-9am': 'Saturday, August 24th, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)',
+        'sat-930am': 'Saturday, August 24th, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)',
+        'sat-10am': 'Saturday, August 24th, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)',
+        'sat-1030am': 'Saturday, August 24th, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)',
+        'sat-11am': 'Saturday, August 24th, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)',
+        'sat-1130am': 'Saturday, August 24th, 2025 - 11:30 AM - 12:00 PM (Southlake, Texas)',
+        'sat-1pm': 'Saturday, August 24th, 2025 - 1:00 PM - 1:30 PM (Southlake, Texas)',
+        'sat-130pm': 'Saturday, August 24th, 2025 - 1:30 PM - 2:00 PM (Southlake, Texas)',
+        'sat-2pm': 'Saturday, August 24th, 2025 - 2:00 PM - 2:30 PM (Southlake, Texas)',
+        'sat-230pm': 'Saturday, August 24th, 2025 - 2:30 PM - 3:00 PM (Southlake, Texas)',
+        'sat-3pm': 'Saturday, August 24th, 2025 - 3:00 PM - 3:30 PM (Southlake, Texas)',
+        'sat-330pm': 'Saturday, August 24th, 2025 - 3:30 PM - 4:00 PM (Southlake, Texas)'
     };
     
     document.getElementById('selected-slot').value = slotDisplay[slotId];
@@ -898,19 +981,37 @@ function updateSlotDisplayCA() {
         spotsElement.className = 'spots';
     });
     
-    // Then update based on actual reservations
-    Object.keys(slotReservationsCA).forEach(slotId => {
-        const reservations = slotReservationsCA[slotId];
-        const remainingSlots = 2 - reservations.length;
-        
-        console.log(`CA Slot ${slotId}: ${reservations.length} reservations, ${remainingSlots} remaining`);
-        
-        // Find the button by its onclick attribute
+    // Check all slots for time-based availability and reservations
+    const allSlotIds = [
+        'fri-9am', 'fri-930am', 'fri-10am', 'fri-1030am', 'fri-11am', 'fri-1130am',
+        'fri-1pm', 'fri-130pm', 'fri-2pm', 'fri-230pm', 'fri-3pm', 'fri-330pm',
+        'sat-9am', 'sat-930am', 'sat-10am', 'sat-1030am', 'sat-11am', 'sat-1130am',
+        'sat-1pm', 'sat-130pm', 'sat-2pm', 'sat-230pm', 'sat-3pm', 'sat-330pm'
+    ];
+    
+    allSlotIds.forEach(slotId => {
         const slotElement = document.querySelector(`#event4 button[onclick*="selectSlotCA('${slotId}')"]`);
         
         if (slotElement) {
             const slotContainer = slotElement.closest('.slot');
             const spotsElement = slotContainer.querySelector('.spots');
+            
+                         // Check if this slot has already passed
+             if (isSlotPassed(slotId, 'california')) {
+                 slotElement.className = 'slot-btn passed';
+                 slotElement.textContent = 'Passed';
+                 slotElement.onclick = null;
+                 spotsElement.textContent = 'Time has passed';
+                 spotsElement.className = 'spots full';
+                 console.log(`CA Slot ${slotId} marked as PASSED`);
+                 return; // Skip reservation checking for passed slots
+             }
+            
+            // Check reservations for available slots
+            const reservations = slotReservationsCA[slotId] || [];
+            const remainingSlots = 2 - reservations.length;
+            
+            console.log(`CA Slot ${slotId}: ${reservations.length} reservations, ${remainingSlots} remaining`);
             
             if (remainingSlots === 0) {
                 slotElement.className = 'slot-btn booked';
@@ -931,11 +1032,19 @@ function updateSlotDisplayCA() {
                 spotsElement.textContent = `${remainingSlots} spots available`;
                 spotsElement.className = 'spots';
             }
+        } else {
+            console.log(`Could not find button for CA slot ${slotId}`);
         }
     });
 }
 
 function selectSlotCA(slotId) {
+    // Check if time slot has already passed
+    if (isSlotPassed(slotId, 'california')) {
+        alert('This time slot has already passed. Please select a future time slot.');
+        return;
+    }
+    
     // Check if slot is available
     const reservations = slotReservationsCA[slotId] || [];
     if (reservations.length >= 2) {

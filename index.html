@@ -435,6 +435,14 @@
       margin-top: 1rem;
     }
 
+    /* Single Column Layout for Texas Event */
+    .timeslot-single-column {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
     .timeslot-card {
       background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
       border-radius: 20px;
@@ -698,6 +706,13 @@
       cursor: not-allowed;
     }
 
+    .slot-btn.passed {
+      background: #6c757d;
+      color: white;
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
     .slot-btn.selected {
       background: linear-gradient(135deg, #0077b6, #023e8a);
       color: white;
@@ -868,7 +883,7 @@
               <button class="register-btn" onclick="showEvent4(event); return false;">Register</button>
             </div>
             <div class="card">
-              <h3>Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)</h3>
+              <h3>Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)</h3>
               <p><strong>Registration Open!</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
               <button class="register-btn" onclick="showEvent3(event); return false;">Register</button>
             </div>
@@ -965,7 +980,7 @@
           <p><strong>Date:</strong> August 14–16, 2023</p>
           <p><strong>Location:</strong> Chestnut Hill Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by Mason Manta Rays swimmers.</p>
-          <p><strong>Age groups:</strong> All ages welcome</p>
+          <p><strong>Age groups:</strong> 5-12 is preferred, but all ages are welcome</p>
         </div>
         
         <div class="card">
@@ -1017,7 +1032,7 @@
           <p><strong>Date:</strong> May 18–19, 2024</p>
           <p><strong>Location:</strong> Chestnut Hill Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by Mason Manta Rays swimmers.</p>
-          <p><strong>Age groups:</strong> All ages welcome</p>
+          <p><strong>Age groups:</strong> 5-12 is preferred, but all ages are welcome</p>
         </div>
         
         <div class="card">
@@ -1073,11 +1088,23 @@
           <h3>🤠 Texas Team</h3>
           <div class="team-grid">
             <div class="team-card">
-              <div class="team-avatar">🏊‍♂️</div>
+              <div class="team-avatar austin-avatar">
+                <img src="austinProfilePicture.jpg" alt="Austin Yao" style="
+                  width: 140px; 
+                  height: 140px; 
+                  object-fit: cover; 
+                  border-radius: 40% 60% 30% 50%;
+                  border: 4px solid #0077b6;
+                  box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                  transform: rotate(4deg);
+                  transition: all 0.3s ease;
+                  filter: brightness(1.1) contrast(1.1);
+                " onmouseover="this.style.transform='rotate(-2deg) scale(1.1)'; this.style.borderRadius='50% 30% 40% 60%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(4deg) scale(1)'; this.style.borderRadius='40% 60% 30% 50%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+              </div>
               <h4>Austin Yao</h4>
               <p class="team-location">Dallas, TX</p>
               <p class="team-club">Lakeside Aquatic Club</p>
-              <p class="team-bio">Founder - Passionate about making swimming accessible to everyone! 🏆</p>
+              <p class="team-bio">I'm Austin. I'm a rising freshman who is passionate about swimming. I have been swimming for over 9 years, and I'm currently on Lakeside Aquatic Club. I am a breastroker, and I recently got a sectionals cut in the 100 breast. I also enjoy playing the violin and chess, and doing math as well.</p>
             </div>
             
             <div class="team-card">
@@ -1097,7 +1124,7 @@
               <h4>Rebecca Yao</h4>
               <p class="team-location">Dallas, TX</p>
               <p class="team-club">Lakeside Aquatic Club</p>
-              <p class="team-bio">I'm Rebecca, and I'm a rising seventh grader. I love swimming, and I've been swimming for over 8 years now. My hobbies include, reading, writing, and art, and I love cats.</p>
+              <p class="team-bio">I'm Rebecca, and I'm 12 years old. I currently swim for Lakeside Aquatic Club and I used to swim for the Mason Manta Rays in Ohio. I have been swimming for over eight years, and its become my favorite sports out of three sports I've tried when I was little. My best stroke is backstroke and this long course season I got the 50 back TAGS and 100 back TAGS Bonus. I've been with this program since we started in Mason, Ohio, and its been quite a journey from starting the program to expanding it to here, in Texas. Other hobbies I have include reading, writing, and playing with my two cats.</p>
             </div>
             
             <div class="team-card">
@@ -1110,7 +1137,7 @@
             
             <div class="team-card">
               <div class="team-avatar olivia-avatar">
-                <img src="oliviaProfilePicture.jpg" alt="Olivia Ye" style="
+                <img src="oliviaProfilePicture2.jpg" alt="Olivia Ye" style="
                   width: 140px; 
                   height: 140px; 
                   object-fit: cover; 
@@ -1281,14 +1308,14 @@
     
     <div class="container">
       <section class="section">
-        <h2>Dallas Swim Lessons – August 23–24, 2025</h2>
+        <h2>Southridge Lakes Swim Lessons – August 23–24, 2025</h2>
         
         <div class="card">
           <h3>Event Details</h3>
           <p><strong>Date:</strong> August 23–24, 2025</p>
-          <p><strong>Location:</strong> Dallas Community Pool</p>
+          <p><strong>Location:</strong> Southridge Lakes Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by Lakeside Aquatic Club swimmers.</p>
-          <p><strong>Age groups:</strong> All ages welcome</p>
+          <p><strong>Age groups:</strong> 5-12 is preferred, but all ages are welcome</p>
           <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Registration Open! 🎉</span></p>
         </div>
 
@@ -1305,7 +1332,7 @@
         
         <div class="card">
           <h3>Select Your Time Slot! 📅</h3>
-          <div class="timeslot-grid">
+          <div class="timeslot-single-column">
             <div class="timeslot-card">
               <h4>Friday, August 23rd</h4>
               <div class="time-slots">
@@ -1443,7 +1470,7 @@
         <div class="card" id="registration-form" style="display: none;">
           <h3>Complete Your Registration! 📝</h3>
           <form class="registration-form" onsubmit="handleRegistration(event)">
-            <input type="hidden" id="event-name" name="event" value="Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)">
+            <input type="hidden" id="event-name" name="event" value="Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)">
             
             <div class="form-group">
               <label for="selected-slot">Selected Time Slot:</label>
@@ -1487,7 +1514,7 @@
             
             <div class="form-group">
               <label for="location">Optional: What area are you located in?</label>
-              <input type="text" id="location" name="location" placeholder="e.g., Mason, West Chester, etc.">
+              <input type="text" id="location" name="location" placeholder="e.g., Southlake, Grapevine, etc.">
             </div>
             
             <div class="form-group">
@@ -1533,7 +1560,7 @@
           <p><strong>Date:</strong> August 2–3, 2025</p>
           <p><strong>Location:</strong> California Community Pool</p>
           <p><strong>Description:</strong> Free private swim lessons offered by California Swimming Club swimmers.</p>
-          <p><strong>Age groups:</strong> All ages welcome</p>
+          <p><strong>Age groups:</strong> 5-12 is preferred, but all ages are welcome</p>
           <p><strong>Status:</strong> <span style="color: #28a745; font-weight: bold;">Registration Open! 🎉</span></p>
         </div>
 
