@@ -80,11 +80,14 @@ async function loadFromSpreadsheet() {
         
         console.log('Fetching Dallas data from:', `${scriptURL}?action=getReservations`);
         
-        const response = await fetch(`${scriptURL}?action=getReservations`, {
+        const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`, {
             method: 'GET',
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             }
         });
         
@@ -822,11 +825,14 @@ async function loadFromSpreadsheetCA() {
         
         console.log('Fetching CA data from:', `${scriptURL}?action=getReservationsCA`);
         
-        const response = await fetch(`${scriptURL}?action=getReservationsCA`, {
+        const response = await fetch(`${scriptURL}?action=getReservationsCA&t=${Date.now()}`, {
             method: 'GET',
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
             }
         });
         
@@ -1221,24 +1227,16 @@ function startPeriodicSync() {
         clearInterval(syncInterval);
     }
     
-    // Sync every 30 seconds
+    // Sync every 15 seconds for better mobile responsiveness
     syncInterval = setInterval(() => {
         console.log('Performing periodic sync...');
         
-        // Only sync if we're on a page that shows time slots
-        const currentPage = getCurrentPage();
-        if (currentPage === 'event3') {
-            loadFromSpreadsheet();
-        } else if (currentPage === 'event4') {
-            loadFromSpreadsheetCA();
-        } else if (currentPage === 'main') {
-            // Sync both when on main page
-            loadFromSpreadsheet();
-            loadFromSpreadsheetCA();
-        }
-    }, 30000); // 30 seconds
+        // Always sync both events to ensure mobile gets updates
+        loadFromSpreadsheet();
+        loadFromSpreadsheetCA();
+    }, 15000); // 15 seconds (faster for mobile)
     
-    console.log('Periodic sync started (every 30 seconds)');
+    console.log('Periodic sync started (every 15 seconds)');
 }
 
 function stopPeriodicSync() {
@@ -1337,4 +1335,35 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         debugReservationState();
     }, 2000);
+    
+    // Mobile-specific: Force sync when page becomes visible
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            console.log('Page became visible - forcing sync for mobile');
+            loadFromSpreadsheet();
+            loadFromSpreadsheetCA();
+        }
+    });
+    
+    // Mobile-specific: Force sync when window gains focus
+    window.addEventListener('focus', function() {
+        console.log('Window gained focus - forcing sync for mobile');
+        loadFromSpreadsheet();
+        loadFromSpreadsheetCA();
+    });
+    
+    // Force sync when user interacts with page (mobile tap/scroll)
+    let lastSyncTime = 0;
+    const forceSyncOnInteraction = function() {
+        const now = Date.now();
+        if (now - lastSyncTime > 10000) { // Only sync once per 10 seconds
+            console.log('User interaction detected - forcing sync');
+            loadFromSpreadsheet();
+            loadFromSpreadsheetCA();
+            lastSyncTime = now;
+        }
+    };
+    
+    document.addEventListener('touchstart', forceSyncOnInteraction);
+    document.addEventListener('click', forceSyncOnInteraction);
 });
