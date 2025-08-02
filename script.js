@@ -78,6 +78,8 @@ async function loadFromSpreadsheet() {
         // Use the same Google Apps Script URL but with a GET request to fetch data
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxaiHA9DlRzucZ3tp9oMY6PgqiSvr5KFFh3T3PM8aHL565dOqc7Tpk6OZPDSrasHiy-Zg/exec';
         
+        console.log('Fetching Dallas data from:', `${scriptURL}?action=getReservations`);
+        
         const response = await fetch(`${scriptURL}?action=getReservations`, {
             method: 'GET'
         });
@@ -805,7 +807,9 @@ async function loadFromSpreadsheetCA() {
     
     try {
         // Use the same Google Apps Script URL but with a GET request to fetch CA data
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwzYnmgxDDk9DxhFTPxTApa8oBDOiivd0WI52flZWyGTpPVWbFvgM16nhioqEdXB_MU3Q/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxaiHA9DlRzucZ3tp9oMY6PgqiSvr5KFFh3T3PM8aHL565dOqc7Tpk6OZPDSrasHiy-Zg/exec';
+        
+        console.log('Fetching CA data from:', `${scriptURL}?action=getReservationsCA`);
         
         const response = await fetch(`${scriptURL}?action=getReservationsCA`, {
             method: 'GET'
@@ -1251,9 +1255,71 @@ function clearAllReservations() {
     console.log('All local reservations cleared');
 }
 
+// Debug function to check current state
+function debugReservationState() {
+    console.log('=== RESERVATION DEBUG INFO ===');
+    console.log('Dallas reservations:', slotReservations);
+    console.log('California reservations:', slotReservationsCA);
+    console.log('localStorage Dallas:', localStorage.getItem('swimReservations'));
+    console.log('localStorage California:', localStorage.getItem('swimReservationsCA'));
+    console.log('Current page:', getCurrentPage());
+    console.log('Sync interval active:', syncInterval !== null);
+    console.log('================================');
+}
+
+// Make functions globally accessible
+window.debugReservationState = debugReservationState;
+
+// Manual test function for Google Sheets connectivity
+async function testGoogleSheetsConnection() {
+    console.log('=== TESTING GOOGLE SHEETS CONNECTION ===');
+    
+    try {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxaiHA9DlRzucZ3tp9oMY6PgqiSvr5KFFh3T3PM8aHL565dOqc7Tpk6OZPDSrasHiy-Zg/exec';
+        
+        console.log('Testing Dallas endpoint...');
+        const dallasResponse = await fetch(`${scriptURL}?action=getReservations`);
+        console.log('Dallas response status:', dallasResponse.status);
+        
+        if (dallasResponse.ok) {
+            const dallasData = await dallasResponse.json();
+            console.log('Dallas data:', dallasData);
+        } else {
+            console.error('Dallas request failed:', await dallasResponse.text());
+        }
+        
+        console.log('Testing California endpoint...');
+        const caResponse = await fetch(`${scriptURL}?action=getReservationsCA`);
+        console.log('California response status:', caResponse.status);
+        
+        if (caResponse.ok) {
+            const caData = await caResponse.json();
+            console.log('California data:', caData);
+        } else {
+            console.error('California request failed:', await caResponse.text());
+        }
+        
+    } catch (error) {
+        console.error('Connection test failed:', error);
+    }
+    
+    console.log('=== TEST COMPLETE ===');
+}
+
+// Make functions globally accessible
+window.testGoogleSheetsConnection = testGoogleSheetsConnection;
+window.clearAllReservations = clearAllReservations;
+
 // Start syncing when page loads
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('🏊‍♂️ Swim With a Splash - Script Loaded Successfully!');
+    console.log('Available debug commands: debugReservationState(), testGoogleSheetsConnection(), clearAllReservations()');
     console.log('Page loaded, starting reservation sync...');
     loadReservations();
     loadReservationsCA();
+    
+    // Add debug info after a short delay
+    setTimeout(() => {
+        debugReservationState();
+    }, 2000);
 });
