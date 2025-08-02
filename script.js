@@ -102,11 +102,11 @@ async function loadFromSpreadsheet() {
                 console.log('Detailed reservations:', slotReservations);
                 
                 // Update localStorage with fresh data
-                saveReservations();
-                
+        saveReservations();
+        
                 // Update the display
-                updateSlotDisplay();
-                
+        updateSlotDisplay();
+        
                 console.log('Successfully synced with Google Sheets - found', Object.keys(data.reservations).length, 'slot groups');
             } else if (data.error) {
                 console.warn('Google Sheets returned error:', data.error);
