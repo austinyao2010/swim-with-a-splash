@@ -714,9 +714,9 @@ function handleCancellation(data) {
       
   } catch(error) {
     console.error('Error handling cancellation:', error);
-    return ContentService
+  return ContentService
       .createTextOutput(JSON.stringify({ 'result': 'error', 'error': error.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    .setMimeType(ContentService.MimeType.JSON);
   }
 }
 

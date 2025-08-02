@@ -76,7 +76,7 @@ async function loadFromSpreadsheet() {
     
     try {
         // Use the same Google Apps Script URL but with a GET request to fetch data
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwzYnmgxDDk9DxhFTPxTApa8oBDOiivd0WI52flZWyGTpPVWbFvgM16nhioqEdXB_MU3Q/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxaiHA9DlRzucZ3tp9oMY6PgqiSvr5KFFh3T3PM8aHL565dOqc7Tpk6OZPDSrasHiy-Zg/exec';
         
         const response = await fetch(`${scriptURL}?action=getReservations`, {
             method: 'GET'
@@ -86,20 +86,26 @@ async function loadFromSpreadsheet() {
             const data = await response.json();
             console.log('Received data from Google Sheets:', data);
             
-            if (data.reservations) {
+            if (data.success && data.reservations) {
                 // Merge Google Sheets data with localStorage
                 slotReservations = data.reservations;
                 
                 // Update localStorage with fresh data
-                saveReservations();
-                
+        saveReservations();
+        
                 // Update the display
+        updateSlotDisplay();
+        
+                console.log('Successfully synced with Google Sheets - found', Object.keys(data.reservations).length, 'slot groups');
+            } else if (data.error) {
+                console.warn('Google Sheets returned error:', data.error);
                 updateSlotDisplay();
-                
-                console.log('Successfully synced with Google Sheets');
+            } else {
+                console.warn('Google Sheets returned unexpected format:', data);
+                updateSlotDisplay();
             }
         } else {
-            console.warn('Could not fetch from Google Sheets, using localStorage data');
+            console.warn('HTTP error from Google Sheets:', response.status, response.statusText);
             updateSlotDisplay();
         }
     } catch (error) {
@@ -397,7 +403,7 @@ function handleRegistration(event) {
 // Submit reservation to Google Sheets
 function submitToGoogleSheets(reservation) {
     // Replace this URL with your Google Apps Script web app URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwzYnmgxDDk9DxhFTPxTApa8oBDOiivd0WI52flZWyGTpPVWbFvgM16nhioqEdXB_MU3Q/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxaiHA9DlRzucZ3tp9oMY6PgqiSvr5KFFh3T3PM8aHL565dOqc7Tpk6OZPDSrasHiy-Zg/exec';
     
     const formData = new FormData();
     formData.append('event', reservation.event || 'Dallas Swim Lessons – August 23–24, 2025 (Dallas, Texas)');
@@ -809,7 +815,7 @@ async function loadFromSpreadsheetCA() {
             const data = await response.json();
             console.log('Received CA data from Google Sheets:', data);
             
-            if (data.reservations) {
+            if (data.success && data.reservations) {
                 // Merge Google Sheets data with localStorage
                 slotReservationsCA = data.reservations;
                 
@@ -819,10 +825,16 @@ async function loadFromSpreadsheetCA() {
                 // Update the display
                 updateSlotDisplayCA();
                 
-                console.log('Successfully synced CA data with Google Sheets');
+                console.log('Successfully synced CA data with Google Sheets - found', Object.keys(data.reservations).length, 'slot groups');
+            } else if (data.error) {
+                console.warn('Google Sheets returned CA error:', data.error);
+                updateSlotDisplayCA();
+            } else {
+                console.warn('Google Sheets returned unexpected CA format:', data);
+                updateSlotDisplayCA();
             }
         } else {
-            console.warn('Could not fetch CA data from Google Sheets, using localStorage data');
+            console.warn('HTTP error from Google Sheets CA:', response.status, response.statusText);
             updateSlotDisplayCA();
         }
     } catch (error) {
@@ -1125,7 +1137,7 @@ function removeReservationCA() {
 // Send cancellation to Google Sheets for Dallas events
 function sendCancellationToGoogleSheets(reservation) {
     // Replace this URL with your Google Apps Script web app URL (same as registration)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx68NBQmzZmOnYVOcbER25VQOVHmUHvxjgAbe__ImI4m3qfNQxl_ceaeC-royCrsDs8lQ/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxaiHA9DlRzucZ3tp9oMY6PgqiSvr5KFFh3T3PM8aHL565dOqc7Tpk6OZPDSrasHiy-Zg/exec';
     
     
     const formData = new FormData();
@@ -1155,7 +1167,7 @@ function sendCancellationToGoogleSheets(reservation) {
 // Send cancellation to Google Sheets for California events
 function sendCancellationToGoogleSheetsCA(reservation) {
     // Replace this URL with your Google Apps Script web app URL (same as registration)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwzYnmgxDDk9DxhFTPxTApa8oBDOiivd0WI52flZWyGTpPVWbFvgM16nhioqEdXB_MU3Q/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxaiHA9DlRzucZ3tp9oMY6PgqiSvr5KFFh3T3PM8aHL565dOqc7Tpk6OZPDSrasHiy-Zg/exec';
     
     const formData = new FormData();
     formData.append('action', 'cancel');
@@ -1226,6 +1238,17 @@ function getCurrentPage() {
     } else {
         return 'main';
     }
+}
+
+// Clear all localStorage data (for debugging/reset)
+function clearAllReservations() {
+    localStorage.removeItem('swimReservations');
+    localStorage.removeItem('swimReservationsCA');
+    slotReservations = {};
+    slotReservationsCA = {};
+    updateSlotDisplay();
+    updateSlotDisplayCA();
+    console.log('All local reservations cleared');
 }
 
 // Start syncing when page loads
