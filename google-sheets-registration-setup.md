@@ -224,8 +224,20 @@ function getReservations(eventType) {
 
 // Convert time slot display text to slot ID
 function convertTimeSlotToSlotId(timeSlot, eventType) {
-  // Dallas event slot mapping
+  // Dallas/Texas event slot mapping - Updated for current event
   const dallasSlots = {
+    // Current Texas event (August 23-24, 2025) with Southlake location
+    'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)': 'fri-9am',
+    'Saturday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)': 'fri-930am',
+    'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'fri-10am',
+    'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'fri-1030am',
+    'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'fri-11am',
+    'Sunday, August 24th, 2025 - 5:30 PM - 6:00 PM (Southlake, Texas)': 'sat-9am',
+    'Sunday, August 24th, 2025 - 6:00 PM - 6:30 PM (Southlake, Texas)': 'sat-930am',
+    'Sunday, August 24th, 2025 - 6:30 PM - 7:00 PM (Southlake, Texas)': 'sat-10am',
+    'Sunday, August 24th, 2025 - 7:00 PM - 7:30 PM (Southlake, Texas)': 'sat-1030am',
+    
+    // Legacy mappings for old data (Dallas location)
     'Friday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Dallas, Texas)': 'fri-9am',
     'Friday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Dallas, Texas)': 'fri-930am',
     'Friday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Dallas, Texas)': 'fri-10am',
