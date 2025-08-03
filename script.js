@@ -48,6 +48,21 @@ function scrollToSection(sectionId) {
     }
 }
 
+// Navigate to main page and scroll to section (for navbar)
+function goToMainAndScroll(sectionId) {
+    // First, hide all event pages and show main content
+    backToMain();
+    
+    // Then scroll to the requested section after a brief delay
+    setTimeout(() => {
+        if (sectionId === 'top') {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            scrollToSection(sectionId);
+        }
+    }, 100);
+}
+
 
 
 // Slot management system
@@ -367,31 +382,64 @@ function selectSlot(slotId) {
 }
 
 function removeReservation() {
-    // Get all current reservations
-    const allReservations = [];
+    // Step 1: Ask for email
+    const email = prompt('Please enter your email address to view your reservations:');
+    
+    if (!email || email.trim() === '') {
+        return; // User cancelled or didn't enter email
+    }
+    
+    const userEmail = email.trim().toLowerCase();
+    let isAdmin = false;
+    
+    // Check for admin access
+    if (userEmail === 'swimwithasplash@gmail.com') {
+        const adminName = prompt('Please enter your name for admin access:');
+        if (adminName && ['Sharon', 'Caleb', 'Andrew', 'Austin', 'Yimo'].includes(adminName.trim())) {
+            isAdmin = true;
+        } else {
+            alert('Admin access denied. Invalid name.');
+            return;
+        }
+    }
+    
+    // Step 2: Find reservations (all if admin, user's if regular user)
+    const userReservations = [];
     
     Object.keys(slotReservations).forEach(slotId => {
         slotReservations[slotId].forEach((reservation, index) => {
-            allReservations.push({
-                slotId: slotId,
-                index: index,
-                reservation: reservation,
-                displayText: `${reservation.childName} (Age ${reservation.age}) - ${reservation.timeSlot}`
-            });
+            // Check both email and parentEmail fields for compatibility
+            const reservationEmail = reservation.email || reservation.parentEmail;
+            if (isAdmin || (reservationEmail && reservationEmail.toLowerCase() === userEmail)) {
+                userReservations.push({
+                    slotId: slotId,
+                    index: index,
+                    reservation: reservation,
+                    displayText: `${reservation.childName} (Age ${reservation.age}) - ${reservation.timeSlot} - ${reservationEmail}`
+                });
+            }
         });
     });
     
-    if (allReservations.length === 0) {
-        alert('No reservations found to cancel.');
+    if (userReservations.length === 0) {
+        alert(isAdmin ? 'No reservations found in the system.' : 'No reservations found for this email address.');
         return;
     }
     
-    // Create a selection dialog
-    let message = 'Select which reservation to cancel:\n\n';
-    allReservations.forEach((item, index) => {
+    // Step 3: Show user their reservations and ask which to remove
+    let message = isAdmin ? 
+        `ADMIN ACCESS - Found ${userReservations.length} total reservation(s):\n\n` :
+        `Found ${userReservations.length} reservation(s) for ${email}:\n\n`;
+    userReservations.forEach((item, index) => {
         message += `${index + 1}. ${item.displayText}\n`;
     });
-    message += '\nEnter the number of the reservation to cancel (or 0 to cancel):';
+    message += `\nWhat would you like to do?\n`;
+    for (let i = 1; i <= userReservations.length; i++) {
+        message += `${i} - Remove reservation ${i}\n`;
+    }
+    message += `${userReservations.length + 1} - Cancel all reservations\n`;
+    message += `0 - Cancel (no changes)\n\n`;
+    message += `Enter your choice:`;
     
     const selection = prompt(message);
     
@@ -399,32 +447,50 @@ function removeReservation() {
         return; // User cancelled
     }
     
-    const selectionNum = parseInt(selection) - 1;
+    const selectionNum = parseInt(selection);
     
-    if (selectionNum < 0 || selectionNum >= allReservations.length || isNaN(selectionNum)) {
+    if (isNaN(selectionNum) || selectionNum < 0 || selectionNum > userReservations.length + 1) {
         alert('Invalid selection. Please try again.');
         return;
     }
     
-    const selectedReservation = allReservations[selectionNum];
+    let reservationsToRemove = [];
     
-    // Confirm deletion
-    const confirmDelete = confirm(`Are you sure you want to cancel this reservation?\n\n${selectedReservation.displayText}\n\nThis action cannot be undone.`);
-    
-    if (!confirmDelete) {
-        return;
+    if (selectionNum === userReservations.length + 1) {
+        // Cancel all reservations
+        const confirmAll = confirm(`Are you sure you want to cancel ALL ${userReservations.length} reservation(s)?\n\nThis action cannot be undone.`);
+        if (!confirmAll) {
+            return;
+        }
+        reservationsToRemove = [...userReservations];
+    } else {
+        // Cancel specific reservation
+        const selectedReservation = userReservations[selectionNum - 1];
+        const confirmDelete = confirm(`Are you sure you want to cancel this reservation?\n\n${selectedReservation.displayText}\n\nThis action cannot be undone.`);
+        if (!confirmDelete) {
+            return;
+        }
+        reservationsToRemove = [selectedReservation];
     }
     
-    // Remove the reservation
-    slotReservations[selectedReservation.slotId].splice(selectedReservation.index, 1);
+    // Step 4: Remove the selected reservations
+    // Sort by index in descending order to avoid index shifting issues
+    reservationsToRemove.sort((a, b) => b.index - a.index);
     
-    // If no reservations left for this slot, remove the slot entirely
-    if (slotReservations[selectedReservation.slotId].length === 0) {
-        delete slotReservations[selectedReservation.slotId];
-    }
+    reservationsToRemove.forEach(item => {
+        // Remove the reservation
+        slotReservations[item.slotId].splice(item.index, 1);
+        
+        // Send cancellation to Google Sheets
+        sendCancellationToGoogleSheets(item.reservation);
+    });
     
-    // Send cancellation to Google Sheets
-    sendCancellationToGoogleSheets(selectedReservation.reservation);
+    // Clean up empty slots
+    Object.keys(slotReservations).forEach(slotId => {
+        if (slotReservations[slotId].length === 0) {
+            delete slotReservations[slotId];
+        }
+    });
     
     // Save updated reservations
     saveReservations();
@@ -1061,31 +1127,64 @@ function getSlotIdFromDisplayCA(displayText) {
 }
 
 function removeReservationCA() {
-    // Get all current California reservations
-    const allReservations = [];
+    // Step 1: Ask for email
+    const email = prompt('Please enter your email address to view your California reservations:');
+    
+    if (!email || email.trim() === '') {
+        return; // User cancelled or didn't enter email
+    }
+    
+    const userEmail = email.trim().toLowerCase();
+    let isAdmin = false;
+    
+    // Check for admin access
+    if (userEmail === 'swimwithasplash@gmail.com') {
+        const adminName = prompt('Please enter your name for admin access:');
+        if (adminName && ['Sharon', 'Caleb', 'Andrew', 'Austin', 'Yimo'].includes(adminName.trim())) {
+            isAdmin = true;
+        } else {
+            alert('Admin access denied. Invalid name.');
+            return;
+        }
+    }
+    
+    // Step 2: Find California reservations (all if admin, user's if regular user)
+    const userReservations = [];
     
     Object.keys(slotReservationsCA).forEach(slotId => {
         slotReservationsCA[slotId].forEach((reservation, index) => {
-            allReservations.push({
-                slotId: slotId,
-                index: index,
-                reservation: reservation,
-                displayText: `${reservation.childName} (Age ${reservation.age}) - ${reservation.timeSlot}`
-            });
+            // Check both email and parentEmail fields for compatibility
+            const reservationEmail = reservation.email || reservation.parentEmail;
+            if (isAdmin || (reservationEmail && reservationEmail.toLowerCase() === userEmail)) {
+                userReservations.push({
+                    slotId: slotId,
+                    index: index,
+                    reservation: reservation,
+                    displayText: `${reservation.childName} (Age ${reservation.age}) - ${reservation.timeSlot} - ${reservationEmail}`
+                });
+            }
         });
     });
     
-    if (allReservations.length === 0) {
-        alert('No California reservations found to cancel.');
+    if (userReservations.length === 0) {
+        alert(isAdmin ? 'No California reservations found in the system.' : 'No California reservations found for this email address.');
         return;
     }
     
-    // Create a selection dialog
-    let message = 'Select which California reservation to cancel:\n\n';
-    allReservations.forEach((item, index) => {
+    // Step 3: Show user their reservations and ask which to remove
+    let message = isAdmin ? 
+        `ADMIN ACCESS - Found ${userReservations.length} total California reservation(s):\n\n` :
+        `Found ${userReservations.length} California reservation(s) for ${email}:\n\n`;
+    userReservations.forEach((item, index) => {
         message += `${index + 1}. ${item.displayText}\n`;
     });
-    message += '\nEnter the number of the reservation to cancel (or 0 to cancel):';
+    message += `\nWhat would you like to do?\n`;
+    for (let i = 1; i <= userReservations.length; i++) {
+        message += `${i} - Remove reservation ${i}\n`;
+    }
+    message += `${userReservations.length + 1} - Cancel all reservations\n`;
+    message += `0 - Cancel (no changes)\n\n`;
+    message += `Enter your choice:`;
     
     const selection = prompt(message);
     
@@ -1093,32 +1192,50 @@ function removeReservationCA() {
         return; // User cancelled
     }
     
-    const selectionNum = parseInt(selection) - 1;
+    const selectionNum = parseInt(selection);
     
-    if (selectionNum < 0 || selectionNum >= allReservations.length || isNaN(selectionNum)) {
+    if (isNaN(selectionNum) || selectionNum < 0 || selectionNum > userReservations.length + 1) {
         alert('Invalid selection. Please try again.');
         return;
     }
     
-    const selectedReservation = allReservations[selectionNum];
+    let reservationsToRemove = [];
     
-    // Confirm deletion
-    const confirmDelete = confirm(`Are you sure you want to cancel this California reservation?\n\n${selectedReservation.displayText}\n\nThis action cannot be undone.`);
-    
-    if (!confirmDelete) {
-        return;
+    if (selectionNum === userReservations.length + 1) {
+        // Cancel all reservations
+        const confirmAll = confirm(`Are you sure you want to cancel ALL ${userReservations.length} California reservation(s)?\n\nThis action cannot be undone.`);
+        if (!confirmAll) {
+            return;
+        }
+        reservationsToRemove = [...userReservations];
+    } else {
+        // Cancel specific reservation
+        const selectedReservation = userReservations[selectionNum - 1];
+        const confirmDelete = confirm(`Are you sure you want to cancel this California reservation?\n\n${selectedReservation.displayText}\n\nThis action cannot be undone.`);
+        if (!confirmDelete) {
+            return;
+        }
+        reservationsToRemove = [selectedReservation];
     }
     
-    // Remove the reservation
-    slotReservationsCA[selectedReservation.slotId].splice(selectedReservation.index, 1);
+    // Step 4: Remove the selected reservations
+    // Sort by index in descending order to avoid index shifting issues
+    reservationsToRemove.sort((a, b) => b.index - a.index);
     
-    // If no reservations left for this slot, remove the slot entirely
-    if (slotReservationsCA[selectedReservation.slotId].length === 0) {
-        delete slotReservationsCA[selectedReservation.slotId];
-    }
+    reservationsToRemove.forEach(item => {
+        // Remove the reservation
+        slotReservationsCA[item.slotId].splice(item.index, 1);
+        
+        // Send cancellation to Google Sheets
+        sendCancellationToGoogleSheetsCA(item.reservation);
+    });
     
-    // Send cancellation to Google Sheets
-    sendCancellationToGoogleSheetsCA(selectedReservation.reservation);
+    // Clean up empty slots
+    Object.keys(slotReservationsCA).forEach(slotId => {
+        if (slotReservationsCA[slotId].length === 0) {
+            delete slotReservationsCA[slotId];
+        }
+    });
     
     // Save updated reservations
     saveReservationsCA();
