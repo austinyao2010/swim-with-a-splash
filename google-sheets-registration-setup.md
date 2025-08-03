@@ -289,34 +289,38 @@ function convertTimeSlotToSlotId(timeSlot, eventType) {
   return null;
 }
 
-// Schedule confirmation email for 2 days before event
+// Enhanced trigger scheduling with self-deletion
 function scheduleConfirmationEmail(data, eventDate) {
   const confirmationDate = new Date(eventDate);
   confirmationDate.setDate(confirmationDate.getDate() - 2);
   
   // Only schedule if confirmation date is in the future
   if (confirmationDate > new Date()) {
-    ScriptApp.newTrigger('sendScheduledConfirmationEmail')
+    // Create trigger with unique identifier
+    const triggerId = Utilities.getUuid();
+    const trigger = ScriptApp.newTrigger('sendScheduledConfirmationEmail')
       .timeBased()
       .at(confirmationDate)
       .create();
     
-    // Store trigger info for this registration
+    // Store trigger info with the actual trigger ID for cleanup
     const triggerData = {
       email: data.email,
       childName: data.childName,
       event: data.event,
       timeSlot: data.timeSlot,
       phone: data.phone,
-      triggerType: 'confirmation'
+      triggerType: 'confirmation',
+      triggerUniqueId: trigger.getUniqueId(), // Store actual trigger ID
+      scheduledFor: confirmationDate.toISOString(),
+      createdAt: new Date().toISOString()
     };
     
     // Store in script properties for later retrieval
     const properties = PropertiesService.getScriptProperties();
-    const triggerId = Utilities.getUuid();
     properties.setProperty(`trigger_${triggerId}`, JSON.stringify(triggerData));
     
-    console.log(`Confirmation email scheduled for ${confirmationDate} for ${data.childName}`);
+    console.log(`✅ Confirmation email scheduled for ${confirmationDate} for ${data.childName} (Trigger ID: ${trigger.getUniqueId()})`);
   } else {
     // Send immediately if event is soon
     sendConfirmationEmail(data);
@@ -324,79 +328,255 @@ function scheduleConfirmationEmail(data, eventDate) {
   }
 }
 
-// Schedule thank you email for 1 day after event
+// Enhanced thank you email scheduling with self-deletion
 function scheduleThankYouEmail(data, eventDate) {
   const thankYouDate = new Date(eventDate);
   thankYouDate.setDate(thankYouDate.getDate() + 1);
   
-  ScriptApp.newTrigger('sendScheduledThankYouEmail')
+  // Create trigger with unique identifier
+  const triggerId = Utilities.getUuid();
+  const trigger = ScriptApp.newTrigger('sendScheduledThankYouEmail')
     .timeBased()
     .at(thankYouDate)
     .create();
   
-  // Store trigger info for this registration
+  // Store trigger info with the actual trigger ID for cleanup
   const triggerData = {
     email: data.email,
     childName: data.childName,
     event: data.event,
     timeSlot: data.timeSlot,
-    triggerType: 'thankYou'
+    triggerType: 'thankYou',
+    triggerUniqueId: trigger.getUniqueId(), // Store actual trigger ID
+    scheduledFor: thankYouDate.toISOString(),
+    createdAt: new Date().toISOString()
   };
   
   // Store in script properties for later retrieval
   const properties = PropertiesService.getScriptProperties();
-  const triggerId = Utilities.getUuid();
   properties.setProperty(`trigger_${triggerId}`, JSON.stringify(triggerData));
   
-  console.log(`Thank you email scheduled for ${thankYouDate} for ${data.childName}`);
+  console.log(`✅ Thank you email scheduled for ${thankYouDate} for ${data.childName} (Trigger ID: ${trigger.getUniqueId()})`);
 }
 
-// Function called by scheduled trigger for confirmation emails
+// Self-deleting confirmation email function
 function sendScheduledConfirmationEmail() {
   const properties = PropertiesService.getScriptProperties();
   const allProperties = properties.getProperties();
+  const currentTriggers = ScriptApp.getProjectTriggers();
   
-  // Find all confirmation triggers that should fire today
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Find the trigger that called this function
+  const executingTrigger = currentTriggers.find(trigger => 
+    trigger.getHandlerFunction() === 'sendScheduledConfirmationEmail'
+  );
   
+  let emailsSent = 0;
+  let triggerDeleted = false;
+  
+  // Find all confirmation triggers that should fire
   Object.keys(allProperties).forEach(key => {
     if (key.startsWith('trigger_')) {
       try {
         const triggerData = JSON.parse(allProperties[key]);
         if (triggerData.triggerType === 'confirmation') {
+          // Send the email
           sendConfirmationEmail(triggerData);
           updateEmailStatus(triggerData.email, triggerData.childName, 'confirmation');
-          // Clean up the trigger data
+          emailsSent++;
+          
+          // Clean up the trigger data from properties
           properties.deleteProperty(key);
+          
+          // Delete the actual trigger if this matches the executing one
+          if (executingTrigger && triggerData.triggerUniqueId === executingTrigger.getUniqueId()) {
+            ScriptApp.deleteTrigger(executingTrigger);
+            triggerDeleted = true;
+            console.log(`🗑️ Deleted confirmation trigger: ${executingTrigger.getUniqueId()}`);
+          }
         }
       } catch (error) {
-        console.error('Error processing scheduled confirmation email:', error);
+        console.error('❌ Error processing scheduled confirmation email:', error);
       }
     }
   });
+  
+  console.log(`✅ Confirmation emails sent: ${emailsSent}, Trigger deleted: ${triggerDeleted}`);
 }
 
-// Function called by scheduled trigger for thank you emails
+// Self-deleting thank you email function
 function sendScheduledThankYouEmail() {
   const properties = PropertiesService.getScriptProperties();
   const allProperties = properties.getProperties();
+  const currentTriggers = ScriptApp.getProjectTriggers();
   
+  // Find the trigger that called this function
+  const executingTrigger = currentTriggers.find(trigger => 
+    trigger.getHandlerFunction() === 'sendScheduledThankYouEmail'
+  );
+  
+  let emailsSent = 0;
+  let triggerDeleted = false;
+  
+  // Find all thank you triggers that should fire
   Object.keys(allProperties).forEach(key => {
     if (key.startsWith('trigger_')) {
       try {
         const triggerData = JSON.parse(allProperties[key]);
         if (triggerData.triggerType === 'thankYou') {
+          // Send the email
           sendPostEventThankYouEmail(triggerData);
           updateEmailStatus(triggerData.email, triggerData.childName, 'thankYou');
-          // Clean up the trigger data
+          emailsSent++;
+          
+          // Clean up the trigger data from properties
           properties.deleteProperty(key);
+          
+          // Delete the actual trigger if this matches the executing one
+          if (executingTrigger && triggerData.triggerUniqueId === executingTrigger.getUniqueId()) {
+            ScriptApp.deleteTrigger(executingTrigger);
+            triggerDeleted = true;
+            console.log(`🗑️ Deleted thank you trigger: ${executingTrigger.getUniqueId()}`);
+          }
         }
       } catch (error) {
-        console.error('Error processing scheduled thank you email:', error);
+        console.error('❌ Error processing scheduled thank you email:', error);
       }
     }
   });
+  
+  console.log(`✅ Thank you emails sent: ${emailsSent}, Trigger deleted: ${triggerDeleted}`);
+}
+
+// Weekly cleanup function to catch any missed triggers
+function cleanupExpiredTriggers() {
+  const triggers = ScriptApp.getProjectTriggers();
+  const properties = PropertiesService.getScriptProperties();
+  const allProperties = properties.getProperties();
+  const now = new Date();
+  
+  let deletedTriggers = 0;
+  let cleanedProperties = 0;
+  
+  console.log(`🧹 Starting cleanup - Found ${triggers.length} total triggers`);
+  
+  // Clean up expired trigger data from properties
+  Object.keys(allProperties).forEach(key => {
+    if (key.startsWith('trigger_')) {
+      try {
+        const triggerData = JSON.parse(allProperties[key]);
+        const scheduledFor = new Date(triggerData.scheduledFor);
+        
+        // If scheduled time has passed by more than 1 day, clean it up
+        const oneDayAfterScheduled = new Date(scheduledFor);
+        oneDayAfterScheduled.setDate(oneDayAfterScheduled.getDate() + 1);
+        
+        if (now > oneDayAfterScheduled) {
+          // Find and delete the corresponding trigger
+          const correspondingTrigger = triggers.find(t => 
+            t.getUniqueId() === triggerData.triggerUniqueId
+          );
+          
+          if (correspondingTrigger) {
+            ScriptApp.deleteTrigger(correspondingTrigger);
+            deletedTriggers++;
+            console.log(`🗑️ Deleted expired trigger: ${triggerData.triggerType} for ${triggerData.childName}`);
+          }
+          
+          // Clean up the property
+          properties.deleteProperty(key);
+          cleanedProperties++;
+        }
+      } catch (error) {
+        console.error('❌ Error during cleanup:', error);
+        // If we can't parse the property, it's probably corrupted - delete it
+        properties.deleteProperty(key);
+        cleanedProperties++;
+      }
+    }
+  });
+  
+  // Also clean up any orphaned email triggers (triggers without corresponding properties)
+  triggers.forEach(trigger => {
+    const functionName = trigger.getHandlerFunction();
+    if (functionName === 'sendScheduledConfirmationEmail' || functionName === 'sendScheduledThankYouEmail') {
+      const triggerUniqueId = trigger.getUniqueId();
+      
+      // Check if this trigger has corresponding property data
+      const hasCorrespondingProperty = Object.keys(allProperties).some(key => {
+        if (key.startsWith('trigger_')) {
+          try {
+            const triggerData = JSON.parse(allProperties[key]);
+            return triggerData.triggerUniqueId === triggerUniqueId;
+          } catch (error) {
+            return false;
+          }
+        }
+        return false;
+      });
+      
+      if (!hasCorrespondingProperty) {
+        ScriptApp.deleteTrigger(trigger);
+        deletedTriggers++;
+        console.log(`🗑️ Deleted orphaned trigger: ${functionName} (${triggerUniqueId})`);
+      }
+    }
+  });
+  
+  console.log(`✅ Cleanup complete: ${deletedTriggers} triggers deleted, ${cleanedProperties} properties cleaned`);
+  
+  // Send cleanup report to admin (optional)
+  if (deletedTriggers > 0 || cleanedProperties > 0) {
+    sendCleanupReport(deletedTriggers, cleanedProperties);
+  }
+}
+
+// Setup weekly cleanup trigger (run this once)
+function setupWeeklyCleanup() {
+  // Delete existing cleanup triggers first
+  const existingTriggers = ScriptApp.getProjectTriggers()
+    .filter(t => t.getHandlerFunction() === 'cleanupExpiredTriggers');
+  
+  existingTriggers.forEach(t => {
+    ScriptApp.deleteTrigger(t);
+    console.log('🗑️ Deleted existing cleanup trigger');
+  });
+  
+  // Create new weekly cleanup trigger
+  const cleanupTrigger = ScriptApp.newTrigger('cleanupExpiredTriggers')
+    .timeBased()
+    .everyWeeks(1)
+    .onWeekDay(ScriptApp.WeekDay.SUNDAY)
+    .atHour(2) // 2 AM on Sunday
+    .create();
+  
+  console.log(`✅ Weekly cleanup trigger created: ${cleanupTrigger.getUniqueId()}`);
+  console.log('🕐 Will run every Sunday at 2:00 AM');
+}
+
+// Optional: Send cleanup report to admin
+function sendCleanupReport(deletedTriggers, cleanedProperties) {
+  const adminEmail = 'swimwithasplash@gmail.com'; // Update this to your admin email
+  const subject = 'Swim With a Splash - Weekly Trigger Cleanup Report';
+  const body = `
+Weekly Cleanup Report - ${new Date().toLocaleDateString()}
+
+Summary:
+- Triggers deleted: ${deletedTriggers}
+- Properties cleaned: ${cleanedProperties}
+- Total triggers remaining: ${ScriptApp.getProjectTriggers().length}
+
+This cleanup helps keep your Google Apps Script running efficiently by removing expired email triggers.
+
+Best regards,
+Swim With a Splash Automation System
+  `;
+  
+  try {
+    GmailApp.sendEmail(adminEmail, subject, body);
+    console.log('📧 Cleanup report sent to admin');
+  } catch (error) {
+    console.error('❌ Failed to send cleanup report:', error);
+  }
 }
 
 // Update email status in the sheet
@@ -812,11 +992,26 @@ function sendCancellationNotification(data) {
   }
 }
 
-// Manual function to check and send any pending emails (run this daily)
+// Enhanced checkPendingEmails with better logging
 function checkPendingEmails() {
-  console.log('Checking for pending scheduled emails...');
-  sendScheduledConfirmationEmail();
-  sendScheduledThankYouEmail();
+  console.log('🔍 Checking for pending emails...');
+  
+  const triggers = ScriptApp.getProjectTriggers();
+  const emailTriggers = triggers.filter(t => 
+    t.getHandlerFunction() === 'sendScheduledConfirmationEmail' || 
+    t.getHandlerFunction() === 'sendScheduledThankYouEmail'
+  );
+  
+  console.log(`📊 Found ${emailTriggers.length} email triggers:`);
+  
+  emailTriggers.forEach(trigger => {
+    const nextExecution = trigger.getTriggerSource() === ScriptApp.TriggerSource.CLOCK ? 
+      'Time-based trigger' : 'Unknown';
+    console.log(`- ${trigger.getHandlerFunction()}: ${nextExecution} (ID: ${trigger.getUniqueId()})`);
+  });
+  
+  // Also run cleanup to catch any expired triggers
+  cleanupExpiredTriggers();
 }
 ```
 

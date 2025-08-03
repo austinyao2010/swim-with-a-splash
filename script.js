@@ -85,7 +85,7 @@ async function loadFromSpreadsheet() {
     
     try {
         // Use the same Google Apps Script URL but with a GET request to fetch data
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
         
         console.log('Fetching Dallas data from:', `${scriptURL}?action=getReservations`);
         
@@ -504,7 +504,7 @@ function handleRegistration(event) {
 // Submit reservation to Google Sheets
 function submitToGoogleSheets(reservation) {
     // Replace this URL with your Google Apps Script web app URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
     
     const formData = new FormData();
     formData.append('event', reservation.event || 'Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)');
@@ -893,7 +893,7 @@ async function loadFromSpreadsheetCA() {
     
     try {
         // Use the same Google Apps Script URL but with a GET request to fetch CA data
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
         
         console.log('Fetching CA data from:', `${scriptURL}?action=getReservationsCA`);
         
@@ -957,143 +957,15 @@ function saveReservationsCA() {
 
 // Update the visual display of all California slots
 function updateSlotDisplayCA() {
-    console.log('Updating CA slot display with reservations:', slotReservationsCA);
-    
-    // First, reset all slots to default state
-    document.querySelectorAll('#event4 .slot-btn').forEach(btn => {
-        btn.className = 'slot-btn available';
-        btn.textContent = 'Sign Up';
-        // Restore onclick functionality
-        const slotId = btn.getAttribute('onclick')?.match(/selectSlotCA\('([^']+)'\)/)?.[1];
-        if (slotId) {
-            btn.onclick = () => selectSlotCA(slotId);
-        }
-    });
-    
-    document.querySelectorAll('#event4 .spots').forEach(spotsElement => {
-        spotsElement.textContent = '2 spots available';
-        spotsElement.className = 'spots';
-    });
-    
-    // Check all slots for time-based availability and reservations
-    const allSlotIds = [
-        'fri-9am', 'fri-930am', 'fri-10am', 'fri-1030am', 'fri-11am', 'fri-1130am',
-        'fri-1pm', 'fri-130pm', 'fri-2pm', 'fri-230pm', 'fri-3pm', 'fri-330pm',
-        'sat-9am', 'sat-930am', 'sat-10am', 'sat-1030am', 'sat-11am', 'sat-1130am',
-        'sat-1pm', 'sat-130pm', 'sat-2pm', 'sat-230pm', 'sat-3pm', 'sat-330pm'
-    ];
-    
-    allSlotIds.forEach(slotId => {
-        const slotElement = document.querySelector(`#event4 button[onclick*="selectSlotCA('${slotId}')"]`);
-        
-        if (slotElement) {
-            const slotContainer = slotElement.closest('.slot');
-            const spotsElement = slotContainer.querySelector('.spots');
-            
-                         // Check if this slot has already passed
-             if (isSlotPassed(slotId, 'california')) {
-                 slotElement.className = 'slot-btn passed';
-                 slotElement.textContent = 'Passed';
-                 slotElement.onclick = null;
-                 spotsElement.textContent = 'Time has passed';
-                 spotsElement.className = 'spots full';
-                 console.log(`CA Slot ${slotId} marked as PASSED`);
-                 return; // Skip reservation checking for passed slots
-             }
-            
-            // Check reservations for available slots
-            const reservations = slotReservationsCA[slotId] || [];
-            const remainingSlots = 2 - reservations.length;
-            
-            console.log(`CA Slot ${slotId}: ${reservations.length} reservations, ${remainingSlots} remaining`);
-            
-            if (remainingSlots === 0) {
-                slotElement.className = 'slot-btn booked';
-                slotElement.textContent = 'Full';
-                slotElement.onclick = null;
-                spotsElement.textContent = 'No spots available';
-                spotsElement.className = 'spots full';
-            } else if (remainingSlots === 1) {
-                slotElement.className = 'slot-btn available';
-                slotElement.textContent = 'Sign Up';
-                slotElement.onclick = () => selectSlotCA(slotId);
-                spotsElement.textContent = '1 spot left';
-                spotsElement.className = 'spots warning';
-            } else {
-                slotElement.className = 'slot-btn available';
-                slotElement.textContent = 'Sign Up';
-                slotElement.onclick = () => selectSlotCA(slotId);
-                spotsElement.textContent = `${remainingSlots} spots available`;
-                spotsElement.className = 'spots';
-            }
-        } else {
-            console.log(`Could not find button for CA slot ${slotId}`);
-        }
-    });
+    // California event is now details-only (no signup), so this function does nothing
+    // This prevents console errors from trying to find removed buttons
+    return;
 }
 
 function selectSlotCA(slotId) {
-    // Check if time slot has already passed
-    if (isSlotPassed(slotId, 'california')) {
-        alert('This time slot has already passed. Please select a future time slot.');
-        return;
-    }
-    
-    // Check if slot is available
-    const reservations = slotReservationsCA[slotId] || [];
-    if (reservations.length >= 2) {
-        alert('This time slot is full. Please select another time.');
-        return;
-    }
-    
-    // Reset all buttons to their current state
-    updateSlotDisplayCA();
-    
-    // Mark selected slot
-    const selectedBtn = document.querySelector(`#event4 button[onclick*="selectSlotCA('${slotId}')"]`);
-    if (selectedBtn) {
-        selectedBtn.className = 'slot-btn selected';
-        selectedBtn.textContent = 'Selected ✓';
-    }
-    
-    // Update the selected slot display
-    const slotDisplay = {
-        'fri-9am': 'Friday, August 9th, 2025 - 9:00 AM - 9:30 AM (California)',
-        'fri-930am': 'Friday, August 9th, 2025 - 9:30 AM - 10:00 AM (California)',
-        'fri-10am': 'Friday, August 9th, 2025 - 10:00 AM - 10:30 AM (California)',
-        'fri-1030am': 'Friday, August 9th, 2025 - 10:30 AM - 11:00 AM (California)',
-        'fri-11am': 'Friday, August 9th, 2025 - 11:00 AM - 11:30 AM (California)',
-        'fri-1130am': 'Friday, August 9th, 2025 - 11:30 AM - 12:00 PM (California)',
-        'fri-1pm': 'Friday, August 9th, 2025 - 1:00 PM - 1:30 PM (California)',
-        'fri-130pm': 'Friday, August 9th, 2025 - 1:30 PM - 2:00 PM (California)',
-        'fri-2pm': 'Friday, August 9th, 2025 - 2:00 PM - 2:30 PM (California)',
-        'fri-230pm': 'Friday, August 9th, 2025 - 2:30 PM - 3:00 PM (California)',
-        'fri-3pm': 'Friday, August 9th, 2025 - 3:00 PM - 3:30 PM (California)',
-        'fri-330pm': 'Friday, August 9th, 2025 - 3:30 PM - 4:00 PM (California)',
-        'sat-9am': 'Saturday, August 10th, 2025 - 9:00 AM - 9:30 AM (California)',
-        'sat-930am': 'Saturday, August 10th, 2025 - 9:30 AM - 10:00 AM (California)',
-        'sat-10am': 'Saturday, August 10th, 2025 - 10:00 AM - 10:30 AM (California)',
-        'sat-1030am': 'Saturday, August 10th, 2025 - 10:30 AM - 11:00 AM (California)',
-        'sat-11am': 'Saturday, August 10th, 2025 - 11:00 AM - 11:30 AM (California)',
-        'sat-1130am': 'Saturday, August 10th, 2025 - 11:30 AM - 12:00 PM (California)',
-        'sat-1pm': 'Saturday, August 10th, 2025 - 1:00 PM - 1:30 PM (California)',
-        'sat-130pm': 'Saturday, August 10th, 2025 - 1:30 PM - 2:00 PM (California)',
-        'sat-2pm': 'Saturday, August 10th, 2025 - 2:00 PM - 2:30 PM (California)',
-        'sat-230pm': 'Saturday, August 10th, 2025 - 2:30 PM - 3:00 PM (California)',
-        'sat-3pm': 'Saturday, August 10th, 2025 - 3:00 PM - 3:30 PM (California)',
-        'sat-330pm': 'Saturday, August 10th, 2025 - 3:30 PM - 4:00 PM (California)'
-    };
-    
-    document.getElementById('selected-slot-ca').value = slotDisplay[slotId];
-    
-    // Show the registration form
-    document.getElementById('registration-form-ca').style.display = 'block';
-    
-    // Smooth scroll to the form
-    document.getElementById('registration-form-ca').scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-    });
+    // California event is now details-only (no signup), so this function does nothing
+    console.log('CA event is details-only - no slot selection available');
+    return;
 }
 
 // Handle California form submission
@@ -1265,7 +1137,7 @@ function removeReservationCA() {
 // Send cancellation to Google Sheets for Dallas events
 function sendCancellationToGoogleSheets(reservation) {
     // Replace this URL with your Google Apps Script web app URL (same as registration)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
     
     
     const formData = new FormData();
@@ -1295,7 +1167,7 @@ function sendCancellationToGoogleSheets(reservation) {
 // Send cancellation to Google Sheets for California events
 function sendCancellationToGoogleSheetsCA(reservation) {
     // Replace this URL with your Google Apps Script web app URL (same as registration)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
     
     const formData = new FormData();
     formData.append('action', 'cancel');
@@ -1386,6 +1258,159 @@ function debugReservationState() {
 // Make functions globally accessible
 window.debugReservationState = debugReservationState;
 
+// Comprehensive debug function to test registration flow
+async function debugRegistrationFlow() {
+    console.log('=== COMPREHENSIVE REGISTRATION DEBUG ===');
+    
+    // Test 1: Check slot ID mapping
+    console.log('1. Testing slot ID mapping...');
+    const testTimeSlot = 'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)';
+    const slotId = getSlotIdFromDisplay(testTimeSlot);
+    console.log('Time slot:', testTimeSlot);
+    console.log('Mapped slot ID:', slotId);
+    
+    // Test 2: Check current reservations
+    console.log('\n2. Current reservation state...');
+    console.log('Dallas reservations:', slotReservations);
+    console.log('California reservations:', slotReservationsCA);
+    
+    // Test 3: Test Google Sheets GET
+    console.log('\n3. Testing Google Sheets GET...');
+    try {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
+        const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`);
+        console.log('GET Response status:', response.status);
+        if (response.ok) {
+            const data = await response.json();
+            console.log('GET Response data:', data);
+        } else {
+            console.log('GET Response text:', await response.text());
+        }
+    } catch (error) {
+        console.error('GET Request failed:', error);
+    }
+    
+    // Test 4: Test a sample registration POST
+    console.log('\n4. Testing sample registration POST...');
+    try {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
+        const formData = new FormData();
+        formData.append('action', 'register');
+        formData.append('childName', 'Debug Test Child');
+        formData.append('parentName', 'Debug Test Parent'); 
+        formData.append('email', 'debug@test.com');
+        formData.append('phone', '555-DEBUG');
+        formData.append('timeSlot', testTimeSlot);
+        formData.append('event', 'Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)');
+        
+        const postResponse = await fetch(scriptURL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        console.log('POST Response status:', postResponse.status);
+        console.log('POST Response headers:', [...postResponse.headers.entries()]);
+        
+        if (postResponse.ok) {
+            const postData = await postResponse.json();
+            console.log('POST Response data:', postData);
+        } else {
+            const postText = await postResponse.text();
+            console.log('POST Response text (first 500 chars):', postText.substring(0, 500));
+        }
+    } catch (error) {
+        console.error('POST Request failed:', error);
+    }
+    
+    // Test 5: Wait and check if data appears
+    console.log('\n5. Waiting 3 seconds then checking for new data...');
+    setTimeout(async () => {
+        try {
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
+            const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`);
+            if (response.ok) {
+                const data = await response.json();
+                console.log('After 3 seconds - GET Response data:', data);
+                
+                if (data.success && data.reservations && Object.keys(data.reservations).length > 0) {
+                    console.log('✅ SUCCESS: Registration appeared in Google Sheets!');
+                } else {
+                    console.log('❌ ISSUE: No reservations found after registration attempt');
+                }
+            }
+        } catch (error) {
+            console.error('Delayed GET failed:', error);
+        }
+    }, 3000);
+    
+    console.log('=== DEBUG COMPLETE - Check console for results ===');
+}
+
+// Make debug function globally available
+window.debugRegistrationFlow = debugRegistrationFlow;
+
+// Simple test function without triggers
+async function testSimpleRegistration() {
+    console.log('=== TESTING SIMPLE REGISTRATION ===');
+    
+    try {
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
+        
+        const formData = new FormData();
+        formData.append('action', 'register');
+        formData.append('childName', 'Simple Test Child');
+        formData.append('parentName', 'Simple Test Parent');
+        formData.append('email', 'simple@test.com');
+        formData.append('phone', '555-SIMPLE');
+        formData.append('timeSlot', 'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)');
+        formData.append('event', 'Southridge Lakes Swim Lessons – August 23–24, 2025 (Southlake, Texas)');
+        
+        console.log('Sending simple registration...');
+        const response = await fetch(scriptURL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Response data:', data);
+            
+            if (data.result === 'success') {
+                console.log('✅ SUCCESS: Registration worked!');
+                
+                // Wait 2 seconds then check if it appears
+                setTimeout(async () => {
+                    const getResponse = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`);
+                    if (getResponse.ok) {
+                        const getData = await getResponse.json();
+                        console.log('After registration - Sheet data:', getData);
+                        
+                        if (getData.reservations && Object.keys(getData.reservations).length > 0) {
+                            console.log('✅ CONFIRMED: Data appeared in Google Sheets!');
+                        } else {
+                            console.log('❌ ISSUE: Data not in Google Sheets yet');
+                        }
+                    }
+                }, 2000);
+                
+            } else {
+                console.log('❌ FAILED: Registration error:', data);
+            }
+        } else {
+            const text = await response.text();
+            console.log('❌ HTTP ERROR:', response.status, text.substring(0, 200));
+        }
+        
+    } catch (error) {
+        console.error('❌ REQUEST FAILED:', error);
+    }
+}
+
+// Make function globally available
+window.testSimpleRegistration = testSimpleRegistration;
+
 // Manual test function for Google Sheets connectivity
 // Debug function to check current reservation state
 function debugCurrentState() {
@@ -1400,7 +1425,7 @@ async function testGoogleSheetsConnection() {
     console.log('=== TESTING GOOGLE SHEETS CONNECTION ===');
     
     try {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbwTLB_xpqtPFqW1oDFPvGz_O6Ou8Gm2UJ4RXVSKnzN_eaUM22TiFXlc9RULiu99rzLRmA/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
         
         console.log('Testing Dallas endpoint...');
         const dallasResponse = await fetch(`${scriptURL}?action=getReservations`);
