@@ -94,67 +94,95 @@ function loadReservations() {
     startPeriodicSync();
 }
 
-// Load reservations from Google Sheets and sync with localStorage
+// Enhanced sync function with better reliability
 async function loadFromSpreadsheet() {
-    console.log('Loading reservations from Google Sheets...');
+    console.log('🔄 Loading reservations from Google Sheets...');
     
     try {
-        // Use the same Google Apps Script URL but with a GET request to fetch data
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxhG0zYWgHIlin8YuvTVRKDKqtx6RvfxOPL48F5U1OTAWq3evbbbDjD4MTomqcyUtTl4Q/exec';
         
-        console.log('Fetching Dallas data from:', `${scriptURL}?action=getReservations`);
+        console.log('📡 Fetching Dallas data from:', `${scriptURL}?action=getReservations`);
         
-        const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`);
+        // Add timeout and better error handling
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
         
-                if (response.ok) {
+        const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`, {
+            signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (response.ok) {
             const data = await response.json();
-            console.log('Received data from Google Sheets:', data);
+            console.log('📥 Received data from Google Sheets:', data);
             
             if (data.success && data.reservations) {
-                console.log('Before sync - Dallas slots:', Object.keys(slotReservations).length);
+                console.log('🔍 Before sync - Dallas slots:', Object.keys(slotReservations).length);
                 
-                // Merge Google Sheets data with localStorage (don't overwrite local data)
-                Object.keys(data.reservations).forEach(slotId => {
-                    if (!slotReservations[slotId]) {
-                        slotReservations[slotId] = [];
-                    }
-                    // Add any reservations from Google Sheets that aren't already local
-                    data.reservations[slotId].forEach(reservation => {
-                        const exists = slotReservations[slotId].some(local => 
-                            local.childName === reservation.childName && 
-                            local.timeSlot === reservation.timeSlot
+                // Complete replacement strategy for better consistency
+                const serverReservations = data.reservations;
+                const localOnlyReservations = {};
+                
+                // First, preserve any local-only reservations (recent submissions not yet in server)
+                Object.keys(slotReservations).forEach(slotId => {
+                    slotReservations[slotId].forEach(localRes => {
+                        const isOnServer = serverReservations[slotId]?.some(serverRes => 
+                            serverRes.childName === localRes.childName && 
+                            serverRes.timeSlot === localRes.timeSlot &&
+                            serverRes.email === localRes.email
                         );
-                        if (!exists) {
-                            slotReservations[slotId].push(reservation);
+                        
+                        if (!isOnServer) {
+                            // This is a local-only reservation (probably just submitted)
+                            if (!localOnlyReservations[slotId]) {
+                                localOnlyReservations[slotId] = [];
+                            }
+                            localOnlyReservations[slotId].push(localRes);
                         }
                     });
                 });
                 
-                console.log('After sync - Dallas slots:', Object.keys(slotReservations).length);
-                console.log('Detailed reservations:', slotReservations);
+                // Replace with server data
+                slotReservations = { ...serverReservations };
                 
-                // Update localStorage with fresh data
-        saveReservations();
-        
+                // Add back local-only reservations
+                Object.keys(localOnlyReservations).forEach(slotId => {
+                    if (!slotReservations[slotId]) {
+                        slotReservations[slotId] = [];
+                    }
+                    slotReservations[slotId].push(...localOnlyReservations[slotId]);
+                });
+                
+                console.log('✅ After sync - Dallas slots:', Object.keys(slotReservations).length);
+                console.log('📊 Detailed reservations:', slotReservations);
+                
+                // Update localStorage with synced data
+                saveReservations();
+                
                 // Update the display
-        updateSlotDisplay();
-        
-                console.log('Successfully synced with Google Sheets - found', Object.keys(data.reservations).length, 'slot groups');
+                updateSlotDisplay();
+                
+                console.log('🎉 Successfully synced with Google Sheets - found', Object.keys(data.reservations).length, 'slot groups');
             } else if (data.error) {
-                console.warn('Google Sheets returned error:', data.error);
+                console.warn('⚠️ Google Sheets returned error:', data.error);
                 updateSlotDisplay();
             } else {
-                console.warn('Google Sheets returned unexpected format:', data);
+                console.warn('⚠️ Google Sheets returned unexpected format:', data);
                 console.log('Expected: {success: true, reservations: {}}');
                 console.log('Received:', data);
                 updateSlotDisplay();
             }
         } else {
-            console.warn('HTTP error from Google Sheets:', response.status, response.statusText);
+            console.warn('❌ HTTP error from Google Sheets:', response.status, response.statusText);
             updateSlotDisplay();
         }
     } catch (error) {
-        console.warn('Error fetching from Google Sheets, falling back to localStorage:', error);
+        if (error.name === 'AbortError') {
+            console.warn('⏰ Sync request timed out');
+        } else {
+            console.warn('❌ Error fetching from Google Sheets, falling back to localStorage:', error);
+        }
         updateSlotDisplay();
     }
 }
@@ -567,9 +595,8 @@ function handleRegistration(event) {
     alert(`Registration successful! ${reservation.childName} is registered for ${selectedSlot}. You will receive a confirmation shortly.`);
 }
 
-// Submit reservation to Google Sheets
-function submitToGoogleSheets(reservation) {
-    // Replace this URL with your Google Apps Script web app URL
+// Enhanced submission with sync trigger
+async function submitToGoogleSheets(reservation) {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxhG0zYWgHIlin8YuvTVRKDKqtx6RvfxOPL48F5U1OTAWq3evbbbDjD4MTomqcyUtTl4Q/exec';
     
     const formData = new FormData();
@@ -585,20 +612,30 @@ function submitToGoogleSheets(reservation) {
     formData.append('timeSlot', reservation.timeSlot);
     formData.append('timestamp', reservation.timestamp);
     
-    fetch(scriptURL, {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
+    try {
+        console.log('📤 Submitting reservation to Google Sheets...');
+        
+        const response = await fetch(scriptURL, {
+            method: 'POST',
+            body: formData
+        });
+        
         if (response.ok) {
-            console.log('Reservation submitted to Google Sheets successfully');
+            const result = await response.json();
+            console.log('✅ Reservation submitted to Google Sheets successfully:', result);
+            
+            // Trigger immediate sync after successful submission
+            setTimeout(() => {
+                console.log('🔄 Triggering sync after submission...');
+                loadFromSpreadsheet();
+            }, 2000); // Wait 2 seconds for server to process
+            
         } else {
-            console.error('Error submitting to Google Sheets');
+            console.error('❌ HTTP error submitting to Google Sheets:', response.status);
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+    } catch (error) {
+        console.error('❌ Network error submitting to Google Sheets:', error);
+    }
 }
 
 // Helper function to get slot ID from display text
@@ -1313,22 +1350,46 @@ function sendCancellationToGoogleSheetsCA(reservation) {
 // Periodic sync functionality
 let syncInterval = null;
 
-function startPeriodicSync() {
+function startPeriodicSync(interval = 30000) {
     // Clear any existing interval
     if (syncInterval) {
         clearInterval(syncInterval);
+        syncInterval = null;
     }
     
-    // Re-enabling periodic sync since Google Apps Script is working
-    syncInterval = setInterval(() => {
-        console.log('Performing periodic sync...');
-        
-        // Always sync both events to ensure mobile gets updates
-        loadFromSpreadsheet();
-        loadFromSpreadsheetCA();
-    }, 30000); // 30 seconds
+    // Enhanced periodic sync with intelligent frequency
+    let syncFailures = 0;
+    const maxSyncFailures = 3;
     
-    console.log('Periodic sync re-enabled (every 30 seconds)');
+    syncInterval = setInterval(async () => {
+        console.log('🔄 Performing periodic sync...');
+        
+        try {
+            // Always sync both events to ensure mobile gets updates
+            await Promise.all([
+                loadFromSpreadsheet(),
+                loadFromSpreadsheetCA()
+            ]);
+            
+            // Reset failure count on success
+            syncFailures = 0;
+            
+        } catch (error) {
+            syncFailures++;
+            console.warn(`⚠️ Sync attempt ${syncFailures}/${maxSyncFailures} failed:`, error);
+            
+            // If too many failures, increase sync interval to reduce load
+            if (syncFailures >= maxSyncFailures) {
+                console.warn('🚨 Too many sync failures, reducing sync frequency');
+                clearInterval(syncInterval);
+                syncInterval = null;
+                // Restart with longer interval after a delay
+                setTimeout(() => startPeriodicSync(60000), 5000); // Wait 5s, then 60s interval
+            }
+        }
+    }, interval);
+    
+    console.log(`🔄 Periodic sync enabled (every ${interval/1000} seconds)`);
 }
 
 function stopPeriodicSync() {
@@ -1374,6 +1435,38 @@ function debugReservationState() {
 
 // Make functions globally accessible
 window.debugReservationState = debugReservationState;
+
+// Manual sync trigger for immediate updates
+async function forceSyncNow() {
+    console.log('🚀 Force syncing all data...');
+    
+    try {
+        // Stop periodic sync temporarily
+        const wasRunning = syncInterval !== null;
+        if (wasRunning) {
+            stopPeriodicSync();
+        }
+        
+        // Force immediate sync
+        await Promise.all([
+            loadFromSpreadsheet(),
+            loadFromSpreadsheetCA()
+        ]);
+        
+        console.log('✅ Force sync completed successfully');
+        
+        // Restart periodic sync if it was running
+        if (wasRunning) {
+            startPeriodicSync();
+        }
+        
+    } catch (error) {
+        console.error('❌ Force sync failed:', error);
+    }
+}
+
+// Make force sync globally accessible
+window.forceSyncNow = forceSyncNow;
 
 // Enhanced debug function for sync issues
 async function debugSyncIssue() {
