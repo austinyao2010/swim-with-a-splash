@@ -1375,6 +1375,61 @@ function debugReservationState() {
 // Make functions globally accessible
 window.debugReservationState = debugReservationState;
 
+// Enhanced debug function for sync issues
+async function debugSyncIssue() {
+    console.log('=== SYNC DEBUGGING ===');
+    
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzQusKNg4-OAxQITk2Phqm9olA_oCH1l1lap4UUn4x9Q2Lak6GB5nB4MqMLffdJYK9VWg/exec';
+    
+    console.log('1. Testing direct URL access...');
+    console.log('URL:', `${scriptURL}?action=getReservations`);
+    
+    try {
+        const response = await fetch(`${scriptURL}?action=getReservations&debug=true`);
+        console.log('Response status:', response.status);
+        console.log('Response headers:', [...response.headers.entries()]);
+        
+        const data = await response.json();
+        console.log('Raw response data:', data);
+        console.log('Data type:', typeof data);
+        console.log('Data.success:', data.success);
+        console.log('Data.reservations:', data.reservations);
+        console.log('Data.reservations type:', typeof data.reservations);
+        console.log('Reservations keys:', Object.keys(data.reservations || {}));
+        
+        // Check if reservations is empty object vs undefined
+        if (data.reservations) {
+            console.log('Reservations object exists');
+            if (Object.keys(data.reservations).length === 0) {
+                console.log('⚠️ ISSUE: Reservations object is empty {}');
+                console.log('This means Google Sheets has no data or filter is wrong');
+            } else {
+                console.log('✅ Reservations found:', Object.keys(data.reservations).length, 'slot groups');
+            }
+        } else {
+            console.log('❌ ISSUE: No reservations property in response');
+        }
+        
+        // Test California data too
+        console.log('\n2. Testing California data...');
+        const caResponse = await fetch(`${scriptURL}?action=getReservationsCA&debug=true`);
+        const caData = await caResponse.json();
+        console.log('CA Raw response:', caData);
+        
+    } catch (error) {
+        console.error('❌ Sync test failed:', error);
+    }
+    
+    console.log('\n3. Current localStorage state:');
+    console.log('slotReservations:', slotReservations);
+    console.log('localStorage swimReservations:', localStorage.getItem('swimReservations'));
+    
+    console.log('=== SYNC DEBUG COMPLETE ===');
+}
+
+// Make debug function globally accessible
+window.debugSyncIssue = debugSyncIssue;
+
 // Comprehensive debug function to test registration flow
 async function debugRegistrationFlow() {
     console.log('=== COMPREHENSIVE REGISTRATION DEBUG ===');
