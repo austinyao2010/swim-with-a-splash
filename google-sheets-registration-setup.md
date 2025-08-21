@@ -433,6 +433,7 @@ function convertTimeSlotToSlotId(timeSlot, eventType) {
     'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'sat-10am',
     'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'sat-1030am',
     'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'sat-11am',
+    'Sunday, August 24th, 2025 - 5:00 PM - 5:30 PM (Southlake, Texas)': 'sun-5pm',
     'Sunday, August 24th, 2025 - 5:30 PM - 6:00 PM (Southlake, Texas)': 'sun-530pm',
     'Sunday, August 24th, 2025 - 6:00 PM - 6:30 PM (Southlake, Texas)': 'sun-6pm',
     'Sunday, August 24th, 2025 - 6:30 PM - 7:00 PM (Southlake, Texas)': 'sun-630pm',

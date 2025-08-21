@@ -295,7 +295,7 @@ function updateSlotDisplay() {
     const allSlotIds = [
         'fri-9am', 'fri-930am', 'fri-10am', 'fri-1030am', 'fri-11am',
         'sat-9am', 'sat-930am', 'sat-10am', 'sat-1030am', 'sat-11am',
-        'sun-530pm', 'sun-6pm', 'sun-630pm', 'sun-7pm'
+        'sun-5pm', 'sun-530pm', 'sun-6pm', 'sun-630pm', 'sun-7pm'
     ];
     
     allSlotIds.forEach(slotId => {
@@ -356,6 +356,7 @@ function selectSlot(slotId) {
         'sat-10am': 'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)',
         'sat-1030am': 'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)',
         'sat-11am': 'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)',
+        'sun-5pm': 'Sunday, August 24th, 2025 - 5:00 PM - 5:30 PM (Southlake, Texas)',
         'sun-530pm': 'Sunday, August 24th, 2025 - 5:30 PM - 6:00 PM (Southlake, Texas)',
         'sun-6pm': 'Sunday, August 24th, 2025 - 6:00 PM - 6:30 PM (Southlake, Texas)',
         'sun-630pm': 'Sunday, August 24th, 2025 - 6:30 PM - 7:00 PM (Southlake, Texas)',
@@ -648,12 +649,12 @@ function getSlotIdFromDisplay(displayText) {
         'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'sat-1030am',
         'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'sat-11am',
         
-        // Sunday slots (evening)
+        // Sunday slots (evening) - CORRECTED: All evening times starting at 5:00 PM
+        'Sunday, August 24th, 2025 - 5:00 PM - 5:30 PM (Southlake, Texas)': 'sun-5pm',
         'Sunday, August 24th, 2025 - 5:30 PM - 6:00 PM (Southlake, Texas)': 'sun-530pm',
         'Sunday, August 24th, 2025 - 6:00 PM - 6:30 PM (Southlake, Texas)': 'sun-6pm',
         'Sunday, August 24th, 2025 - 6:30 PM - 7:00 PM (Southlake, Texas)': 'sun-630pm',
-        'Sunday, August 24th, 2025 - 7:00 PM - 7:30 PM (Southlake, Texas)': 'sun-7pm',
-        'Sunday, August 24th, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'sun-11am'
+        'Sunday, August 24th, 2025 - 7:00 PM - 7:30 PM (Southlake, Texas)': 'sun-7pm'
     };
     return slotMap[displayText];
 }
@@ -1196,11 +1197,19 @@ function removeReservationCA() {
             // Check both email and parentEmail fields for compatibility
             const reservationEmail = reservation.email || reservation.parentEmail;
             if (isAdmin || (reservationEmail && reservationEmail.toLowerCase() === userEmail)) {
+                // Debug logging for age field
+                console.log(`🔍 CA Reservation data for ${reservation.childName}:`, {
+                    age: reservation.age,
+                    ageType: typeof reservation.age,
+                    ageValue: reservation.age,
+                    fullReservation: reservation
+                });
+                
                 userReservations.push({
                     slotId: slotId,
                     index: index,
                     reservation: reservation,
-                    displayText: `${reservation.childName} (Age ${reservation.age}) - ${reservation.timeSlot} - ${reservationEmail}`
+                    displayText: `${reservation.childName} (Age ${reservation.age || 'MISSING'}) - ${reservation.timeSlot} - ${reservationEmail}`
                 });
             }
         });
@@ -1525,6 +1534,32 @@ async function debugSyncIssue() {
 
 // Make debug function globally accessible
 window.debugSyncIssue = debugSyncIssue;
+
+// Debug function to inspect reservation data and age fields
+function debugReservationData() {
+    console.log('=== RESERVATION DATA DEBUG ===');
+    console.log('Current slotReservations:', slotReservations);
+    
+    Object.keys(slotReservations).forEach(slotId => {
+        console.log(`\nSlot: ${slotId}`);
+        slotReservations[slotId].forEach((reservation, index) => {
+            console.log(`  Reservation ${index + 1}:`, {
+                childName: reservation.childName,
+                age: reservation.age,
+                ageType: typeof reservation.age,
+                ageValue: reservation.age,
+                email: reservation.email,
+                timeSlot: reservation.timeSlot,
+                fullData: reservation
+            });
+        });
+    });
+    
+    console.log('=== END DEBUG ===');
+}
+
+// Make it available globally for debugging
+window.debugReservationData = debugReservationData;
 
 // Comprehensive debug function to test registration flow
 async function debugRegistrationFlow() {
