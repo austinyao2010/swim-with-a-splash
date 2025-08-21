@@ -55,6 +55,11 @@ function doPost(e) {
   try {
     const data = e.parameter;
     
+    // Check if this is a confirmation email request
+    if (data.action === 'sendConfirmationEmail') {
+      return handleConfirmationEmail(data);
+    }
+    
     // Check if this is a cancellation request
     if (data.action === 'cancel') {
       return handleCancellation(data);
@@ -227,15 +232,15 @@ function convertTimeSlotToSlotId(timeSlot, eventType) {
   // Dallas/Texas event slot mapping - Updated for current event
   const dallasSlots = {
     // Current Texas event (August 23-24, 2025) with Southlake location
-    'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)': 'fri-9am',
-    'Saturday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)': 'fri-930am',
-    'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'fri-10am',
-    'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'fri-1030am',
-    'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'fri-11am',
-    'Sunday, August 24th, 2025 - 5:30 PM - 6:00 PM (Southlake, Texas)': 'sat-9am',
-    'Sunday, August 24th, 2025 - 6:00 PM - 6:30 PM (Southlake, Texas)': 'sat-930am',
-    'Sunday, August 24th, 2025 - 6:30 PM - 7:00 PM (Southlake, Texas)': 'sat-10am',
-    'Sunday, August 24th, 2025 - 7:00 PM - 7:30 PM (Southlake, Texas)': 'sat-1030am',
+    'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)': 'sat-9am',
+    'Saturday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)': 'sat-930am',
+    'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'sat-10am',
+    'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'sat-1030am',
+    'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'sat-11am',
+    'Sunday, August 24th, 2025 - 5:30 PM - 6:00 PM (Southlake, Texas)': 'sun-530pm',
+    'Sunday, August 24th, 2025 - 6:00 PM - 6:30 PM (Southlake, Texas)': 'sun-6pm',
+    'Sunday, August 24th, 2025 - 6:30 PM - 7:00 PM (Southlake, Texas)': 'sun-630pm',
+    'Sunday, August 24th, 2025 - 7:00 PM - 7:30 PM (Southlake, Texas)': 'sun-7pm',
     
     // Legacy mappings for old data (Dallas location)
     'Friday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Dallas, Texas)': 'fri-9am',
@@ -1117,4 +1122,91 @@ If you're getting CORS errors like "No 'Access-Control-Allow-Origin' header" or 
 - Data not updating across devices: Verify CORS is fixed and sync is working
 - Reservations not persisting: Check both localStorage and Google Sheets data
 - Check that the daily trigger is set up correctly
-- Test with events that have different dates to verify date parsing 
+- Test with events that have different dates to verify date parsing
+
+## Immediate Confirmation Email Function
+
+```javascript
+function handleConfirmationEmail(data) {
+  try {
+    const email = data.email;
+    const childName = data.childName;
+    const event = data.event;
+    const timeSlot = data.timeSlot;
+    const phone = data.phone;
+    
+    // Send immediate confirmation email
+    const subject = 'Swim Lesson Registration Confirmation - Swim With a Splash';
+    const htmlBody = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #0077b6, #023e8a); color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+          <h1 style="margin: 0; font-size: 24px;">🏊‍♂️ Swim With a Splash</h1>
+          <p style="margin: 10px 0 0 0; font-size: 16px;">Registration Confirmation</p>
+        </div>
+        
+        <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-radius: 0 0 10px 10px;">
+          <h2 style="color: #0077b6; margin-top: 0;">Registration Confirmed! ✅</h2>
+          
+          <p>Dear Parent/Guardian,</p>
+          
+          <p>Thank you for registering <strong>${childName}</strong> for our swim lessons!</p>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #023e8a; margin-top: 0;">📋 Registration Details</h3>
+            <p><strong>Event:</strong> ${event}</p>
+            <p><strong>Time Slot:</strong> ${timeSlot}</p>
+            <p><strong>Contact Phone:</strong> ${phone}</p>
+          </div>
+          
+          <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #28a745; margin-top: 0;">📍 Location & Arrival</h3>
+            <p><strong>Address:</strong> 111 Southridge Lakes Pkwy, Southlake, TX 76092</p>
+            <p><strong>Please arrive:</strong> 10 minutes before your scheduled time</p>
+            <p><strong>What to bring:</strong> Swimsuit, towel, and water bottle</p>
+          </div>
+          
+          <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3 style="color: #856404; margin-top: 0;">⚠️ Important Notes</h3>
+            <ul>
+              <li>Lessons are FREE and open to all skill levels</li>
+              <li>Our experienced coaches will assess your child's level</li>
+              <li>Parents are welcome to watch from the pool deck</li>
+              <li>Please notify us if you need to cancel or reschedule</li>
+            </ul>
+          </div>
+          
+          <p>If you have any questions, please contact us at <strong>swimwithasplash@gmail.com</strong></p>
+          
+          <p>We look forward to seeing <strong>${childName}</strong> at the pool! 🏊‍♀️</p>
+          
+          <p>Best regards,<br>
+          <strong>The Swim With a Splash Team</strong></p>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px; color: #666; font-size: 12px;">
+          <p>This is an automated confirmation email. Please do not reply directly to this message.</p>
+        </div>
+      </div>
+    `;
+    
+    // Send email using Gmail
+    GmailApp.sendEmail(email, subject, '', { htmlBody: htmlBody });
+    
+    console.log(`Confirmation email sent to ${email} for ${childName}`);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      result: 'success',
+      message: 'Confirmation email sent successfully'
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    console.error('Error sending confirmation email:', error);
+    return ContentService.createTextOutput(JSON.stringify({
+      result: 'error',
+      error: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+```
+
+**Add this function to your Google Apps Script code to enable immediate confirmation emails!** 

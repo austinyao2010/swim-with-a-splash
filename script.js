@@ -158,11 +158,11 @@ async function loadFromSpreadsheet() {
                 console.log('📊 Detailed reservations:', slotReservations);
                 
                 // Update localStorage with synced data
-                saveReservations();
-                
+        saveReservations();
+        
                 // Update the display
-                updateSlotDisplay();
-                
+        updateSlotDisplay();
+        
                 console.log('🎉 Successfully synced with Google Sheets - found', Object.keys(data.reservations).length, 'slot groups');
             } else if (data.error) {
                 console.warn('⚠️ Google Sheets returned error:', data.error);
@@ -274,32 +274,28 @@ function isSlotPassed(slotId, eventType = 'southlake') {
     return now > slotDateTime;
 }
 
-// Update the visual display of all slots
+// Update the visual display of all slots - DISABLED FOR NOW
 function updateSlotDisplay() {
-    console.log('Updating slot display with reservations:', slotReservations);
+    console.log('Updating slot display - ALL SLOTS DISABLED');
     
-    // First, reset all slots to default state
+    // Make ALL slots appear as full/disabled
     document.querySelectorAll('.slot-btn').forEach(btn => {
-        btn.className = 'slot-btn available';
-        btn.textContent = 'Sign Up';
-        // Restore onclick functionality
-        const slotId = btn.getAttribute('onclick')?.match(/selectSlot\('([^']+)'\)/)?.[1];
-        if (slotId) {
-            btn.onclick = () => selectSlot(slotId);
-        }
+        btn.className = 'slot-btn booked';
+        btn.textContent = 'Full';
+        btn.onclick = null; // Remove click functionality
+        btn.style.cursor = 'not-allowed';
     });
     
     document.querySelectorAll('.spots').forEach(spotsElement => {
-        spotsElement.textContent = '2 spots available';
-        spotsElement.className = 'spots';
+        spotsElement.textContent = 'No spots available';
+        spotsElement.className = 'spots full';
     });
     
-
-    
-    // Check all slots for time-based availability and reservations
+    // Also update the specific slot IDs to ensure consistency
     const allSlotIds = [
         'fri-9am', 'fri-930am', 'fri-10am', 'fri-1030am', 'fri-11am',
-        'sat-9am', 'sat-930am', 'sat-10am', 'sat-1030am', 'sat-11am'
+        'sat-9am', 'sat-930am', 'sat-10am', 'sat-1030am', 'sat-11am',
+        'sun-530pm', 'sun-6pm', 'sun-630pm', 'sun-7pm'
     ];
     
     allSlotIds.forEach(slotId => {
@@ -309,57 +305,27 @@ function updateSlotDisplay() {
             const slotContainer = slotElement.closest('.slot');
             const spotsElement = slotContainer.querySelector('.spots');
             
-                         // Check if this slot has already passed
-             if (isSlotPassed(slotId, 'southlake')) {
-                 slotElement.className = 'slot-btn passed';
-                 slotElement.textContent = 'Passed';
-                 slotElement.onclick = null;
-                 spotsElement.textContent = 'Time has passed';
-                 spotsElement.className = 'spots full';
-                 console.log(`Slot ${slotId} marked as PASSED`);
-                 return; // Skip reservation checking for passed slots
-             }
+            // Mark all slots as full
+            slotElement.className = 'slot-btn booked';
+            slotElement.textContent = 'Full';
+            slotElement.onclick = null;
+            slotElement.style.cursor = 'not-allowed';
             
-            // Check reservations for available slots
-            const reservations = slotReservations[slotId] || [];
-            const remainingSlots = 2 - reservations.length;
-            
-            console.log(`Slot ${slotId}: ${reservations.length} reservations, ${remainingSlots} remaining`);
-            
-
-            
-            if (remainingSlots === 0) {
-                // Slot is full
-                slotElement.className = 'slot-btn booked';
-                slotElement.textContent = 'Full';
-                slotElement.onclick = null;
+            if (spotsElement) {
                 spotsElement.textContent = 'No spots available';
                 spotsElement.className = 'spots full';
-                console.log(`Slot ${slotId} marked as FULL`);
-            } else if (remainingSlots === 1) {
-                // One spot left
-                slotElement.className = 'slot-btn available';
-                slotElement.textContent = 'Sign Up';
-                slotElement.onclick = () => selectSlot(slotId);
-                spotsElement.textContent = '1 spot left';
-                spotsElement.className = 'spots warning';
-                console.log(`Slot ${slotId} marked as 1 SPOT LEFT`);
-            } else {
-                // Multiple spots available
-                slotElement.className = 'slot-btn available';
-                slotElement.textContent = 'Sign Up';
-                slotElement.onclick = () => selectSlot(slotId);
-                spotsElement.textContent = `${remainingSlots} spots available`;
-                spotsElement.className = 'spots';
-                console.log(`Slot ${slotId} marked as ${remainingSlots} SPOTS AVAILABLE`);
             }
-        } else {
-            console.log(`Could not find button for slot ${slotId}`);
+            
+            console.log(`Slot ${slotId} marked as FULL (DISABLED)`);
         }
     });
 }
 
 function selectSlot(slotId) {
+    // ALL SLOTS ARE DISABLED - NO REGISTRATION ALLOWED
+    alert('Registration is currently disabled. All slots are full.');
+    return;
+    
     // Check if time slot has already passed
     if (isSlotPassed(slotId, 'southlake')) {
         alert('This time slot has already passed. Please select a future time slot.');
@@ -595,11 +561,12 @@ function handleRegistration(event) {
     alert(`Registration successful! ${reservation.childName} is registered for ${selectedSlot}. You will receive a confirmation shortly.`);
 }
 
-// Enhanced submission with sync trigger
+// Enhanced submission with confirmation email
 async function submitToGoogleSheets(reservation) {
     const scriptURL = 'https://script.google.com/macros/s/AKfycbxhG0zYWgHIlin8YuvTVRKDKqtx6RvfxOPL48F5U1OTAWq3evbbbDjD4MTomqcyUtTl4Q/exec';
     
     const formData = new FormData();
+    formData.append('action', 'register'); // Add action parameter
     formData.append('event', reservation.event || 'Southlake Swim Lessons – August 23–24, 2025 (Southlake, Texas)');
     formData.append('childName', reservation.childName);
     formData.append('age', reservation.age);
@@ -616,13 +583,16 @@ async function submitToGoogleSheets(reservation) {
         console.log('📤 Submitting reservation to Google Sheets...');
         
         const response = await fetch(scriptURL, {
-            method: 'POST',
-            body: formData
+        method: 'POST',
+        body: formData
         });
         
         if (response.ok) {
             const result = await response.json();
             console.log('✅ Reservation submitted to Google Sheets successfully:', result);
+            
+            // Send confirmation email immediately
+            await sendConfirmationEmail(reservation);
             
             // Trigger immediate sync after successful submission
             setTimeout(() => {
@@ -638,19 +608,53 @@ async function submitToGoogleSheets(reservation) {
     }
 }
 
+// Send immediate confirmation email
+async function sendConfirmationEmail(reservation) {
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxhG0zYWgHIlin8YuvTVRKDKqtx6RvfxOPL48F5U1OTAWq3evbbbDjD4MTomqcyUtTl4Q/exec';
+    
+    const formData = new FormData();
+    formData.append('action', 'sendConfirmationEmail');
+    formData.append('email', reservation.email);
+    formData.append('childName', reservation.childName);
+    formData.append('event', reservation.event);
+    formData.append('timeSlot', reservation.timeSlot);
+    formData.append('phone', reservation.phone);
+    
+    try {
+        console.log('📧 Sending confirmation email...');
+        
+        const response = await fetch(scriptURL, {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log('✅ Confirmation email sent successfully:', result);
+        } else {
+            console.error('❌ HTTP error sending confirmation email:', response.status);
+        }
+    } catch (error) {
+        console.error('❌ Network error sending confirmation email:', error);
+    }
+}
+
 // Helper function to get slot ID from display text
 function getSlotIdFromDisplay(displayText) {
     const slotMap = {
-        'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)': 'fri-9am',
-        'Saturday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)': 'fri-930am',
-        'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'fri-10am',
-        'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'fri-1030am',
-        'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'fri-11am',
-        'Sunday, August 24th, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)': 'sat-9am',
-        'Sunday, August 24th, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)': 'sat-930am',
-        'Sunday, August 24th, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'sat-10am',
-        'Sunday, August 24th, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'sat-1030am',
-        'Sunday, August 24th, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'sat-11am'
+        // Saturday slots (morning)
+        'Saturday, August 23rd, 2025 - 9:00 AM - 9:30 AM (Southlake, Texas)': 'sat-9am',
+        'Saturday, August 23rd, 2025 - 9:30 AM - 10:00 AM (Southlake, Texas)': 'sat-930am',
+        'Saturday, August 23rd, 2025 - 10:00 AM - 10:30 AM (Southlake, Texas)': 'sat-10am',
+        'Saturday, August 23rd, 2025 - 10:30 AM - 11:00 AM (Southlake, Texas)': 'sat-1030am',
+        'Saturday, August 23rd, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'sat-11am',
+        
+        // Sunday slots (evening)
+        'Sunday, August 24th, 2025 - 5:30 PM - 6:00 PM (Southlake, Texas)': 'sun-530pm',
+        'Sunday, August 24th, 2025 - 6:00 PM - 6:30 PM (Southlake, Texas)': 'sun-6pm',
+        'Sunday, August 24th, 2025 - 6:30 PM - 7:00 PM (Southlake, Texas)': 'sun-630pm',
+        'Sunday, August 24th, 2025 - 7:00 PM - 7:30 PM (Southlake, Texas)': 'sun-7pm',
+        'Sunday, August 24th, 2025 - 11:00 AM - 11:30 AM (Southlake, Texas)': 'sun-11am'
     };
     return slotMap[displayText];
 }
