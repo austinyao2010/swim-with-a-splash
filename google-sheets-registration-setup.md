@@ -390,17 +390,25 @@ function getReservations(eventType) {
         // Add reservation to slot with ALL fields
         const reservation = {
           childName: row[childNameCol],
-          age: row[headers.indexOf('Age')] || 'N/A',
-          swimmingLevel: row[headers.indexOf('Swimming Level')] || 'N/A',
-          goals: row[headers.indexOf('Goals')] || 'N/A',
-          phone: row[headers.indexOf('Phone')] || 'N/A',
+          age: row[headers.indexOf('Age')] || row[headers.indexOf('Child Age')] || row[headers.indexOf('Age Group')] || 'N/A',
+          swimmingLevel: row[headers.indexOf('Swimming Level')] || row[headers.indexOf('Level')] || 'N/A',
+          goals: row[headers.indexOf('Goals')] || row[headers.indexOf('Goal')] || 'N/A',
+          phone: row[headers.indexOf('Phone')] || row[headers.indexOf('Phone Number')] || 'N/A',
           email: row[headers.indexOf('Email')],
           location: row[headers.indexOf('Location')] || 'N/A',
-          additionalInfo: row[headers.indexOf('Additional Info')] || 'N/A',
+          additionalInfo: row[headers.indexOf('Additional Info')] || row[headers.indexOf('Additional Information')] || 'N/A',
           timeSlot: timeSlot,
           timestamp: row[headers.indexOf('Timestamp')],
           event: row[eventCol] || ''
         };
+        
+        // Debug logging for age field specifically
+        console.log(`🔍 Age field debug for ${reservation.childName}:`);
+        console.log(`  - Age column index: ${headers.indexOf('Age')}`);
+        console.log(`  - Child Age column index: ${headers.indexOf('Child Age')}`);
+        console.log(`  - Age Group column index: ${headers.indexOf('Age Group')}`);
+        console.log(`  - Raw age value: ${row[headers.indexOf('Age')] || row[headers.indexOf('Child Age')] || row[headers.indexOf('Age Group')]}`);
+        console.log(`  - Final age value: ${reservation.age}`);
         
         slotReservations[slotId].push(reservation);
         console.log(`✅ Added reservation for ${reservation.childName} to slot ${slotId}`);

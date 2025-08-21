@@ -99,7 +99,7 @@ async function loadFromSpreadsheet() {
     console.log('🔄 Loading reservations from Google Sheets...');
     
     try {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
         
         console.log('📡 Fetching Dallas data from:', `${scriptURL}?action=getReservations`);
         
@@ -563,7 +563,7 @@ function handleRegistration(event) {
 
 // Enhanced submission with confirmation email
 async function submitToGoogleSheets(reservation) {
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
     
     const formData = new FormData();
     formData.append('action', 'register'); // Add action parameter
@@ -610,7 +610,7 @@ async function submitToGoogleSheets(reservation) {
 
 // Send immediate confirmation email
 async function sendConfirmationEmail(reservation) {
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
     
     const formData = new FormData();
     formData.append('action', 'sendConfirmationEmail');
@@ -1000,7 +1000,7 @@ async function loadFromSpreadsheetCA() {
     
     try {
         // Use the same Google Apps Script URL but with a GET request to fetch CA data
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
         
         console.log('Fetching CA data from:', `${scriptURL}?action=getReservationsCA`);
         
@@ -1303,7 +1303,7 @@ function removeReservationCA() {
 // Send cancellation to Google Sheets for Dallas events
 function sendCancellationToGoogleSheets(reservation) {
     // Replace this URL with your Google Apps Script web app URL (same as registration)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
     
     
     const formData = new FormData();
@@ -1333,7 +1333,7 @@ function sendCancellationToGoogleSheets(reservation) {
 // Send cancellation to Google Sheets for California events
 function sendCancellationToGoogleSheetsCA(reservation) {
     // Replace this URL with your Google Apps Script web app URL (same as registration)
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
     
     const formData = new FormData();
     formData.append('action', 'cancel');
@@ -1484,7 +1484,7 @@ window.forceSyncNow = forceSyncNow;
 async function debugSyncIssue() {
     console.log('=== SYNC DEBUGGING ===');
     
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
     
     console.log('1. Testing direct URL access...');
     console.log('URL:', `${scriptURL}?action=getReservations`);
@@ -1580,7 +1580,7 @@ async function debugRegistrationFlow() {
     // Test 3: Test Google Sheets GET
     console.log('\n3. Testing Google Sheets GET...');
     try {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
         const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`);
         console.log('GET Response status:', response.status);
         if (response.ok) {
@@ -1596,7 +1596,7 @@ async function debugRegistrationFlow() {
     // Test 4: Test a sample registration POST
     console.log('\n4. Testing sample registration POST...');
     try {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
         const formData = new FormData();
         formData.append('action', 'register');
         formData.append('childName', 'Debug Test Child');
@@ -1629,7 +1629,7 @@ async function debugRegistrationFlow() {
     console.log('\n5. Waiting 3 seconds then checking for new data...');
     setTimeout(async () => {
         try {
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
             const response = await fetch(`${scriptURL}?action=getReservations&t=${Date.now()}`);
             if (response.ok) {
                 const data = await response.json();
@@ -1657,7 +1657,7 @@ async function testSimpleRegistration() {
     console.log('=== TESTING SIMPLE REGISTRATION ===');
     
     try {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
         
         const formData = new FormData();
         formData.append('action', 'register');
@@ -1728,7 +1728,7 @@ async function testGoogleSheetsConnection() {
     console.log('=== TESTING GOOGLE SHEETS CONNECTION ===');
     
     try {
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbx7VEY7_VPce1Ln08I4_fMp80N_rR-H1r_fOQAIHV_ZQIyQ8sMi0Qu8-A6kvUXnbptQSw/exec';
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbx5c1mAxSWktpHdbIDDs32bqUBsf8zNPw9O-VNnR1-4wlBoOxrcWIik6xisKuTW6kgVlQ/exec';
         
         console.log('Testing Dallas endpoint...');
         const dallasResponse = await fetch(`${scriptURL}?action=getReservations`);
