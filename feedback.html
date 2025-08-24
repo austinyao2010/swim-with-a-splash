@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Your Experience - Swim With a Splash</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.6; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        h1{
+            margin: 0px 0px 20px 0px;
+            color: #0077b6;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2{
+            color: #0077b6;
+            font-size: 2.2em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h3{
+            color: #023e8a;
+            font-size: 1.4em;
+            margin-bottom: 0.8rem;
+        }
+        
+        header h1 {
+            color: white;
+            font-size: 2.2em;
+        }
+        
+        p {
+            color: #333;
+            line-height: 1.7;
+            font-size: 1.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .card p {
+            color: #444;
+            line-height: 1.6;
+            font-size: 1em;
+        }
+        
+        strong {
+            color: #023e8a;
+        }
+        
+        .card strong {
+            color: #0077b6;
+        }
+        
+        header { 
+            background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%); 
+            color: white; 
+            padding: 1.5rem 1rem 1rem 1rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        nav a { 
+            color: white; 
+            margin: 0 1rem; 
+            text-decoration: none; 
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+        
+        nav a:hover { 
+            background: rgba(255,255,255,0.2); 
+            transform: translateY(-2px);
+        }
+        
+        .container { 
+            padding: 1rem; 
+            max-width: 1200px; 
+            margin: auto; 
+        }
+        
+        .section { 
+            margin-top: 2rem; 
+        }
+        
+        .card { 
+            background: white; 
+            padding: 1.5rem 2rem; 
+            margin-bottom: 1.5rem; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+        
+        footer { 
+            background: linear-gradient(rgba(2, 62, 138, 0.8), rgba(0, 119, 182, 0.8)), url('poolNAvBar.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white; 
+            text-align: center; 
+            padding: 1rem; 
+            margin-top: 2rem; 
+        }
+        
+        footer p {
+            color: white;
+        }
+        
+        /* Registration Form Styling - Exact same as original */
+        .registration-form {
+            display: grid;
+            gap: 1.5rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #0077b6;
+            font-size: 1.1em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0077b6;
+            box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group textarea {
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .register-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+        }
+
+        .register-btn:hover {
+            background: linear-gradient(135deg, #20c997, #28a745);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(-1px);
+        }
+
+        /* Back Button Styling */
+        .back-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            margin: 10px auto;
+            width: 120px;
+            display: block;
+            background: linear-gradient(135deg, #0077b6, #023e8a);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(135deg, #023e8a, #0077b6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
+        }
+
+        .back-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 119, 182, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 20px;">
+            <img src="Logo C.png" alt="Swim With a Splash Logo" style="
+                width: 70px; 
+                height: 70px; 
+                border-radius: 50%; 
+                object-fit: cover; 
+                object-position: center;
+                border: 2px solid rgba(255, 255, 255, 0.8); 
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+                filter: brightness(1.1) contrast(1.05);
+                padding: 2px;
+            ">
+            <h1 style="margin: 0;">Swim With a Splash</h1>
+        </div>
+        <nav>
+            <a href="index.html#top">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#members">Team</a>
+            <a href="index.html#events">Events</a>
+            <a href="index.html#get-involved">Get Involved</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <h2>Share Your Experience</h2>
+            <div class="card">
+                <h3>We'd Love to Hear From You! 🌊</h3>
+                <p>Your feedback helps us improve and inspires other families to join our swimming community. Share your experience and help us make a difference!</p>
+            </div>
+            
+            <div class="card">
+                <h3>Feedback Form</h3>
+                <form class="registration-form" onsubmit="submitFeedback(event)">
+                    <div class="form-group">
+                        <label for="feedback-message">Your Experience & Feedback *</label>
+                        <textarea id="feedback-message" name="feedback-message" rows="5" placeholder="Tell us about your experience! What did your child learn? How did the coaches help? Any memorable moments?" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="parent-name">Your Name (Optional)</label>
+                        <input type="text" id="parent-name" name="parent-name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="child-name">Child's Name (Optional)</label>
+                        <input type="text" id="child-name" name="child-name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="event-attended">Which event did you attend? *</label>
+                        <select id="event-attended" name="event-attended" required>
+                            <option value="">Select an event...</option>
+                            <option value="Southlake Swim Lessons – August 23–24, 2025 (Southlake, Texas)">Southlake Swim Lessons – August 23–24, 2025 (Southlake, Texas)</option>
+                            <option value="California Swim Lessons – August 2–3, 2025 (San Diego, California)">California Swim Lessons – August 2–3, 2025 (San Diego, California)</option>
+                            <option value="Previous Event">Previous Event</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rating">How would you rate your experience? *</label>
+                        <select id="rating" name="rating" required>
+                            <option value="">Select rating...</option>
+                            <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ Very Good</option>
+                            <option value="3">⭐⭐⭐ Good</option>
+                            <option value="2">⭐⭐ Fair</option>
+                            <option value="1">⭐ Poor</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="permission">Can we share your feedback on our website? *</label>
+                        <select id="permission" name="permission" required>
+                            <option value="">Select...</option>
+                            <option value="yes">Yes, you can share my feedback</option>
+                            <option value="no">No, keep it private</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="register-btn">Share My Experience 🌊</button>
+                </form>
+            </div>
+        </section>
+    </div>
+    
+    <a href="index.html#parent-feedback" class="back-btn">Back to Parent Feedback</a>
+
+    <footer>
+        <p>&copy; 2025 Swim With a Splash. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Feedback submission
+        function submitFeedback(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const feedbackData = Object.fromEntries(formData.entries());
+            
+            // Basic validation
+            if (!feedbackData['event-attended'] || !feedbackData['feedback-message'] || !feedbackData['rating'] || !feedbackData['permission']) {
+                alert('Please fill in all required fields marked with *');
+                return;
+            }
+            
+            // Here you would typically send the data to your backend
+            // For now, we'll just show a success message
+            alert('Thank you for sharing your experience! Your feedback has been submitted successfully. 🌊');
+            
+            // Reset the form
+            event.target.reset();
+        }
+    </script>
+</body>
+</html> 

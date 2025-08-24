@@ -306,9 +306,9 @@ function updateSlotDisplay() {
             const spotsElement = slotContainer.querySelector('.spots');
             
             // Mark all slots as full
-            slotElement.className = 'slot-btn booked';
-            slotElement.textContent = 'Full';
-            slotElement.onclick = null;
+                slotElement.className = 'slot-btn booked';
+                slotElement.textContent = 'Full';
+                slotElement.onclick = null;
             slotElement.style.cursor = 'not-allowed';
             
             if (spotsElement) {
