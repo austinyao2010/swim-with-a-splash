@@ -264,28 +264,7 @@
                 <form class="registration-form" onsubmit="submitFeedback(event)">
                     <div class="form-group">
                         <label for="feedback-message">Your Experience & Feedback *</label>
-                        <textarea id="feedback-message" name="feedback-message" rows="5" placeholder="Tell us about your experience! What did your child learn? Anything to improve? How did the coaches help? Any memorable moments?" required></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="parent-name">Your Name (Optional)</label>
-                        <input type="text" id="parent-name" name="parent-name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="child-name">Child's Name (Optional)</label>
-                        <input type="text" id="child-name" name="child-name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="event-attended">Which event did you attend? *</label>
-                        <select id="event-attended" name="event-attended" required>
-                            <option value="">Select an event...</option>
-                            <option value="Southlake Swim Lessons – August 23–24, 2025 (Southlake, Texas)">Southlake Swim Lessons – August 23–24, 2025 (Southlake, Texas)</option>
-                            <option value="California Swim Lessons – August 2–3, 2025 (San Diego, California)">California Swim Lessons – August 2–3, 2025 (San Diego, California)</option>
-                            <option value="Previous Event">Previous Event</option>
-                            <option value="Other">Other</option>
-                        </select>
+                        <textarea id="feedback-message" name="feedback-message" rows="5" placeholder="Tell us about your experience! What did your child learn? How did the coaches help? Any memorable moments? Anything to improve?" required></textarea>
                     </div>
                     
                     <div class="form-group">
@@ -301,12 +280,33 @@
                     </div>
                     
                     <div class="form-group">
+                        <label for="event-attended">Which event did you attend? *</label>
+                        <select id="event-attended" name="event-attended" required>
+                            <option value="">Select an event...</option>
+                            <option value="Southlake Swim Lessons – August 23–24, 2025 (Southlake, Texas)">Southlake Swim Lessons – August 23–24, 2025 (Southlake, Texas)</option>
+                            <option value="California Swim Lessons – August 2–3, 2025 (San Diego, California)">California Swim Lessons – August 2–3, 2025 (San Diego, California)</option>
+                            <option value="Previous Event">Previous Event</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
                         <label for="permission">Can we share your feedback on our website? *</label>
                         <select id="permission" name="permission" required>
                             <option value="">Select...</option>
                             <option value="yes">Yes, you can share my feedback</option>
                             <option value="no">No, keep it private</option>
                         </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="parent-name">Your Name (Optional)</label>
+                        <input type="text" id="parent-name" name="parent-name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="child-name">Child's Name (Optional)</label>
+                        <input type="text" id="child-name" name="child-name">
                     </div>
                     
                     <button type="submit" class="register-btn">Share My Experience 🌊</button>
