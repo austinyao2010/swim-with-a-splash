@@ -317,31 +317,9 @@
     
     <a href="index.html#parent-feedback" class="back-btn">Back to Parent Feedback</a>
 
+    <script src="script.js"></script>
     <footer>
         <p>&copy; 2025 Swim With a Splash. All rights reserved.</p>
     </footer>
-
-    <script>
-        // Feedback submission
-        function submitFeedback(event) {
-            event.preventDefault();
-            
-            const formData = new FormData(event.target);
-            const feedbackData = Object.fromEntries(formData.entries());
-            
-            // Basic validation
-            if (!feedbackData['event-attended'] || !feedbackData['feedback-message'] || !feedbackData['rating'] || !feedbackData['permission']) {
-                alert('Please fill in all required fields marked with *');
-                return;
-            }
-            
-            // Here you would typically send the data to your backend
-            // For now, we'll just show a success message
-            alert('Thank you for sharing your experience! Your feedback has been submitted successfully. 🌊');
-            
-            // Reset the form
-            event.target.reset();
-        }
-    </script>
 </body>
 </html> 

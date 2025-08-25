@@ -1509,4 +1509,113 @@ function handleConfirmationEmail(data) {
 - **Sunday slots**: Clear logging to see if they're being processed
 - **Better debugging**: Console shows exactly what's happening with data
 
-**These fixes ensure all reservation data is properly loaded and displayed!** 🚀✨ 
+**These fixes ensure all reservation data is properly loaded and displayed!** 🚀✨
+
+## 🚨 **FEEDBACK SUBMISSION FUNCTIONALITY - ADD THIS TO YOUR APPS SCRIPT!**
+
+### **📝 Add this function to your Google Apps Script to handle feedback submissions:**
+
+```javascript
+// Handle feedback form submission
+function handleFeedbackSubmission(request) {
+  try {
+    const parentName = request.parameter.parentName || 'Anonymous';
+    const childName = request.parameter.childName || 'Not provided';
+    const eventAttended = request.parameter.eventAttended;
+    const feedbackMessage = request.parameter.feedbackMessage;
+    const rating = request.parameter.rating;
+    const permission = request.parameter.permission;
+    const parentEmail = request.parameter.parentEmail || 'Not provided';
+    const timestamp = request.parameter.timestamp || new Date().toISOString();
+    
+    // Get the feedback sheet
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Feedback') || 
+                  SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Feedback Form') ||
+                  SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Parent Feedback');
+    
+    if (!sheet) {
+      // Create feedback sheet if it doesn't exist
+      const newSheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet('Feedback');
+      newSheet.getRange('A1:H1').setValues([['Timestamp', 'Parent Name', 'Child Name', 'Event Attended', 'Feedback Message', 'Rating', 'Permission to Share', 'Parent Email']]);
+      newSheet.getRange('A1:H1').setFontWeight('bold');
+      newSheet.getRange('A1:H1').setBackground('#0077b6');
+      newSheet.getRange('A1:H1').setFontColor('white');
+    }
+    
+    // Add feedback to sheet
+    const feedbackRow = [
+      timestamp,
+      parentName,
+      childName,
+      eventAttended,
+      feedbackMessage,
+      rating,
+      permission,
+      parentEmail
+    ];
+    
+    sheet.getRange(sheet.getLastRow() + 1, 1, 1, feedbackRow.length).setValues([feedbackRow]);
+    
+    console.log(`✅ Feedback submitted successfully from ${parentName}`);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      result: 'success',
+      message: 'Feedback submitted successfully'
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    console.error('Error handling feedback submission:', error);
+    return ContentService.createTextOutput(JSON.stringify({
+      result: 'error',
+      error: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+```
+
+### **🔧 Update your `doPost` function to handle feedback:**
+
+```javascript
+function doPost(request) {
+  try {
+    const action = request.parameter.action;
+    
+    if (action === 'register') {
+      return handleRegistration(request);
+    } else if (action === 'getReservations') {
+      return getReservations(request);
+    } else if (action === 'sendConfirmationEmail') {
+      return handleConfirmationEmail(request);
+    } else if (action === 'feedback') {  // ADD THIS LINE
+      return handleFeedbackSubmission(request);  // ADD THIS LINE
+    } else {
+      return ContentService.createTextOutput(JSON.stringify({
+        result: 'error',
+        error: 'Invalid action'
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+  } catch (error) {
+    console.error('Error in doPost:', error);
+    return ContentService.createTextOutput(JSON.stringify({
+      result: 'error',
+      error: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+```
+
+### **📋 What This Does:**
+
+1. **Creates a Feedback sheet** automatically if it doesn't exist
+2. **Stores all feedback data** with proper headers and formatting
+3. **Handles feedback submissions** from the feedback form
+4. **Integrates with existing code** through the `doPost` function
+
+### **🎯 After Adding This Code:**
+
+1. **Deploy as new version** in Google Apps Script
+2. **Feedback form will work** and submit to Google Sheets
+3. **Data will be organized** in a dedicated Feedback sheet
+4. **All existing functionality** remains intact
+
+**This will restore the feedback submission functionality that was accidentally removed!** 🚀✨ 

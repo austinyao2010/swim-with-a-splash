@@ -750,7 +750,7 @@ function submitFeedback(event) {
 // Submit feedback to Google Sheets
 function submitFeedbackToGoogleSheets(feedback) {
     // Replace this URL with your Google Apps Script web app URL for feedback
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbx-XNKN1CLp9lE-wNsKqe3E38eA3BDaUgoKS4ZpjZE0I8_zqAr79e4JD7sV6_GiM9K_xw/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby9QPqedoDwz9A1dCQaRz1vU5Fs1DY_rvV1QblgacNOnKqqkh64B2ASrYLtHDJPEPgPxA/exec';
     
     const formData = new FormData();
     formData.append('parentName', feedback.parentName);
