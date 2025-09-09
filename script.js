@@ -27,13 +27,6 @@ function showEvent5(event) {
     window.scrollTo(0, 0);
 }
 
-function showMembers(event) {
-    if (event) event.preventDefault();
-    mainPage.style.display = "none";
-    document.getElementById("members-detail").style.display = "flex";
-    document.getElementById("members-detail").style.flexDirection = "column";
-    window.scrollTo(0, 0);
-}
 
 
 
@@ -666,7 +659,7 @@ function backToMain() {
     event3.style.display = "none";
     document.getElementById("event4").style.display = "none";
     event5.style.display = "none";
-    document.getElementById("members-detail").style.display = "none";
+    
     document.getElementById("feedback-page").style.display = "none";
     
     // Restore scroll position if it was saved

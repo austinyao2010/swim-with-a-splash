@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meet Our Team - Swim With a Splash</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.6; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        h1{
+            margin: 0px 0px 20px 0px;
+            color: #0077b6;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        h2{
+            color: #0077b6;
+            font-size: 2.2em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        h3{
+            color: #023e8a;
+            font-size: 1.4em;
+            margin-bottom: 0.8rem;
+        }
+        
+        header h1 {
+            color: white;
+            font-size: 2.2em;
+        }
+        
+        p {
+            color: #333;
+            line-height: 1.7;
+            font-size: 1.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .card p {
+            color: #444;
+            line-height: 1.6;
+            font-size: 1em;
+        }
+        
+        strong {
+            color: #023e8a;
+        }
+        
+        .card strong {
+            color: #0077b6;
+        }
+        
+        header { 
+            background: linear-gradient(135deg, #0077b6 0%, #023e8a 100%); 
+            color: white; 
+            padding: 1.5rem 1rem 1rem 1rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        nav a { 
+            color: white; 
+            margin: 0 1rem; 
+            text-decoration: none; 
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+        
+        nav a:hover { 
+            background: rgba(255,255,255,0.2); 
+            transform: translateY(-2px);
+        }
+        
+        .container { 
+            padding: 1rem; 
+            max-width: 1200px; 
+            margin: auto; 
+        }
+        
+        .section { 
+            margin-top: 2rem; 
+        }
+        
+        .card { 
+            background: white; 
+            padding: 1.5rem 2rem; 
+            margin-bottom: 1.5rem; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+        
+        footer { 
+            background: linear-gradient(rgba(2, 62, 138, 0.8), rgba(0, 119, 182, 0.8)), url('poolNAvBar.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white; 
+            text-align: center; 
+            padding: 1rem; 
+            margin-top: 2rem; 
+        }
+        
+        footer p {
+            color: white;
+        }
+        
+        /* Team Grid Styling */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .team-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid #e8ecf0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        
+        .team-card:hover {
+            border-color: #0077b6;
+            box-shadow: 0 12px 35px rgba(0,119,182,0.15);
+            transform: translateY(-3px);
+        }
+        
+        .team-avatar {
+            margin-bottom: 1rem;
+        }
+        
+        .team-card h4 {
+            color: #0077b6;
+            margin-bottom: 0.5rem;
+            font-size: 1.3em;
+        }
+        
+        .team-location {
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        
+        .team-club {
+            color: #0077b6;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .team-bio {
+            color: #444;
+            line-height: 1.6;
+            font-size: 0.95em;
+            text-align: left;
+        }
+        
+        /* Back Button Styling */
+        .back-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            margin: 10px auto;
+            width: 120px;
+            display: block;
+            background: linear-gradient(135deg, #0077b6, #023e8a);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(135deg, #023e8a, #0077b6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 119, 182, 0.4);
+        }
+        
+        .back-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 10px rgba(0, 119, 182, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 25px; margin-bottom: 20px;">
+            <img src="Logo C.png" alt="Swim With a Splash Logo" style="
+                width: 70px; 
+                height: 70px; 
+                border-radius: 50%; 
+                object-fit: cover; 
+                object-position: center;
+                border: 2px solid rgba(255, 255, 255, 0.8); 
+                box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+                filter: brightness(1.1) contrast(1.05);
+                padding: 2px;
+            ">
+            <h1 style="margin: 0;">Swim With a Splash</h1>
+        </div>
+        <nav>
+            <a href="index.html#top">Home</a>
+            <a href="index.html#about">About</a>
+            <a href="index.html#members">Team</a>
+            <a href="index.html#events">Events</a>
+            <a href="index.html#get-involved">Get Involved</a>
+            <a href="index.html#contact">Contact</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <section class="section">
+            <h2>Meet Our Amazing Team! 🌊</h2>
+            <div class="card">
+                <h3>Our Coaches</h3>
+                <p>Our team consists of competitive swimmers from top clubs in the nation, dedicated to teaching swimming skills and water safety to our community.</p>
+            </div>
+            
+            <div class="card">
+                <h3>🤠 Texas Team</h3>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="austinProfilePicture.jpg" alt="Austin Yao" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 40% 60% 30% 50%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(4deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(-2deg) scale(1.1)'; this.style.borderRadius='50% 30% 40% 60%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(4deg) scale(1)'; this.style.borderRadius='40% 60% 30% 50%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Austin Yao</h4>
+                        <p class="team-location">Dallas, TX</p>
+                        <p class="team-club">Lakeside Aquatic Club</p>
+                        <p class="team-bio">Hi, I'm Austin, a rising freshman with a passion for swimming. I've been swimming since I was 3 years old and currently train with Lakeside Aquatic Club, specializing in breaststroke. Recently, I achieved a Sectionals cut in the 100m breast and have qualified for TAGS (Texas Age Group Swimming) twice. At the Long Course TAGS meet, I competed on both A medley relay teams. I've swam on both the Mason Manta Rays and North Texas Natadores, whose members help make up the Ohio and Texas chapters of our organization. Outside of the pool, I enjoy playing the violin, solving math problems, and playing chess.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="rebeccaProfilePicture.jpg" alt="Rebecca Yao" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 30% 50% 40% 20%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(2deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(-3deg) scale(1.1)'; this.style.borderRadius='50% 30% 20% 40%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(2deg) scale(1)'; this.style.borderRadius='30% 50% 40% 20%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Rebecca Yao</h4>
+                        <p class="team-location">Dallas, TX</p>
+                        <p class="team-club">Lakeside Aquatic Club</p>
+                        <p class="team-bio">I'm Rebecca, and I'm 12 years old. I currently swim for Lakeside Aquatic Club and I used to swim for the Mason Manta Rays in Ohio. I have been swimming for over eight years, and its become my favorite sports out of three sports I've tried when I was little. My best stroke is backstroke and this long course season I got the 50 back TAGS and 100 back TAGS Bonus. I've been with this program since we started in Mason, Ohio, and its been quite a journey from starting the program to expanding it to here, in Texas. Other hobbies I have include reading, writing, and playing with my two cats.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="aidenProfilePicture.jpg" alt="Aiden Ji" style="
+                                width: 140px; 
+                                height: 160px; 
+                                object-fit: cover; 
+                                border-radius: 50% 30% 60% 40%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(-2deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(3deg) scale(1.1)'; this.style.borderRadius='30% 50% 40% 60%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-2deg) scale(1)'; this.style.borderRadius='50% 30% 60% 40%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Aiden Ji</h4>
+                        <p class="team-location">Frisco, TX</p>
+                        <p class="team-club">Lakeside Aquatic Club</p>
+                        <p class="team-bio">I'm Aiden, a 13 year old who goes to St. Mark's School of Texas. I have been swimming for 8 years and current swim for Lakeside Aquatic Club. My main stroke is breastroke, qualifying for TAGS in the 100 Breast. Outside of the pool, I enjoy watching and following sports and playing the cello.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="oliviaProfilePicture.jpg" alt="Olivia Ye" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 60% 30% 50% 40%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(-3deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(4deg) scale(1.1)'; this.style.borderRadius='40% 60% 30% 50%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-3deg) scale(1)'; this.style.borderRadius='60% 30% 50% 40%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Olivia Ye</h4>
+                        <p class="team-location">Coppell, TX</p>
+                        <p class="team-club">Lakeside Aquatic Club</p>
+                        <p class="team-bio">I'm Olivia. I'm 12 years old and I swim for Lakeside Aquatic Club. I have been swimming since I was 4 1/2 and have loved doing it. My best stroke is breaststroke and some milestones on my swimming journey include getting team records on my old team (Waterloo Swimming), getting to A finals in TAGS (Texas Age Group Championship Swimming), and moving from Austin to Dallas and making so many new friends.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="lucasProfilePicture.jpg" alt="Lucas Sun" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 20% 50% 30% 40%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(3deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(-2deg) scale(1.1)'; this.style.borderRadius='40% 30% 50% 20%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(3deg) scale(1)'; this.style.borderRadius='20% 50% 30% 40%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Lucas Sun</h4>
+                        <p class="team-location">Southlake, TX</p>
+                        <p class="team-club">North Texas Natadores</p>
+                        <p class="team-bio">I've been swimming for the past eight years, dedicating countless hours to training and improvement. I was part of the NTN swim club, where I developed strong technique and discipline. My hard work paid off when I earned a spot on the Southlake Carroll varsity swim team, a milestone that reflects my growth and commitment to the sport.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="valentinaProfilePicture.jpg" alt="Valentina Calderon" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 50% 30% 40% 60%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(-1deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(3deg) scale(1.1)'; this.style.borderRadius='30% 50% 60% 40%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-1deg) scale(1)'; this.style.borderRadius='50% 30% 40% 60%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Valentina Calderon</h4>
+                        <p class="team-location">Highland Park, TX</p>
+                        <p class="team-club">Lakeside Aquatic Club</p>
+                        <p class="team-bio">I'm Valentina, I'm 13 years old and I swim for Lakeside Aquatic Club. I have been swimming for seven years and my favorite strokes are freestyle and backstroke. Some of my accomplishments are going to TAGS (Texas Age Group Swimming Championships) and holding multiple school records. I love swimming and am dedicated and appreciate the friends, experiences, and lessons it has given me!</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="angelaProfilePicture.jpeg" alt="Angela Guo" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 40% 50% 30% 60%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(2deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(-2deg) scale(1.1)'; this.style.borderRadius='60% 30% 50% 40%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(2deg) scale(1)'; this.style.borderRadius='40% 50% 30% 60%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Angela Guo</h4>
+                        <p class="team-location">Dallas, TX</p>
+                        <p class="team-club">Lakeside Aquatic Club</p>
+                        <p class="team-bio">Hi. My name is Angela Guo. I'm 11 years old, and I swim for Lakeside Aquatic Club. I love swimming, and my favorite strokes are butterfly and backstroke. Some highlights of my swim journey include breaking team records and winning the 2024 Long Course TAGS championship in the 100 freestyle and 100 butterfly. I also have previous experience coaching swimming, and I am super excited to meet all of you!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🌽 Ohio Team</h3>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="sharonProfilePicture.jpg" alt="Sharon Li" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 50% 40% 30% 60%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(-1deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(2deg) scale(1.1)'; this.style.borderRadius='40% 50% 60% 30%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-1deg) scale(1)'; this.style.borderRadius='50% 40% 30% 60%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Sharon Li</h4>
+                        <p class="team-location">Mason, OH</p>
+                        <p class="team-club">Mason Manta Rays</p>
+                        <p class="team-bio">Hi, I'm Sharon. I'm a rising freshman and I swim for the Mason Manta Rays. I've been swimming for 5 and a half years, and my favorite stroke is breaststroke. I've gotten several JC cuts in the past especially in breaststroke and backstroke. Through swimming, I've learned to push myself hard while enjoying the sport. When I'm not swimming, I like to read, write, and hang out with friends.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="calebProfilePicture.jpg" alt="Caleb Tan" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 30% 60% 40% 50%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(-2deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(3deg) scale(1.1)'; this.style.borderRadius='50% 40% 30% 60%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-2deg) scale(1)'; this.style.borderRadius='30% 60% 40% 50%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Caleb Tan</h4>
+                        <p class="team-location">Mason, OH</p>
+                        <p class="team-club">Mason Manta Rays</p>
+                        <p class="team-bio">Hi, I'm Caleb and I've been swimming competitively for 8 years. I'm currently swimming for the Mason Manta Rays. My favorite strokes are backstroke and breaststroke. I currently hold multiple team individual and relay records. When I'm not swimming, I like to watch movies, play Go, or read a book.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="andrewProfilePicture.jpg" alt="Andrew Zhang" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 60% 40% 30% 50%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(2deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(-4deg) scale(1.1)'; this.style.borderRadius='40% 60% 50% 30%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(2deg) scale(1)'; this.style.borderRadius='60% 40% 30% 50%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Andrew Zhang</h4>
+                        <p class="team-location">Mason, OH</p>
+                        <p class="team-club">Mason Manta Rays</p>
+                        <p class="team-bio">I'm Andrew, and I'm a 13 year old who loves swimming on the Mason Manta Rays. I've been swimming since the age of 5 and have been passionate about it ever since! My favorite stroke is breastroke and individual medleys. I currently hold 12 individual short-course team records for the 9-10 and 11-12 age groups and one long-course team record. I've also recently gotten two sectionals, 100 and 200 breast at 13. I'm excited to both teach and learn and when I'm not swimming, I like playing video games and exploring music.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="victorProfilePicture.jpg" alt="Victor Cao" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 40% 20% 60% 30%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(-4deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(2deg) scale(1.1)'; this.style.borderRadius='30% 60% 20% 40%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-4deg) scale(1)'; this.style.borderRadius='40% 20% 60% 30%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Victor Cao</h4>
+                        <p class="team-location">Mason, OH</p>
+                        <p class="team-club">Mason Manta Rays</p>
+                        <p class="team-bio">Hi, I'm Victor Cao, and I'm a 12-year-old who swims with the Mason Manta Rays. I have been swimming competitively for 4 years, and my best strokes are breaststroke and freestyle. Recently, I achieved two Zones/AAA cuts for both 50 free and 50 breast. I currently hold one team relay record for the 4x50 freestyle relay. When I'm not swimming, I like playing video games and Rubik's Cubing.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="bryanProfilePicture2.jpg" alt="Bryan Zhang" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 50% 20% 50% 20%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(-5deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(0deg) scale(1.1)'; this.style.borderRadius='20% 50% 20% 50%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(-5deg) scale(1)'; this.style.borderRadius='50% 20% 50% 20%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Bryan Zhang</h4>
+                        <p class="team-location">Mason, OH</p>
+                        <p class="team-club">Mason Manta Rays</p>
+                        <p class="team-bio">Patient coach who excels at teaching beginners and building strong foundations! 🌟</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="claireProfilePicture.jpg" alt="Claire Liu" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 60% 40% 50% 30%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(2deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(-3deg) scale(1.1)'; this.style.borderRadius='30% 60% 40% 50%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(2deg) scale(1)'; this.style.borderRadius='60% 40% 50% 30%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Claire Liu</h4>
+                        <p class="team-location">Mason, OH</p>
+                        <p class="team-club">Mason Manta Rays</p>
+                        <p class="team-bio">Hi, My name is Claire and I'm currently a rising freshman in Mason Highschool. As a proud swimmer of the Mason Manta Rays, my devotion and commitment to this sport has allowed me to achieve top age group times and compete at high level meets like zones (in which I competed 4 consecutive years in.) My best stroke is Butterfly, and I'm striving for the 100 fly sectional though I also have zone cuts for freestyle. Besides swimming, I also ran track and qualified for states, and I enjoy hanging out with friends during my free time.</p>
+                    </div>
+                    
+                    <div class="team-card">
+                        <div class="team-avatar">
+                            <img src="annaProfilePicture.jpg" alt="Anna Yu" style="
+                                width: 140px; 
+                                height: 140px; 
+                                object-fit: cover; 
+                                border-radius: 40% 60% 30% 50%;
+                                border: 4px solid #0077b6;
+                                box-shadow: 0 8px 20px rgba(0, 119, 182, 0.3);
+                                transform: rotate(3deg);
+                                transition: all 0.3s ease;
+                                filter: brightness(1.1) contrast(1.1);
+                            " onmouseover="this.style.transform='rotate(-2deg) scale(1.1)'; this.style.borderRadius='60% 40% 50% 30%'; this.style.boxShadow='0 12px 30px rgba(0, 119, 182, 0.4)'" onmouseout="this.style.transform='rotate(3deg) scale(1)'; this.style.borderRadius='40% 60% 30% 50%'; this.style.boxShadow='0 8px 20px rgba(0, 119, 182, 0.3)'">
+                        </div>
+                        <h4>Anna Yu</h4>
+                        <p class="team-location">Mason, OH</p>
+                        <p class="team-club">Mason Manta Rays</p>
+                        <p class="team-bio">Dedicated coach who excels at helping swimmers build confidence and technique! 🌟</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🌴 California Team</h3>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-avatar">🏊‍♂️</div>
+                        <h4>Yimo Liu</h4>
+                        <p class="team-location">California</p>
+                        <p class="team-club">Pacific Swim</p>
+                        <p class="team-bio">Hi! My name is Yimo Liu and I've been competitively swimming for 5 years. I'm a rising freshman going into Westview High School. I swim for Pacific swim and I'm a backstroker. My current goal is to make it to Far Westerns before I turn 15.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <a href="index.html#members" class="back-btn">Back to Main Page</a>
+
+    <footer>
+        <p>&copy; 2025 Swim With a Splash. All rights reserved.</p>
+    </footer>
+</body>
+</html>
